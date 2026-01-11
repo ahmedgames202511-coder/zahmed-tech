@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z Ahmed Tech | Pro Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #00f2fe; --staff-clr: #ff9f43; --admin-clr: #ff4757; --dark: #020617; --glass: rgba(15, 23, 42, 0.98); }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; margin: 0; }
+        
+        /* شاشة الدخول */
+        #authOverlay { position: fixed; inset: 0; background: var(--dark); z-index: 10000; display: flex; justify-content: center; align-items: center; }
+        .auth-card { background: var(--glass); padding: 35px; border-radius: 25px; border: 1px solid #1e293b; width: 400px; text-align: center; }
+        .btn-toggle-group { display: flex; gap: 5px; margin-bottom: 20px; background: #000; padding: 5px; border-radius: 10px; }
+        .btn-toggle-group button { flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer; background: transparent; color: #666; transition: 0.3s; }
+        .btn-toggle-group button.active { background: var(--primary); color: #000; font-weight: bold; }
+        
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #333; color: white; border-radius: 10px; box-sizing: border-box; }
+        .btn-main { width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
+        /* لوحة التحكم */
+        #adminDashboard { display: none; background: #0f172a; padding: 25px; margin: 20px 5%; border-radius: 20px; border: 1px solid var(--primary); }
+        .tab-nav { display: flex; gap: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-link { cursor: pointer; color: #666; font-weight: bold; font-size: 0.85rem; }
+        .tab-link.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+
+        /* الجداول */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.8rem; }
+        th, td { padding: 10px; border: 1px solid #1e293b; text-align: center; }
+        th { background: #1e293b; color: var(--primary); }
+        .action-btn { padding: 5px 8px; border-radius: 5px; border: none; cursor: pointer; font-size: 0.7rem; color: white; }
+
+        /* المنشورات */
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; padding: 25px 5%; }
+        .card { background: var(--glass); border-radius: 20px; border: 1px solid #1e293b; overflow: hidden; }
+        .card img, .card iframe { width: 100%; height: 200px; border: none; object-fit: cover; }
+        .card-body { padding: 15px; }
+        .btn-link { display: block; text-align: center; background: var(--primary); color: #000; padding: 10px; border-radius: 10px; text-decoration: none; font-weight: bold; margin-top: 10px; }
+        
+        .fab { position: fixed; bottom: 20px; left: 20px; width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #000; font-size: 1.5rem; z-index: 5001; }
+        .badge { background: var(--admin-clr); padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+<div id="authOverlay">
+    <div class="auth-card">
+        <h2 id="authTitle">Z Ahmed Tech</h2>
+        <div class="btn-toggle-group">
+            <button id="vBtn" class="active" onclick="switchLogin('visitor')">زائر</button>
+            <button id="sBtn" onclick="switchLogin('staff')">موظف</button>
+            <button id="aBtn" onclick="switchLogin('admin')">المدير</button>
+        </div>
+
+        <div id="loginFields">
+            <input type="text" id="loginUser" placeholder="الاسم الكامل">
+            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
+            <div id="visitorExtra">
+                <input type="tel" id="loginPhone" placeholder="رقم الهاتف (للتسجيل الجديد)">
+            </div>
+            <input type="password" id="loginPass" placeholder="كلمة السر (للموظف والمدير)" style="display:none;">
+            <p id="visitorNote" style="font-size: 0.75rem; color: #666; margin-top: 5px;">* للزوار: إذا كان لديك حساب، ادخل الاسم والبريد فقط.</p>
+            <button class="btn-main" id="entryBtn" style="background:var(--primary)" onclick="processLogin()">دخول</button>
+        </div>
+    </div>
+</div>
+
+<nav style="background:#000; padding:15px 5%; border-bottom:1px solid #1e293b; display:flex; justify-content:space-between; align-items:center;">
+    <div style="font-size: 1.5rem; font-weight: bold;">Z AHMED <span style="color:var(--primary)">TECH</span></div>
+    <div id="navUser" style="font-size:0.8rem;"></div>
+</nav>
+
+<div id="adminDashboard">
+    <div class="tab-nav">
+        <span class="tab-link active" id="staffLink" onclick="openTab(event, 'staffTab')">إدارة الموظفين</span>
+        <span class="tab-link" id="requestLink" onclick="openTab(event, 'requestTab')">طلبات النشر <span id="reqCount" class="badge">0</span></span>
+        <span class="tab-link" onclick="openTab(event, 'visitorTab')">قاعدة الزوار</span>
+        <span class="tab-link" onclick="openTab(event, 'postTab')">نشر منشور</span>
+    </div>
+
+    <div id="staffTab" class="tab-pane active">
+        <h4>إضافة حساب موظف</h4>
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="sName" placeholder="اسم الموظف">
+            <input type="password" id="sPass" placeholder="الباسورد">
+            <button onclick="addStaff()" style="background:var(--staff-clr); border:none; padding:10px 20px; border-radius:10px; cursor:pointer;">إضافة</button>
+        </div>
+        <table>
+            <thead><tr><th>الموظف</th><th>الباسورد</th><th>التحكم</th></tr></thead>
+            <tbody id="staffTable"></tbody>
+        </table>
+    </div>
+
+    <div id="requestTab" class="tab-pane">
+        <h4>منشورات تنتظر الموافقة</h4>
+        <div id="pendingPosts"></div>
+    </div>
+
+    <div id="visitorTab" class="tab-pane">
+        <h4>الزوار المسجلون (إدارة الحسابات)</h4>
+        <table>
+            <thead><tr><th>الاسم</th><th>البريد</th><th>الهاتف</th><th>التحكم</th></tr></thead>
+            <tbody id="visitorTable"></tbody>
+        </table>
+    </div>
+
+    <div id="postTab" class="tab-pane">
+        <h4>إضافة محتوى جديد</h4>
+        <input type="text" id="pTitle" placeholder="العنوان">
+        <textarea id="pDesc" placeholder="الوصف..."></textarea>
+        <input type="text" id="pMedia" placeholder="رابط (صورة أو فيديو)">
+        <select id="pType"><option value="img">صورة</option><option value="vid">فيديو (Link)</option></select>
+        <input type="text" id="pLink" placeholder="رابط الزر">
+        <button onclick="submitPost()" class="btn-main" style="background:var(--primary); color:#000;">نشر / إرسال طلب</button>
+    </div>
+</div>
+
+<div class="news-grid" id="mainFeed"></div>
+
+<div class="fab" onclick="toggleDashboard()" id="dashFab" style="display:none;"><i class="fas fa-cog"></i></div>
+
+<script>
+    const ADMIN_KEY = "21072014";
+    let currentUser = { name: "", role: "" };
+
+    function switchLogin(role) {
+        document.querySelectorAll('.btn-toggle-group button').forEach(b => b.classList.remove('active'));
+        document.getElementById(role.charAt(0) + 'Btn').classList.add('active');
+        document.getElementById('visitorExtra').style.display = role === 'visitor' ? 'block' : 'none';
+        document.getElementById('visitorNote').style.display = role === 'visitor' ? 'block' : 'none';
+        document.getElementById('loginPass').style.display = role === 'visitor' ? 'none' : 'block';
+    }
+
+    function processLogin() {
+        const name = document.getElementById('loginUser').value;
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPass').value;
+        const btn = document.querySelector('.btn-toggle-group .active').id;
+
+        if(!name || !email) return alert("ادخل الاسم والبريد");
+
+        if(btn === 'aBtn') {
+            if(pass === ADMIN_KEY) currentUser = { name: "أحمد (المدير)", role: "admin" };
+            else return alert("باسورد المدير خطأ");
+        } else if(btn === 'sBtn') {
+            let staff = JSON.parse(localStorage.getItem('zStaff') || '[]');
+            let found = staff.find(s => s.name === name && s.pass === pass);
+            if(found) currentUser = { name: found.name, role: "staff" };
+            else return alert("بيانات الموظف خطأ");
+        } else {
+            // نظام الزوار
+            let visitors = JSON.parse(localStorage.getItem('zVisitors') || '[]');
+            let existing = visitors.find(v => v.email === email);
+            
+            if(existing) {
+                currentUser = { name: existing.name, role: "visitor" };
+                alert("مرحباً بعودتك يا " + existing.name);
+            } else {
+                const phone = document.getElementById('loginPhone').value;
+                if(!phone) return alert("هذا بريد جديد، يرجى إدخال رقم الهاتف للتسجيل.");
+                let newUser = { name, email, phone, id: Date.now() };
+                visitors.push(newUser);
+                localStorage.setItem('zVisitors', JSON.stringify(visitors));
+                currentUser = { name, role: "visitor" };
+                alert("تم إنشاء حسابك بنجاح");
+            }
+        }
+
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('navUser').innerText = currentUser.name;
+        if(currentUser.role !== 'visitor') document.getElementById('dashFab').style.display = 'flex';
+        renderAll();
+    }
+
+    // إدارة الطاقم
+    function addStaff() {
+        const n = document.getElementById('sName').value, p = document.getElementById('sPass').value;
+        if(!n || !p) return;
+        let staff = JSON.parse(localStorage.getItem('zStaff') || '[]');
+        staff.push({name: n, pass: p});
+        localStorage.setItem('zStaff', JSON.stringify(staff));
+        renderStaff();
+    }
+
+    function renderStaff() {
+        let staff = JSON.parse(localStorage.getItem('zStaff') || '[]');
+        document.getElementById('staffTable').innerHTML = staff.map((s, i) => `
+            <tr><td>${s.name}</td><td>${s.pass}</td>
+            <td><button class="action-btn" style="background:red" onclick="removeStaff(${i})">حذف</button></td></tr>
+        `).join('');
+    }
+
+    function removeStaff(i) {
+        let staff = JSON.parse(localStorage.getItem('zStaff') || '[]');
+        staff.splice(i, 1);
+        localStorage.setItem('zStaff', JSON.stringify(staff));
+        renderStaff();
+    }
+
+    // حذف حساب الزوار (مطلبك الجديد)
+    function removeVisitor(id) {
+        if(!confirm("هل أنت متأكد من حذف حساب هذا الزائر؟ لن يتمكن من الدخول مرة أخرى.")) return;
+        let vists = JSON.parse(localStorage.getItem('zVisitors') || '[]');
+        vists = vists.filter(v => v.id !== id);
+        localStorage.setItem('zVisitors', JSON.stringify(vists));
+        renderAll();
+    }
+
+    // إدارة المحتوى
+    function submitPost() {
+        const p = {
+            id: Date.now(), title: document.getElementById('pTitle').value,
+            desc: document.getElementById('pDesc').value, media: document.getElementById('pMedia').value,
+            type: document.getElementById('pType').value, link: document.getElementById('pLink').value,
+            author: currentUser.name, status: currentUser.role === 'admin' ? 'approved' : 'pending'
+        };
+        if(!p.title) return alert("ادخل العنوان");
+        let posts = JSON.parse(localStorage.getItem('zPosts') || '[]');
+        posts.push(p);
+        localStorage.setItem('zPosts', JSON.stringify(posts));
+        alert(currentUser.role === 'admin' ? "نُشر" : "في انتظار المدير");
+        renderAll();
+    }
+
+    function renderAll() {
+        let posts = JSON.parse(localStorage.getItem('zPosts') || '[]');
+        // المنصة
+        document.getElementById('mainFeed').innerHTML = posts.filter(p => p.status === 'approved').map(p => `
+            <div class="card">
+                ${p.type === 'img' ? `<img src="${p.media}">` : `<iframe src="${p.media}"></iframe>`}
+                <div class="card-body">
+                    <h3>${p.title}</h3><p>${p.desc}</p>
+                    ${p.link ? `<a href="${p.link}" target="_blank" class="btn-link">فتح الرابط</a>` : ''}
+                    ${currentUser.role === 'admin' ? `<button onclick="delPost(${p.id})" style="background:none;border:none;color:red;cursor:pointer;font-size:0.7rem;">حذف المنشور</button>` : ''}
+                </div>
+            </div>
+        `).join('');
+
+        // طلبات الأدمن
+        if(currentUser.role === 'admin') {
+            let pending = posts.filter(p => p.status === 'pending');
+            document.getElementById('reqCount').innerText = pending.length;
+            document.getElementById('pendingPosts').innerHTML = pending.map(p => `
+                <div style="background:#1e293b; padding:10px; border-radius:10px; margin-bottom:10px;">
+                    <b>${p.title}</b> (بواسطة: ${p.author})
+                    <div style="margin-top:5px;">
+                        <button class="action-btn" style="background:green" onclick="approvePost(${p.id})">نشر</button>
+                        <button class="action-btn" style="background:red" onclick="delPost(${p.id})">رفض</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // جدول الزوار (مع زر الحذف)
+        let visitors = JSON.parse(localStorage.getItem('zVisitors') || '[]');
+        document.getElementById('visitorTable').innerHTML = visitors.map(v => `
+            <tr><td>${v.name}</td><td>${v.email}</td><td>${v.phone}</td>
+            <td><button class="action-btn" style="background:red" onclick="removeVisitor(${v.id})">حذف الحساب</button></td></tr>
+        `).join('');
+        renderStaff();
+    }
+
+    function approvePost(id) {
+        let posts = JSON.parse(localStorage.getItem('zPosts'));
+        posts.find(p => p.id === id).status = 'approved';
+        localStorage.setItem('zPosts', JSON.stringify(posts));
+        renderAll();
+    }
+
+    function delPost(id) {
+        let posts = JSON.parse(localStorage.getItem('zPosts')).filter(p => p.id !== id);
+        localStorage.setItem('zPosts', JSON.stringify(posts));
+        renderAll();
+    }
+
+    function toggleDashboard() {
+        const d = document.getElementById('adminDashboard');
+        d.style.display = d.style.display === 'block' ? 'none' : 'block';
+        if(currentUser.role === 'staff') {
+            document.getElementById('staffLink').style.display = 'none';
+            document.getElementById('requestLink').style.display = 'none';
+        }
+    }
+
+    function openTab(evt, name) {
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
+        document.getElementById(name).classList.add('active');
+        evt.currentTarget.classList.add('active');
+    }
+</script>
+</body>
+</html>
