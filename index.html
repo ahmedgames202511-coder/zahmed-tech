@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Ahmed Tech | Ultimate 2026</title>
+    <title>Z Ahmed Tech | المنصة الذكية</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -12,66 +12,63 @@
     <style>
         :root {
             --primary: #00f2fe; --secondary: #4facfe; --dark: #020617;
-            --glass: rgba(15, 23, 42, 0.9); --text: #f8fafc; --accent: #ff4757;
+            --glass: rgba(15, 23, 42, 0.95); --text: #f8fafc;
         }
 
-        * { box-sizing: border-box; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        * { box-sizing: border-box; transition: 0.3s; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); margin: 0; overflow-x: hidden; }
 
-        /* الخلفية المتحركة */
-        .bg-layer { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at center, #1e293b 0%, #020617 100%); }
-        .glow { position: absolute; width: 300px; height: 300px; background: var(--primary); filter: blur(120px); opacity: 0.15; animation: float 15s infinite alternate; }
-        @keyframes float { from { transform: translate(0,0); } to { transform: translate(80vw, 80vh); } }
-
-        /* شاشة الدخول */
-        #authOverlay { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(20px); background: rgba(0,0,0,0.8); }
-        .auth-card { background: var(--glass); padding: 40px; border-radius: 30px; border: 2px solid var(--primary); text-align: center; width: 90%; max-width: 400px; box-shadow: 0 0 50px rgba(0, 242, 254, 0.2); }
-        .google-btn { background: white; color: #444; padding: 15px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; border: none; width: 100%; font-size: 1rem; margin-top: 25px; transition: 0.3s; }
-        .google-btn:hover { background: #eee; transform: translateY(-3px); }
+        /* خلفية سينمائية */
+        .bg-layer { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); }
+        
+        /* شاشة الدخول الموحدة */
+        #authOverlay { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(25px); background: rgba(0,0,0,0.7); }
+        .auth-card { background: var(--glass); padding: 40px; border-radius: 30px; border: 1px solid var(--primary); text-align: center; width: 90%; max-width: 400px; box-shadow: 0 0 50px rgba(0, 242, 254, 0.2); }
+        
+        .google-btn { background: white; color: #444; padding: 15px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; border: none; width: 100%; font-size: 1rem; margin-top: 20px; }
+        .google-btn:hover { background: #f1f1f1; transform: scale(1.02); }
 
         /* الهيدر */
-        nav { position: fixed; top: 0; width: 100%; height: 75px; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 1000; }
-        .logo { font-size: 1.6rem; font-weight: 900; } .logo span { color: var(--primary); }
-        .search-box { background: rgba(0,0,0,0.4); border: 1px solid var(--primary); border-radius: 20px; padding: 5px 15px; display: flex; align-items: center; width: 250px; }
+        nav { position: fixed; top: 0; width: 100%; height: 70px; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 1000; }
+        .logo { font-size: 1.4rem; font-weight: 900; } .logo span { color: var(--primary); }
+        
+        .search-box { background: rgba(0,0,0,0.5); border: 1px solid var(--primary); border-radius: 20px; padding: 5px 15px; display: flex; align-items: center; width: 250px; }
         .search-box input { background: none; border: none; color: white; padding: 8px; width: 100%; outline: none; }
 
-        /* شبكة الأخبار */
-        main { padding: 120px 5% 50px; }
-        .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
-        .post-card { background: var(--glass); border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; position: relative; }
-        .post-card:hover { transform: translateY(-10px); border-color: var(--primary); }
-        .post-card img { width: 100%; height: 220px; object-fit: cover; }
+        /* المحتوى */
+        main { padding: 100px 5% 50px; }
+        .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .post-card { background: var(--glass); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
+        .post-card img { width: 100%; height: 200px; object-fit: cover; }
         .post-info { padding: 20px; }
 
-        /* لوحة التحكم */
-        #adminPanel { position: fixed; left: -100%; top: 0; width: 400px; height: 100%; background: var(--dark); border-right: 2px solid var(--primary); z-index: 2001; padding: 30px; overflow-y: auto; transition: 0.5s; }
-        #adminPanel.open { left: 0; }
-        .fab { position: fixed; bottom: 30px; left: 30px; width: 65px; height: 65px; background: var(--primary); border-radius: 50%; display: none; align-items: center; justify-content: center; color: #000; font-size: 1.5rem; cursor: pointer; z-index: 2000; box-shadow: 0 10px 30px rgba(0,242,254,0.4); }
+        /* أزرار الإدارة (تظهر للمدير فقط) */
+        .admin-controls { display: flex; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .btn-edit { background: var(--secondary); border: none; color: white; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+        .btn-del { background: #ff4757; border: none; color: white; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+
+        /* لوحة إضافة المنشورات */
+        #adminPanel { position: fixed; right: -100%; top: 0; width: 380px; height: 100%; background: var(--dark); border-left: 2px solid var(--primary); z-index: 2001; padding: 30px; transition: 0.5s; overflow-y: auto; }
+        #adminPanel.open { right: 0; }
+        
+        .fab { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: none; align-items: center; justify-content: center; color: black; font-size: 1.5rem; cursor: pointer; z-index: 2000; box-shadow: 0 5px 20px rgba(0,242,254,0.4); }
 
         input, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: rgba(0,0,0,0.5); color: white; }
-        .btn-save { width: 100%; padding: 15px; background: var(--primary); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        
-        .btn-action { padding: 6px 12px; border-radius: 5px; border: none; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
-        .edit-btn { background: var(--secondary); color: #fff; }
-        .del-btn { background: var(--accent); color: #fff; }
+        .btn-main { width: 100%; padding: 15px; background: var(--primary); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: black; }
     </style>
 </head>
 <body>
 
 <div class="bg-layer"></div>
-<div class="glow"></div>
 
 <div id="authOverlay">
     <div class="auth-card">
         <h2 class="logo">Z AHMED <span>TECH</span></h2>
-        <p>مرحباً بك في النسخة الأسطورية 4.0</p>
+        <p>سجل دخولك الآن لاستكشاف أحدث التقنيات</p>
         <button class="google-btn" onclick="googleLogin()">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20">
-            تسجيل الدخول بجوجل
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="18">
+            الدخول بحساب Google
         </button>
-        <div style="margin: 20px 0; opacity: 0.3;">أو دخول الإدارة</div>
-        <input type="password" id="adminKey" placeholder="كود المدير">
-        <button class="btn-save" onclick="adminLogin()">دخول</button>
     </div>
 </div>
 
@@ -79,11 +76,11 @@
     <div class="logo">Z AHMED <span>TECH</span></div>
     <div class="search-box">
         <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="ابحث عن أخبار..." oninput="searchPosts()">
+        <input type="text" id="searchInput" placeholder="ابحث عن محتوى..." oninput="searchPosts()">
     </div>
-    <div style="display:flex; align-items:center; gap:10px">
-        <span id="uName" style="font-size:0.8rem; font-weight:bold"></span>
-        <img id="uAvatar" src="" style="width:35px; border-radius:50%; display:none">
+    <div id="userPart" style="display:flex; align-items:center; gap:10px">
+        <span id="userName" style="font-size:0.8rem"></span>
+        <img id="userImg" src="" style="width:35px; border-radius:50%; display:none">
     </div>
 </nav>
 
@@ -93,20 +90,20 @@
 
 <div id="adminPanel">
     <div style="display:flex; justify-content:space-between; align-items:center">
-        <h3>الإدارة</h3>
+        <h3>إضافة منشور جديد</h3>
         <i class="fas fa-times" onclick="togglePanel()" style="cursor:pointer"></i>
     </div>
     <input type="hidden" id="editId">
-    <input type="text" id="pTitle" placeholder="عنوان المنشور">
-    <textarea id="pDesc" placeholder="المحتوى التقني..." rows="6"></textarea>
+    <input type="text" id="pTitle" placeholder="العنوان">
+    <textarea id="pDesc" placeholder="التفاصيل..." rows="6"></textarea>
     <input type="text" id="pImg" placeholder="رابط الصورة">
-    <button class="btn-save" id="saveBtn" onclick="savePost()">نشر الآن</button>
+    <button class="btn-main" id="saveBtn" onclick="savePost()">نشر في الموقع</button>
 </div>
 
-<div class="fab" id="adminFab" onclick="togglePanel()"><i class="fas fa-tools"></i></div>
+<div class="fab" id="adminFab" onclick="togglePanel()"><i class="fas fa-plus"></i></div>
 
 <script>
-    // بيانات Firebase الخاصة بك يا أحمد
+    // بياناتك الحقيقية يا أحمد
     const firebaseConfig = {
         apiKey: "AIzaSyAqSQLHq0QFpe1CV8bAYc53mbUO7I03Q5I",
         authDomain: "z-ahmed-tech.firebaseapp.com",
@@ -124,55 +121,53 @@
     let currentUser = null;
     let allPosts = [];
 
-    // --- نظام الدخول ---
+    // --- تسجيل الدخول ---
     function googleLogin() {
         const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider).then(res => handleUser(res.user))
-            .catch(() => alert("تأكد من إضافة رابط موقعك في Authorized Domains في Firebase"));
+        auth.signInWithPopup(provider).then(res => loginSuccess(res.user)).catch(err => {
+            console.log("Authentication Error");
+        });
     }
 
-    function adminLogin() {
-        if(document.getElementById('adminKey').value === "21072014") handleUser({displayName: "المدير أحمد", isAdmin: true});
-        else alert("كود خطأ");
-    }
-
-    function handleUser(user) {
+    function loginSuccess(user) {
         currentUser = user;
         document.getElementById('authOverlay').style.display = 'none';
-        document.getElementById('uName').innerText = user.displayName;
+        document.getElementById('userName').innerText = user.displayName;
         if(user.photoURL) {
-            document.getElementById('uAvatar').src = user.photoURL;
-            document.getElementById('uAvatar').style.display = 'block';
+            document.getElementById('userImg').src = user.photoURL;
+            document.getElementById('userImg').style.display = 'block';
         }
-        if(user.isAdmin || user.email === "ahmedwebcom13@gmail.com") {
+        
+        // إيميلك كمدير
+        if(user.email === "ahmedwebcom13@gmail.com") {
             currentUser.isAdmin = true;
             document.getElementById('adminFab').style.display = 'flex';
         }
         loadPosts();
     }
 
-    // --- المنشورات ---
+    // --- إدارة المحتوى ---
     function loadPosts() {
         db.ref('posts').on('value', snap => {
             const data = snap.val();
             allPosts = data ? Object.entries(data).map(([id, val]) => ({id, ...val})) : [];
-            render(allPosts);
+            display(allPosts);
         });
     }
 
-    function render(posts) {
+    function display(posts) {
         const container = document.getElementById('postsContainer');
         container.innerHTML = posts.reverse().map(p => `
             <div class="post-card">
-                <img src="${p.img || 'https://via.placeholder.com/400x220'}">
+                <img src="${p.img || 'https://via.placeholder.com/400x200'}">
                 <div class="post-info">
-                    <h3>${p.title}</h3>
+                    <h3 style="margin:0">${p.title}</h3>
                     <p style="opacity:0.7; font-size:0.9rem">${p.desc}</p>
                     <small style="color:var(--primary)">بواسطة: ${p.author}</small>
                     ${currentUser.isAdmin ? `
-                        <div style="display:flex; gap:10px">
-                            <button class="btn-action edit-btn" onclick="editP('${p.id}')">تعديل</button>
-                            <button class="btn-action del-btn" onclick="delP('${p.id}')">حذف</button>
+                        <div class="admin-controls">
+                            <button class="btn-edit" onclick="editPost('${p.id}')">تعديل</button>
+                            <button class="btn-del" onclick="delPost('${p.id}')">حذف</button>
                         </div>
                     ` : ''}
                 </div>
@@ -194,25 +189,31 @@
         clear();
     }
 
-    function editP(id) {
+    function editPost(id) {
         const p = allPosts.find(x => x.id === id);
         document.getElementById('editId').value = id;
         document.getElementById('pTitle').value = p.title;
         document.getElementById('pDesc').value = p.desc;
         document.getElementById('pImg').value = p.img;
-        document.getElementById('saveBtn').innerText = "حفظ التعديلات";
+        document.getElementById('saveBtn').innerText = "حفظ التغييرات";
         togglePanel();
     }
 
-    function delP(id) { if(confirm("حذف؟")) db.ref('posts/' + id).remove(); }
+    function delPost(id) { if(confirm("حذف؟")) db.ref('posts/' + id).remove(); }
 
     function searchPosts() {
-        const term = document.getElementById('searchInput').value.toLowerCase();
-        render(allPosts.filter(p => p.title.toLowerCase().includes(term) || p.desc.toLowerCase().includes(term)));
+        const t = document.getElementById('searchInput').value.toLowerCase();
+        display(allPosts.filter(p => p.title.toLowerCase().includes(t) || p.desc.toLowerCase().includes(t)));
     }
 
     function togglePanel() { document.getElementById('adminPanel').classList.toggle('open'); }
-    function clear() { document.getElementById('editId').value = ''; document.getElementById('pTitle').value = ''; document.getElementById('pDesc').value = ''; document.getElementById('pImg').value = ''; }
+    function clear() { 
+        document.getElementById('editId').value = ''; 
+        document.getElementById('pTitle').value = ''; 
+        document.getElementById('pDesc').value = ''; 
+        document.getElementById('pImg').value = ''; 
+        document.getElementById('saveBtn').innerText = "نشر في الموقع";
+    }
 </script>
 </body>
 </html>
