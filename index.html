@@ -23,6 +23,7 @@
         .btn-cyan { background: linear-gradient(90deg, #06b6d4, #3b82f6); color: white; transition: 0.3s; }
         .btn-cyan:hover { box-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
         input, textarea, select { background: #0f172a !important; border: 1px solid #1e293b !important; color: white !important; }
+        .btn-phone { background: #10b981; color: white; }
     </style>
 </head>
 <body>
@@ -41,11 +42,18 @@
                     <hr class="flex-grow border-slate-800"> <span class="text-xs text-slate-500 uppercase">أو عبر</span> <hr class="flex-grow border-slate-800">
                 </div>
                 
-                <button onclick="googleSignIn()" class="w-full bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-200 transition">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20"> Google Login
-                </button>
-                <button onclick="registerVisitor()" class="text-slate-500 text-xs hover:text-cyan-400 transition">إنشاء حساب زائر جديد</button>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="googleSignIn()" class="bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-200 transition text-xs">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="16"> Google
+                    </button>
+                    <button onclick="phoneSignIn()" class="btn-phone py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition text-xs">
+                        <i class="fas fa-phone-alt"></i> Phone
+                    </button>
+                </div>
+                
+                <button onclick="registerVisitor()" class="text-slate-500 text-xs hover:text-cyan-400 transition mt-4">إنشاء حساب زائر جديد (إيميل)</button>
             </div>
+            <div id="recaptcha-container"></div>
         </div>
     </div>
 
@@ -59,10 +67,9 @@
         </nav>
 
         <div class="container mx-auto p-4 lg:p-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
-            
             <div class="space-y-6">
                 <div id="adminMenu" class="hidden glass p-6 rounded-[2rem] border-r-4 border-cyan-500">
-                    <h3 class="font-black text-xs text-slate-500 mb-6 uppercase tracking-widest">أدوات المدير</h3>
+                    <h3 class="font-black text-xs text-slate-500 mb-6 uppercase tracking-widest text-right">أدوات المدير</h3>
                     <div class="space-y-2 text-right">
                         <button onclick="openTab('addPost')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3">
                             <i class="fas fa-plus-circle text-cyan-400"></i> نشر منشور جديد
@@ -73,14 +80,11 @@
                         <button onclick="openTab('manageUsers')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3">
                             <i class="fas fa-users-cog text-cyan-400"></i> مراقبة الأعضاء
                         </button>
-                        <button onclick="openTab('monitorChats')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3">
-                            <i class="fas fa-comments text-cyan-400"></i> مراقبة الدردشات
-                        </button>
                     </div>
                 </div>
 
                 <div id="workerMenu" class="hidden glass p-6 rounded-[2rem] border-r-4 border-amber-500">
-                    <h3 class="font-black text-xs text-slate-500 mb-6 uppercase tracking-widest">أدوات الموظف</h3>
+                    <h3 class="font-black text-xs text-slate-500 mb-6 uppercase tracking-widest text-right">أدوات الموظف</h3>
                     <button onclick="openTab('addPost')" class="w-full p-3 hover:bg-amber-500/10 rounded-xl transition flex items-center gap-3">
                         <i class="fas fa-file-signature text-amber-500"></i> اقتراح منشور جديد
                     </button>
@@ -92,8 +96,7 @@
                     <h2 class="text-3xl font-black">آخر <span class="text-cyan-400">الأخبار</span></h2>
                     <div class="h-1 flex-grow mx-6 bg-slate-800 rounded-full"></div>
                 </div>
-                <div id="postsFeed" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    </div>
+                <div id="postsFeed" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
             </div>
         </div>
     </div>
@@ -106,7 +109,7 @@
     </div>
 
     <script>
-        // --- 1. التكوين (بياناتك) ---
+        // --- 1. Firebase Config ---
         const firebaseConfig = {
             apiKey: "AIzaSyAqSQLHq0QFpe1CV8bAYc53mbUO7I03Q5I",
             authDomain: "z-ahmed-tech.firebaseapp.com",
@@ -119,11 +122,10 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const auth = firebase.auth();
-
         const MASTER_ADMIN = "ahmedgames2025.11@gmail.com";
         let me = null;
 
-        // --- 2. نظام الدخول ---
+        // --- 2. Auth Logic ---
         async function login() {
             const e = document.getElementById('email').value;
             const p = document.getElementById('pass').value;
@@ -134,15 +136,45 @@
             const provider = new firebase.auth.GoogleAuthProvider();
             try {
                 const res = await auth.signInWithPopup(provider);
-                const user = res.user;
-                const snap = await db.ref('users/' + user.uid).once('value');
-                if(!snap.exists()) {
-                    await db.ref('users/' + user.uid).set({
-                        uid: user.uid, email: user.email, name: user.displayName, 
-                        role: user.email === MASTER_ADMIN ? 'admin' : 'visitor', pass: 'Google Login'
-                    });
-                }
+                handleUserRecord(res.user, 'Google Login');
             } catch(e) { Swal.fire('خطأ', 'فشل دخول جوجل', 'error'); }
+        }
+
+        async function phoneSignIn() {
+            const { value: phone } = await Swal.fire({
+                title: 'تسجيل برقم الهاتف',
+                input: 'tel',
+                inputPlaceholder: '+2010XXXXXXXX',
+                showCancelButton: true,
+                confirmButtonText: 'إرسال كود التحقق'
+            });
+
+            if (phone) {
+                const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size: 'invisible' });
+                try {
+                    const confirmationResult = await auth.signInWithPhoneNumber(phone, appVerifier);
+                    const { value: code } = await Swal.fire({
+                        title: 'ادخل الكود (6 أرقام)',
+                        input: 'text',
+                        confirmButtonText: 'تأكيد'
+                    });
+                    const res = await confirmationResult.confirm(code);
+                    handleUserRecord(res.user, 'Phone Login');
+                } catch (err) { Swal.fire('خطأ', 'الرقم غير صحيح أو انتهت المحاولات', 'error'); }
+            }
+        }
+
+        async function handleUserRecord(user, method) {
+            const snap = await db.ref('users/' + user.uid).once('value');
+            if(!snap.exists()) {
+                await db.ref('users/' + user.uid).set({
+                    uid: user.uid,
+                    email: user.email || user.phoneNumber,
+                    name: user.displayName || "مستخدم_" + user.uid.slice(0,4),
+                    role: user.email === MASTER_ADMIN ? 'admin' : 'visitor',
+                    pass: method
+                });
+            }
         }
 
         async function registerVisitor() {
@@ -172,10 +204,13 @@
                         }, 500);
                     }
                 });
-            } else { location.reload; }
+            } else {
+                document.getElementById('authScreen').classList.remove('hidden', 'animate__fadeOutUp');
+                document.getElementById('mainApp').classList.add('hidden');
+            }
         });
 
-        // --- 3. إدارة التبويبات (خاص للمدير والموظف) ---
+        // --- 3. Tabs & Content ---
         function openTab(type) {
             const modal = document.getElementById('mainModal');
             const content = document.getElementById('modalContent');
@@ -187,44 +222,30 @@
                     <h2 class="text-2xl font-black mb-6 text-cyan-400">✨ نشر محتوى جديد</h2>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="space-y-4 text-right">
-                            <input id="postTitle" type="text" placeholder="عنوان المنشور" class="w-full p-4 rounded-xl outline-none">
-                            <input id="postImg" type="text" placeholder="رابط الصورة (URL)" class="w-full p-4 rounded-xl outline-none">
-                            <input id="postLink" type="text" placeholder="رابط خارجي (اختياري)" class="w-full p-4 rounded-xl outline-none">
-                            <textarea id="postDesc" rows="4" placeholder="اكتب وصف الخبر بالتفصيل..." class="w-full p-4 rounded-xl outline-none"></textarea>
+                            <input id="postTitle" type="text" placeholder="عنوان المنشور" class="w-full p-4 rounded-xl outline-none border border-slate-800">
+                            <input id="postImg" type="text" placeholder="رابط الصورة (URL)" class="w-full p-4 rounded-xl outline-none border border-slate-800">
+                            <input id="postLink" type="text" placeholder="رابط خارجي (اختياري)" class="w-full p-4 rounded-xl outline-none border border-slate-800">
+                            <textarea id="postDesc" rows="4" placeholder="اكتب وصف الخبر..." class="w-full p-4 rounded-xl outline-none border border-slate-800"></textarea>
                             <button onclick="submitNewPost()" class="w-full btn-cyan py-4 rounded-xl font-bold">تأكيد النشر</button>
                         </div>
-                        <div class="hidden lg:block bg-slate-900 rounded-3xl p-6 border border-slate-800">
-                            <p class="text-xs text-slate-500 mb-4">معاينة لشكل المنشور:</p>
-                            <div class="bg-slate-800 rounded-2xl h-32 mb-4 flex items-center justify-center text-slate-600 italic">سيتم عرض الصورة هنا</div>
-                            <div class="h-4 w-3/4 bg-slate-800 rounded mb-2"></div>
-                            <div class="h-10 w-full bg-slate-800 rounded"></div>
+                        <div class="hidden lg:block bg-slate-900 rounded-3xl p-6 border border-slate-800 text-center">
+                            <p class="text-xs text-slate-500 mb-4 uppercase tracking-widest">Post Preview</p>
+                            <div class="bg-slate-800 rounded-2xl h-48 flex items-center justify-center text-slate-700 italic">Image Preview</div>
                         </div>
-                    </div>
-                `;
-            } 
-            else if(type === 'manageWorkers') {
-                content.innerHTML = `
-                    <h2 class="text-2xl font-black mb-6">👔 إنشاء حساب موظف</h2>
-                    <div class="space-y-4">
-                        <input id="wEmail" type="email" placeholder="بريد الموظف" class="w-full p-4 rounded-xl outline-none">
-                        <input id="wPass" type="password" placeholder="كلمة مرور الموظف" class="w-full p-4 rounded-xl outline-none">
-                        <button onclick="createWorkerAccount()" class="w-full btn-cyan py-4 rounded-xl font-bold">إنشاء الحساب الآن</button>
-                    </div>
-                `;
+                    </div>`;
             }
             else if(type === 'manageUsers') {
                 content.innerHTML = `<h2 class="text-2xl font-black mb-6 text-cyan-400">👥 مراقبة الأعضاء</h2><div id="uList" class="space-y-3 max-h-96 overflow-y-auto"></div>`;
                 db.ref('users').on('value', snap => {
-                    const list = document.getElementById('uList');
-                    list.innerHTML = '';
+                    const list = document.getElementById('uList'); list.innerHTML = '';
                     snap.forEach(u => {
                         const user = u.val();
                         if(user.email === MASTER_ADMIN) return;
                         list.innerHTML += `
-                            <div class="flex justify-between items-center p-4 bg-slate-900 rounded-2xl border border-slate-800 hover:border-cyan-500 transition">
+                            <div class="flex justify-between items-center p-4 bg-slate-900 rounded-2xl border border-slate-800">
                                 <div class="text-right">
-                                    <p class="font-bold">${user.name} <span class="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-cyan-400">${user.role}</span></p>
-                                    <p class="text-xs text-slate-500">Pass: <span class="text-red-400">${user.pass}</span> | ${user.email}</p>
+                                    <p class="font-bold text-white">${user.name} <span class="text-[8px] bg-cyan-500/20 text-cyan-400 px-2 rounded-full">${user.role}</span></p>
+                                    <p class="text-[10px] text-slate-500">${user.email} | ${user.pass}</p>
                                 </div>
                                 <button onclick="deleteUser('${u.key}')" class="text-red-500 hover:scale-110 transition"><i class="fas fa-trash-alt"></i></button>
                             </div>`;
@@ -233,39 +254,15 @@
             }
         }
 
-        // --- 4. الأوامر البرمجية (Actions) ---
         async function submitNewPost() {
             const title = document.getElementById('postTitle').value;
             const img = document.getElementById('postImg').value;
             const desc = document.getElementById('postDesc').value;
             const link = document.getElementById('postLink').value;
-
             if(!title || !img || !desc) return Swal.fire('تنبيه', 'املأ البيانات الأساسية', 'info');
-
             const status = (me.role === 'admin' || me.email === MASTER_ADMIN) ? 'active' : 'pending';
-
-            await db.ref('posts').push({
-                title, img, desc, link, status,
-                author: me.name, time: Date.now()
-            });
-
-            Swal.fire('تم', status === 'active' ? 'نُشر الخبر فوراً' : 'تم الإرسال للمدير للموافقة', 'success');
-            closeModal();
-        }
-
-        async function createWorkerAccount() {
-            const email = document.getElementById('wEmail').value;
-            const pass = document.getElementById('wPass').value;
-            if(!email || !pass) return Swal.fire('تنبيه', 'املأ الحقول', 'info');
-
-            try {
-                const res = await auth.createUserWithEmailAndPassword(email, pass);
-                await db.ref('users/' + res.user.uid).set({
-                    uid: res.user.uid, email, pass, name: 'موظف ' + Date.now(), role: 'worker'
-                });
-                Swal.fire('نجاح', 'تم إنشاء حساب الموظف بنجاح', 'success');
-                closeModal();
-            } catch(e) { Swal.fire('خطأ', e.message, 'error'); }
+            await db.ref('posts').push({ title, img, desc, link, status, author: me.name, time: Date.now() });
+            Swal.fire('تم', 'نُشر الخبر بنجاح', 'success'); closeModal();
         }
 
         function loadPosts() {
@@ -277,17 +274,17 @@
                     if(post.status === 'active' || me.role === 'admin' || me.email === MASTER_ADMIN) {
                         feed.innerHTML += `
                             <div class="glass rounded-[2.5rem] overflow-hidden cyber-card animate__animated animate__fadeInUp">
-                                <img src="${post.img}" class="w-full h-56 object-cover">
-                                <div class="p-8 text-right">
-                                    <div class="flex justify-between items-center mb-4">
-                                        <span class="text-[10px] bg-cyan-500 text-black px-3 py-1 rounded-full font-bold">TECH NEWS</span>
+                                <img src="${post.img}" class="w-full h-52 object-cover">
+                                <div class="p-6 text-right">
+                                    <div class="flex justify-between items-center mb-3">
+                                        <span class="text-[10px] bg-cyan-500 text-black px-2 py-1 rounded font-black">NEWS</span>
                                         ${(me.role === 'admin' || me.email === MASTER_ADMIN) ? `<button onclick="deletePost('${p.key}')" class="text-red-500"><i class="fas fa-trash"></i></button>` : ''}
                                     </div>
-                                    <h3 class="text-2xl font-black text-white mb-4">${post.title}</h3>
-                                    <p class="text-slate-400 text-sm leading-relaxed mb-6">${post.desc.substring(0, 150)}...</p>
-                                    <div class="flex justify-between items-center border-t border-slate-800 pt-6">
-                                        <a href="${post.link || '#'}" target="_blank" class="text-cyan-400 font-bold hover:underline flex items-center gap-2">قراءة المزيد <i class="fas fa-arrow-left text-xs"></i></a>
-                                        <span class="text-[10px] text-slate-600">بواسطة: ${post.author}</span>
+                                    <h3 class="text-xl font-black text-white mb-3">${post.title}</h3>
+                                    <p class="text-slate-400 text-xs leading-relaxed mb-4">${post.desc.substring(0, 100)}...</p>
+                                    <div class="flex justify-between items-center border-t border-slate-800 pt-4">
+                                        <a href="${post.link || '#'}" target="_blank" class="text-cyan-400 text-xs font-bold">قراءة المزيد</a>
+                                        <span class="text-[9px] text-slate-600 italic">BY: ${post.author}</span>
                                     </div>
                                 </div>
                             </div>`;
@@ -297,7 +294,7 @@
         }
 
         async function deleteUser(uid) {
-            const res = await Swal.fire({ title: 'طرد المستخدم؟', text: "سيتم حذف بياناته نهائياً", icon: 'warning', showCancelButton: true });
+            const res = await Swal.fire({ title: 'طرد المستخدم؟', icon: 'warning', showCancelButton: true });
             if(res.isConfirmed) db.ref('users/'+uid).remove();
         }
 
