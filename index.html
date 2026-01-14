@@ -16,7 +16,6 @@
         /* شاشة الدخول */
         #authOverlay { position: fixed; inset: 0; background: var(--dark); z-index: 10000; display: flex; justify-content: center; align-items: center; }
         .auth-card { background: var(--glass); padding: 35px; border-radius: 25px; border: 1px solid #1e293b; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 30px rgba(0, 242, 254, 0.1); }
-        
         .google-btn { background: white; color: #444; padding: 14px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; border: none; width: 100%; margin-top: 20px; font-size: 1rem; }
 
         /* الهيدر */
@@ -34,9 +33,11 @@
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 12px; border: 1px solid #1e293b; text-align: center; font-size: 0.85rem; }
         th { background: #1e293b; }
+        .del-btn { color: #ff4757; cursor: pointer; background: none; border: none; font-size: 1rem; transition: 0.3s; }
+        .del-btn:hover { transform: scale(1.2); color: #ff6b81; }
 
         .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; padding: 25px 5%; }
-        .card { background: var(--glass); border-radius: 20px; border: 1px solid #1e293b; overflow: hidden; transition: 0.3s; }
+        .card { background: var(--glass); border-radius: 20px; border: 1px solid #1e293b; overflow: hidden; transition: 0.3s; position: relative; }
         .card:hover { border-color: var(--primary); }
         .card img { width: 100%; height: 200px; object-fit: cover; }
         .card-body { padding: 15px; }
@@ -90,16 +91,16 @@
     </div>
 
     <div id="visitorTab" class="tab-pane">
-        <h4>قائمة الزوار المسجلين</h4>
+        <h4>قائمة الزوار والتحكم بالحسابات</h4>
         <table id="visitorTable"></table>
     </div>
 
     <div id="staffTab" class="tab-pane">
-        <h4>إضافة موظف جديد (صلاحيات محدودة)</h4>
-        <div style="display:flex; gap:10px;">
+        <h4>إدارة طاقم العمل</h4>
+        <div style="display:flex; gap:10px; margin-bottom: 20px;">
             <input type="text" id="sName" placeholder="اسم الموظف">
             <input type="text" id="sEmail" placeholder="إيميله المعتمد">
-            <button onclick="addStaff()" style="background:orange; border:none; padding:10px; border-radius:10px; cursor:pointer">إضافة</button>
+            <button onclick="addStaff()" style="background:orange; border:none; padding:10px; border-radius:10px; cursor:pointer; font-weight:bold; min-width:100px;">إضافة</button>
         </div>
         <table id="staffTable"></table>
     </div>
@@ -110,7 +111,6 @@
 <div class="fab" onclick="toggleDashboard()" id="dashFab"><i class="fas fa-sliders-h"></i></div>
 
 <script>
-    // بيانات الربط الخاصة بك
     const firebaseConfig = {
         apiKey: "AIzaSyAqSQLHq0QFpe1CV8bAYc53mbUO7I03Q5I",
         authDomain: "z-ahmed-tech.firebaseapp.com",
@@ -128,13 +128,10 @@
     const MY_ADMIN_EMAIL = "ahmedgames2025.11@gmail.com";
     let currentUser = null;
 
-    // --- تسجيل الدخول ---
     function loginWithGoogle() {
         const provider = new firebase.auth.GoogleAuthProvider();
         auth.signInWithPopup(provider).then(async res => {
             const user = res.user;
-            
-            // التحقق من الرتبة
             const staffSnap = await db.ref('staff').once('value');
             const staffList = staffSnap.val() || {};
             const isStaff = Object.values(staffList).find(s => s.email === user.email);
@@ -145,7 +142,7 @@
                 currentUser = { name: user.displayName, role: "staff", email: user.email };
             } else {
                 currentUser = { name: user.displayName, role: "visitor", email: user.email };
-                db.ref('visitors/' + user.uid).set({ name: user.displayName, email: user.email, date: Date.now() });
+                db.ref('visitors/' + user.uid).set({ id: user.uid, name: user.displayName, email: user.email, date: Date.now() });
             }
 
             document.getElementById('authOverlay').style.display = 'none';
@@ -155,7 +152,6 @@
         }).catch(e => alert("خطأ في تسجيل الدخول"));
     }
 
-    // --- نظام النشر ---
     async function submitPost() {
         const id = Date.now();
         const post = {
@@ -170,69 +166,73 @@
         };
         if(!post.title || !post.media) return alert("اكمل البيانات");
         await db.ref('posts/' + id).set(post);
-        alert(currentUser.role === 'admin' ? "تم النشر فوراً" : "تم الإرسال للمدير للمراجعة");
+        alert(currentUser.role === 'admin' ? "تم النشر بنجاح" : "تم الإرسال للمدير للمراجعة");
         clearInputs();
     }
 
     function render() {
-        // تحديث المنشورات في الصفحة
         db.ref('posts').on('value', snap => {
             const posts = snap.val() || {};
             const feed = document.getElementById('mainFeed');
             feed.innerHTML = Object.values(posts).filter(p => p.status === 'approved').reverse().map(p => `
                 <div class="card">
+                    ${currentUser.role === 'admin' ? `<button onclick="del('posts/${p.id}')" style="position:absolute; top:10px; right:10px; z-index:10; background:rgba(0,0,0,0.6); padding:8px; border-radius:10px;" class="del-btn"><i class="fas fa-trash"></i></button>` : ''}
                     <img src="${p.media}">
                     <div class="card-body">
                         <h3>${p.title}</h3><p>${p.desc}</p>
-                        ${p.link ? `<a href="${p.link}" class="btn-link" target="_blank">رابط الخبر</a>` : ''}
-                        ${currentUser.role === 'admin' ? `<button onclick="del('posts/${p.id}')" style="color:red;background:none;border:none;cursor:pointer;margin-top:10px"><i class="fas fa-trash"></i> حذف من الموقع</button>` : ''}
+                        ${p.link ? `<a href="${p.link}" target="_blank" style="color:var(--primary); text-decoration:none; font-size:0.9rem;">🔗 فتح الرابط</a>` : ''}
                     </div>
                 </div>
             `).join('');
 
-            // تحديث طلبات الموظفين (للمدير فقط)
             if(currentUser.role === 'admin') {
                 const pending = Object.values(posts).filter(p => p.status === 'pending');
                 document.getElementById('reqCount').innerText = pending.length;
                 document.getElementById('pendingPosts').innerHTML = pending.map(p => `
                     <div style="background:#1e293b; padding:15px; border-radius:10px; margin-bottom:10px;">
-                        <strong>${p.title}</strong> <br> <small>بواسطة: ${p.author}</small>
-                        <div style="margin-top:10px;">
-                            <button onclick="approve(${p.id})" style="background:green; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer">موافقة ونشر</button>
-                            <button onclick="del('posts/${p.id}')" style="background:red; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer">رفض</button>
+                        <strong>${p.title}</strong> <br> <small>المصدر: ${p.author}</small>
+                        <div style="margin-top:10px; display:flex; gap:10px;">
+                            <button onclick="approve(${p.id})" style="background:green; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer">نشر الآن</button>
+                            <button onclick="del('posts/${p.id}')" style="background:red; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer">حذف الطلب</button>
                         </div>
                     </div>
                 `).join('');
             }
         });
 
-        // تحديث جداول الإدارة
         if(currentUser.role === 'admin') {
             db.ref('visitors').on('value', snap => {
                 const vis = snap.val() || {};
-                document.getElementById('visitorTable').innerHTML = `<tr><th>الاسم</th><th>البريد</th></tr>` + 
-                Object.values(vis).map(v => `<tr><td>${v.name}</td><td>${v.email}</td></tr>`).join('');
+                document.getElementById('visitorTable').innerHTML = `<tr><th>الاسم</th><th>البريد</th><th>إجراء</th></tr>` + 
+                Object.values(vis).map(v => `<tr><td>${v.name}</td><td>${v.email}</td><td><button class="del-btn" onclick="del('visitors/${v.id}')"><i class="fas fa-user-times"></i></button></td></tr>`).join('');
             });
             db.ref('staff').on('value', snap => {
                 const stf = snap.val() || {};
-                document.getElementById('staffTable').innerHTML = `<tr><th>الموظف</th><th>الإيميل</th><th>حذف</th></tr>` + 
-                Object.values(stf).map(s => `<tr><td>${s.name}</td><td>${s.email}</td><td><button onclick="del('staff/${s.id}')">X</button></td></tr>`).join('');
+                document.getElementById('staffTable').innerHTML = `<tr><th>الموظف</th><th>الإيميل</th><th>إجراء</th></tr>` + 
+                Object.values(stf).map(s => `<tr><td>${s.name}</td><td>${s.email}</td><td><button class="del-btn" onclick="del('staff/${s.id}')"><i class="fas fa-trash-alt"></i></button></td></tr>`).join('');
             });
         }
     }
 
-    // --- وظائف مساعدة ---
     async function addStaff() {
         const name = document.getElementById('sName').value;
         const email = document.getElementById('sEmail').value;
-        if(!name || !email) return;
+        if(!name || !email) return alert("امسأ البيانات أولاً");
         const id = Date.now();
         await db.ref('staff/' + id).set({ id, name, email });
-        alert("تمت إضافة الموظف بنجاح");
+        alert("تم تعيين الموظف بنجاح");
+        document.getElementById('sName').value = ''; document.getElementById('sEmail').value = '';
     }
 
     async function approve(id) { await db.ref('posts/'+id).update({status: 'approved'}); }
-    function del(path) { if(confirm('هل أنت متأكد من الحذف؟')) db.ref(path).remove(); }
+    function del(path) { 
+        if(confirm('🚨 تحذير: هل أنت متأكد تماماً من حذف هذا العنصر؟ لا يمكن التراجع.')) {
+            db.ref(path).remove().then(() => {
+                if(path.includes('visitors')) alert('تم مسح حساب الزائر بنجاح');
+            });
+        }
+    }
+    
     function toggleDashboard() { const d = document.getElementById('adminDashboard'); d.style.display = d.style.display === 'block' ? 'none' : 'block'; }
     function openTab(evt, name) {
         document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
@@ -241,7 +241,6 @@
         evt.currentTarget.classList.add('active');
     }
     function clearInputs() { document.getElementById('pTitle').value = ''; document.getElementById('pDesc').value = ''; document.getElementById('pMedia').value = ''; }
-
     render();
 </script>
 </body>
