@@ -3,96 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Ahmed Tech | Ultimate Control</title>
+    <title>Z Ahmed Tech | المنصة الرسمية</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background: #020617; color: #e2e8f0; }
-        .glass { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
-        .btn-cyan { background: #06b6d4; color: white; transition: 0.3s; }
-        .btn-cyan:hover { background: #0891b2; transform: scale(1.02); }
-        .chat-bubble { padding: 10px 15px; border-radius: 15px; margin-bottom: 5px; max-width: 80%; }
-        .google-btn { background: white; color: #444; padding: 10px 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; }
+        body { font-family: 'Cairo', sans-serif; background: #020617; color: #e2e8f0; scroll-behavior: smooth; }
+        .glass { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); }
+        .cyber-card { border-radius: 2rem; border: 1px solid rgba(6, 182, 212, 0.2); transition: 0.3s; }
+        .cyber-card:hover { transform: translateY(-5px); border-color: #06b6d4; box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2); }
+        .btn-cyan { background: linear-gradient(90deg, #06b6d4, #3b82f6); color: white; transition: 0.3s; }
+        .btn-cyan:hover { box-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
+        input, textarea, select { background: #0f172a !important; border: 1px solid #1e293b !important; color: white !important; }
     </style>
 </head>
 <body>
 
-    <div id="authScreen" class="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950 p-4">
-        <div class="glass p-8 w-full max-w-md rounded-[2rem] text-center animate__animated animate__zoomIn">
-            <h1 class="text-3xl font-black mb-6">Z AHMED <span class="text-cyan-400">TECH</span></h1>
+    <div id="authScreen" class="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950 p-4 animate__animated">
+        <div class="glass p-8 w-full max-w-md rounded-[2.5rem] text-center cyber-card">
+            <h1 class="text-4xl font-black mb-2 tracking-tighter">Z AHMED <span class="text-cyan-400">TECH</span></h1>
+            <p class="text-slate-400 text-sm mb-8">لوحة التحكم والمراقبة المركزية</p>
+            
             <div class="space-y-4">
-                <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 bg-slate-900 rounded-xl border border-slate-800 outline-none">
-                <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 bg-slate-900 rounded-xl border border-slate-800 outline-none">
-                <button onclick="login()" class="w-full btn-cyan py-4 rounded-xl font-bold">دخول للمنصة</button>
-                <button onclick="registerVisitor()" class="w-full text-slate-400 text-sm">ليس لديك حساب؟ سجل كزائر</button>
+                <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-xl outline-none">
+                <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 rounded-xl outline-none">
+                <button onclick="login()" class="w-full btn-cyan py-4 rounded-xl font-bold text-lg shadow-xl shadow-cyan-500/20">دخول للمنصة</button>
                 
-                <div class="relative py-4">
-                    <hr class="border-slate-800">
-                    <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-950 px-2 text-xs text-slate-500">أو</span>
+                <div class="flex items-center gap-2 py-2">
+                    <hr class="flex-grow border-slate-800"> <span class="text-xs text-slate-500 uppercase">أو عبر</span> <hr class="flex-grow border-slate-800">
                 </div>
-                <button onclick="googleSignIn()" class="google-btn w-full">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20">
-                    الدخول بواسطة Google
+                
+                <button onclick="googleSignIn()" class="w-full bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-200 transition">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20"> Google Login
                 </button>
+                <button onclick="registerVisitor()" class="text-slate-500 text-xs hover:text-cyan-400 transition">إنشاء حساب زائر جديد</button>
             </div>
         </div>
     </div>
 
     <div id="mainApp" class="hidden">
-        <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-black">Z AHMED <span class="text-cyan-400">TECH</span></div>
-            <div id="userInfo" class="flex items-center gap-4">
-                <span id="navRole" class="text-xs bg-slate-800 px-3 py-1 rounded-full text-cyan-400"></span>
-                <button onclick="logout()" class="text-red-500"><i class="fas fa-power-off"></i></button>
+        <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center border-b border-white/5">
+            <div class="text-2xl font-black">Z AHMED <span class="text-cyan-400">TECH</span></div>
+            <div class="flex items-center gap-4">
+                <span id="navRole" class="text-[10px] font-bold bg-cyan-500/20 text-cyan-400 px-3 py-1 rounded-full uppercase tracking-widest">USER</span>
+                <button onclick="logout()" class="text-red-500 hover:text-red-400"><i class="fas fa-power-off text-xl"></i></button>
             </div>
         </nav>
 
-        <div class="container mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <div class="space-y-4">
-                <div id="adminMenu" class="hidden glass p-6 rounded-3xl border-r-4 border-cyan-500">
-                    <h3 class="font-bold mb-4">أدوات المدير</h3>
-                    <button onclick="openTab('createWorker')" class="w-full text-right p-2 hover:bg-slate-800 rounded"><i class="fas fa-user-plus ml-2"></i> إنشاء حساب موظف</button>
-                    <button onclick="openTab('manageUsers')" class="w-full text-right p-2 hover:bg-slate-800 rounded"><i class="fas fa-users-cog ml-2"></i> رقابة وحذف الأعضاء</button>
-                    <button onclick="openTab('monitorChats')" class="w-full text-right p-2 hover:bg-slate-800 rounded"><i class="fas fa-comments ml-2 text-green-500"></i> مراقبة الدردشات</button>
-                    <button onclick="openTab('pendingPosts')" class="w-full text-right p-2 hover:bg-slate-800 rounded relative">
-                        <i class="fas fa-clock ml-2 text-amber-400"></i> منشورات بانتظار الموافقة
-                        <span id="pendingPostsBadge" class="absolute left-2 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">0</span>
-                    </button>
+        <div class="container mx-auto p-4 lg:p-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
+            
+            <div class="space-y-6">
+                <div id="adminMenu" class="hidden glass p-6 rounded-[2rem] border-r-4 border-cyan-500">
+                    <h3 class="font-black text-xs text-slate-500 mb-6 uppercase tracking-widest">أدوات المدير</h3>
+                    <div class="space-y-2 text-right">
+                        <button onclick="openTab('addPost')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3">
+                            <i class="fas fa-plus-circle text-cyan-400"></i> نشر منشور جديد
+                        </button>
+                        <button onclick="openTab('manageWorkers')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3">
+                            <i class="fas fa-user-shield text-cyan-400"></i> إنشاء حساب موظف
+                        </button>
+                        <button onclick="openTab('manageUsers')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3">
+                            <i class="fas fa-users-cog text-cyan-400"></i> مراقبة الأعضاء
+                        </button>
+                        <button onclick="openTab('monitorChats')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3">
+                            <i class="fas fa-comments text-cyan-400"></i> مراقبة الدردشات
+                        </button>
+                    </div>
                 </div>
 
-                <div id="workerMenu" class="hidden glass p-6 rounded-3xl border-r-4 border-amber-500">
-                    <h3 class="font-bold mb-4">أدوات الموظف</h3>
-                    <button onclick="openTab('addPost')" class="w-full text-right p-2 hover:bg-slate-800 rounded"><i class="fas fa-plus ml-2"></i> إضافة منشور</button>
-                    <button onclick="openTab('requestDelete')" class="w-full text-right p-2 hover:bg-slate-800 rounded text-red-400"><i class="fas fa-trash-alt ml-2"></i> طلب حذف حساب</button>
-                </div>
-                
-                <div id="visitorMenu" class="glass p-6 rounded-3xl border-r-4 border-blue-500">
-                    <button onclick="openTab('chatWithWorker')" class="w-full text-right p-2 hover:bg-slate-800 rounded"><i class="fas fa-headset ml-2"></i> تواصل مع موظف</button>
+                <div id="workerMenu" class="hidden glass p-6 rounded-[2rem] border-r-4 border-amber-500">
+                    <h3 class="font-black text-xs text-slate-500 mb-6 uppercase tracking-widest">أدوات الموظف</h3>
+                    <button onclick="openTab('addPost')" class="w-full p-3 hover:bg-amber-500/10 rounded-xl transition flex items-center gap-3">
+                        <i class="fas fa-file-signature text-amber-500"></i> اقتراح منشور جديد
+                    </button>
                 </div>
             </div>
 
-            <div class="lg:col-span-3">
-                <div id="postsFeed" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            <div class="lg:col-span-3 space-y-8">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-3xl font-black">آخر <span class="text-cyan-400">الأخبار</span></h2>
+                    <div class="h-1 flex-grow mx-6 bg-slate-800 rounded-full"></div>
+                </div>
+                <div id="postsFeed" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    </div>
             </div>
         </div>
     </div>
 
     <div id="mainModal" class="hidden fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center p-4">
-        <div class="glass w-full max-w-4xl p-8 rounded-3xl relative">
-            <button onclick="closeModal()" class="absolute top-4 left-4 text-2xl"><i class="fas fa-times"></i></button>
+        <div class="glass w-full max-w-4xl p-8 rounded-[3rem] relative animate__animated animate__zoomIn">
+            <button onclick="closeModal()" class="absolute top-6 left-6 text-2xl hover:text-cyan-400"><i class="fas fa-times-circle"></i></button>
             <div id="modalContent"></div>
         </div>
     </div>
 
     <script>
+        // --- 1. التكوين (بياناتك) ---
         const firebaseConfig = {
             apiKey: "AIzaSyAqSQLHq0QFpe1CV8bAYc53mbUO7I03Q5I",
             authDomain: "z-ahmed-tech.firebaseapp.com",
@@ -109,51 +123,37 @@
         const MASTER_ADMIN = "ahmedgames2025.11@gmail.com";
         let me = null;
 
-        // الدخول اليدوي
+        // --- 2. نظام الدخول ---
         async function login() {
             const e = document.getElementById('email').value;
             const p = document.getElementById('pass').value;
-            try { await auth.signInWithEmailAndPassword(e, p); } catch(err) { Swal.fire('خطأ', 'بيانات الدخول خاطئة', 'error'); }
+            try { await auth.signInWithEmailAndPassword(e, p); } catch(err) { Swal.fire('خطأ', 'البيانات غير صحيحة', 'error'); }
         }
 
-        // تسجيل الزائر
-        async function registerVisitor() {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('pass').value;
-            if(!e || !p) return Swal.fire('تنبيه', 'ادخل بياناتك أولاً', 'info');
-            try {
-                const res = await auth.createUserWithEmailAndPassword(e, p);
-                await db.ref('users/' + res.user.uid).set({ uid: res.user.uid, email: e, pass: p, role: 'visitor', name: e.split('@')[0] });
-                Swal.fire('نجاح', 'تم تسجيلك كزائر', 'success');
-            } catch(err) { Swal.fire('خطأ', err.message, 'error'); }
-        }
-
-        // الدخول بجوجل
         async function googleSignIn() {
             const provider = new firebase.auth.GoogleAuthProvider();
             try {
                 const res = await auth.signInWithPopup(provider);
                 const user = res.user;
-                const userRef = db.ref('users/' + user.uid);
-                const snap = await userRef.once('value');
-
-                if(!snap.exists()) { // لو أول مرة يدخل بجوجل
-                    await userRef.set({
-                        uid: user.uid,
-                        email: user.email,
-                        pass: 'تم الدخول عبر جوجل', // لا نحفظ الباسورد
-                        role: user.email === MASTER_ADMIN ? 'admin' : 'visitor', // الافتراضي زائر، ولو المدير يبقى مدير
-                        name: user.displayName
-                    });
-                } else { // لو مسجل من قبل بجوجل، نحدث بياناته
-                    await userRef.update({
-                        name: user.displayName,
-                        email: user.email,
-                        // إذا كان المدير يدخل بجوجل، نضمن دوره كمدير
-                        role: user.email === MASTER_ADMIN ? 'admin' : snap.val().role 
+                const snap = await db.ref('users/' + user.uid).once('value');
+                if(!snap.exists()) {
+                    await db.ref('users/' + user.uid).set({
+                        uid: user.uid, email: user.email, name: user.displayName, 
+                        role: user.email === MASTER_ADMIN ? 'admin' : 'visitor', pass: 'Google Login'
                     });
                 }
-            } catch (err) { Swal.fire('خطأ', 'فشل الدخول بجوجل: ' + err.message, 'error'); }
+            } catch(e) { Swal.fire('خطأ', 'فشل دخول جوجل', 'error'); }
+        }
+
+        async function registerVisitor() {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('pass').value;
+            if(!e || !p) return Swal.fire('تنبيه', 'املأ الحقول أولاً', 'info');
+            try {
+                const res = await auth.createUserWithEmailAndPassword(e, p);
+                await db.ref('users/' + res.user.uid).set({ uid: res.user.uid, email: e, name: e.split('@')[0], role: 'visitor', pass: p });
+                Swal.fire('نجاح', 'تم تسجيلك كزائر', 'success');
+            } catch(err) { Swal.fire('خطأ', err.message, 'error'); }
         }
 
         auth.onAuthStateChanged(user => {
@@ -161,52 +161,59 @@
                 db.ref('users/' + user.uid).on('value', snap => {
                     me = snap.val();
                     if(me) {
-                        document.getElementById('authScreen').classList.add('hidden');
-                        document.getElementById('mainApp').classList.remove('hidden');
-                        document.getElementById('navRole').innerText = me.role;
-                        document.getElementById('adminMenu').style.display = me.role === 'admin' || me.email === MASTER_ADMIN ? 'block' : 'none';
-                        document.getElementById('workerMenu').style.display = me.role === 'worker' ? 'block' : 'none';
-                        
-                        if (me.role === 'admin' || me.email === MASTER_ADMIN) {
-                            db.ref('posts').orderByChild('status').equalTo('pending').on('value', s => {
-                                document.getElementById('pendingPostsBadge').innerText = s.numChildren();
-                            });
-                        }
-                        loadPosts();
+                        document.getElementById('authScreen').classList.add('animate__fadeOutUp');
+                        setTimeout(() => {
+                            document.getElementById('authScreen').classList.add('hidden');
+                            document.getElementById('mainApp').classList.remove('hidden');
+                            document.getElementById('navRole').innerText = me.role;
+                            document.getElementById('adminMenu').style.display = (me.role === 'admin' || me.email === MASTER_ADMIN) ? 'block' : 'none';
+                            document.getElementById('workerMenu').style.display = (me.role === 'worker') ? 'block' : 'none';
+                            loadPosts();
+                        }, 500);
                     }
                 });
-            } else {
-                document.getElementById('authScreen').classList.remove('hidden');
-                document.getElementById('mainApp').classList.add('hidden');
-            }
+            } else { location.reload; }
         });
 
-        // إدارة التبويبات والمودال
+        // --- 3. إدارة التبويبات (خاص للمدير والموظف) ---
         function openTab(type) {
             const modal = document.getElementById('mainModal');
             const content = document.getElementById('modalContent');
             modal.classList.remove('hidden');
-            content.innerHTML = ''; // تنظيف المحتوى السابق
+            content.innerHTML = '';
 
-            if(type === 'createWorker') {
+            if(type === 'addPost') {
                 content.innerHTML = `
-                    <h2 class="text-xl font-bold mb-4">إنشاء حساب موظف جديد</h2>
-                    <p class="text-sm text-slate-400 mb-4">هذا الحساب لن يتمكن أي شخص من تسجيله غيرك.</p>
-                    <input id="wEmail" type="email" placeholder="ايميل الموظف" class="w-full p-4 mb-2 bg-slate-900 rounded">
-                    <input id="wPass" type="password" placeholder="كلمة المرور" class="w-full p-4 mb-4 bg-slate-900 rounded">
-                    <button onclick="addWorkerAction()" class="w-full btn-cyan py-3 rounded">تأكيد الإضافة</button>
+                    <h2 class="text-2xl font-black mb-6 text-cyan-400">✨ نشر محتوى جديد</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="space-y-4 text-right">
+                            <input id="postTitle" type="text" placeholder="عنوان المنشور" class="w-full p-4 rounded-xl outline-none">
+                            <input id="postImg" type="text" placeholder="رابط الصورة (URL)" class="w-full p-4 rounded-xl outline-none">
+                            <input id="postLink" type="text" placeholder="رابط خارجي (اختياري)" class="w-full p-4 rounded-xl outline-none">
+                            <textarea id="postDesc" rows="4" placeholder="اكتب وصف الخبر بالتفصيل..." class="w-full p-4 rounded-xl outline-none"></textarea>
+                            <button onclick="submitNewPost()" class="w-full btn-cyan py-4 rounded-xl font-bold">تأكيد النشر</button>
+                        </div>
+                        <div class="hidden lg:block bg-slate-900 rounded-3xl p-6 border border-slate-800">
+                            <p class="text-xs text-slate-500 mb-4">معاينة لشكل المنشور:</p>
+                            <div class="bg-slate-800 rounded-2xl h-32 mb-4 flex items-center justify-center text-slate-600 italic">سيتم عرض الصورة هنا</div>
+                            <div class="h-4 w-3/4 bg-slate-800 rounded mb-2"></div>
+                            <div class="h-10 w-full bg-slate-800 rounded"></div>
+                        </div>
+                    </div>
                 `;
-            } else if(type === 'addPost') {
+            } 
+            else if(type === 'manageWorkers') {
                 content.innerHTML = `
-                    <h2 class="text-xl font-bold mb-4">إضافة منشور جديد</h2>
-                    <input id="postTitle" type="text" placeholder="عنوان المنشور" class="w-full p-4 mb-2 bg-slate-900 rounded">
-                    <input id="postImg" type="url" placeholder="رابط صورة المنشور (URL)" class="w-full p-4 mb-2 bg-slate-900 rounded">
-                    <textarea id="postDesc" placeholder="وصف المنشور بالتفصيل" rows="4" class="w-full p-4 mb-2 bg-slate-900 rounded"></textarea>
-                    <input id="postLink" type="url" placeholder="رابط خارجي للمزيد (اختياري)" class="w-full p-4 mb-4 bg-slate-900 rounded">
-                    <button onclick="submitPost()" class="w-full btn-cyan py-3 rounded">نشر المنشور</button>
+                    <h2 class="text-2xl font-black mb-6">👔 إنشاء حساب موظف</h2>
+                    <div class="space-y-4">
+                        <input id="wEmail" type="email" placeholder="بريد الموظف" class="w-full p-4 rounded-xl outline-none">
+                        <input id="wPass" type="password" placeholder="كلمة مرور الموظف" class="w-full p-4 rounded-xl outline-none">
+                        <button onclick="createWorkerAccount()" class="w-full btn-cyan py-4 rounded-xl font-bold">إنشاء الحساب الآن</button>
+                    </div>
                 `;
-            } else if(type === 'manageUsers') {
-                content.innerHTML = `<h2 class="text-xl font-bold mb-4">إدارة الأعضاء</h2><div id="uList" class="space-y-2"></div>`;
+            }
+            else if(type === 'manageUsers') {
+                content.innerHTML = `<h2 class="text-2xl font-black mb-6 text-cyan-400">👥 مراقبة الأعضاء</h2><div id="uList" class="space-y-3 max-h-96 overflow-y-auto"></div>`;
                 db.ref('users').on('value', snap => {
                     const list = document.getElementById('uList');
                     list.innerHTML = '';
@@ -214,144 +221,51 @@
                         const user = u.val();
                         if(user.email === MASTER_ADMIN) return;
                         list.innerHTML += `
-                            <div class="flex justify-between items-center p-3 bg-slate-800 rounded">
-                                <div>
-                                    <div class="font-bold">${user.name} (${user.role})</div>
-                                    <div class="text-sm text-slate-400">${user.email} | Pass: <span class="text-red-400">${user.pass}</span></div>
+                            <div class="flex justify-between items-center p-4 bg-slate-900 rounded-2xl border border-slate-800 hover:border-cyan-500 transition">
+                                <div class="text-right">
+                                    <p class="font-bold">${user.name} <span class="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-cyan-400">${user.role}</span></p>
+                                    <p class="text-xs text-slate-500">Pass: <span class="text-red-400">${user.pass}</span> | ${user.email}</p>
                                 </div>
-                                <button onclick="deleteUser('${u.key}')" class="text-red-500 hover:scale-110 transition"><i class="fas fa-trash-alt"></i> حذف</button>
+                                <button onclick="deleteUser('${u.key}')" class="text-red-500 hover:scale-110 transition"><i class="fas fa-trash-alt"></i></button>
                             </div>`;
                     });
                 });
-            } else if (type === 'monitorChats') {
-                content.innerHTML = `<h2 class="text-xl font-bold mb-4">مراقبة الدردشات المباشرة</h2><div id="chatsList" class="space-y-2"></div>`;
-                db.ref('chats').on('value', snap => {
-                    const list = document.getElementById('chatsList');
-                    list.innerHTML = '';
-                    if (!snap.exists()) {
-                        list.innerHTML = `<p class="text-slate-400 text-center">لا توجد محادثات نشطة حالياً.</p>`;
-                        return;
-                    }
-                    snap.forEach(c => {
-                        const chatData = c.val();
-                        const chatKey = c.key; // هذا هو الـ ID الخاص بالمحادثة
-                        // نعتبر أن الـ chatKey هو اسم الزائر والموظف
-                        list.innerHTML += `<button onclick="viewChat('${chatKey}')" class="w-full p-4 bg-slate-800 rounded text-right block hover:bg-slate-700 transition">غرفة دردشة: ${chatKey}</button>`;
-                    });
-                });
-            } else if (type === 'pendingPosts') {
-                content.innerHTML = `<h2 class="text-xl font-bold mb-4">منشورات بانتظار الموافقة</h2><div id="pendingPostsList" class="space-y-4"></div>`;
-                db.ref('posts').orderByChild('status').equalTo('pending').on('value', snap => {
-                    const list = document.getElementById('pendingPostsList');
-                    list.innerHTML = '';
-                    if (!snap.exists()) {
-                        list.innerHTML = `<p class="text-slate-400 text-center">لا توجد منشورات معلقة حالياً.</p>`;
-                        return;
-                    }
-                    snap.forEach(p => {
-                        const post = p.val();
-                        list.innerHTML += `
-                            <div class="glass p-4 rounded-xl border-l-4 border-amber-500">
-                                <h3 class="font-bold text-amber-400">${post.title}</h3>
-                                <p class="text-sm text-slate-400">${post.desc.substring(0, 100)}...</p>
-                                <div class="flex gap-2 mt-4">
-                                    <button onclick="approvePost('${p.key}')" class="bg-green-600 px-3 py-1 rounded text-white">موافقة</button>
-                                    <button onclick="deletePost('${p.key}')" class="bg-red-600 px-3 py-1 rounded text-white">رفض</button>
-                                </div>
-                            </div>`;
-                    });
-                });
-            } else if (type === 'chatWithWorker') {
-                // للزائر: بدأ دردشة جديدة
-                content.innerHTML = `
-                    <h2 class="text-xl font-bold mb-4">تواصل مباشر مع موظف</h2>
-                    <div id="liveChatBox" class="h-64 overflow-y-auto mb-4 p-4 bg-slate-900 rounded"></div>
-                    <div class="flex gap-2">
-                        <input id="chatMessage" type="text" placeholder="اكتب رسالتك..." class="flex-grow p-3 bg-slate-800 rounded">
-                        <button onclick="sendChatMessage()" class="btn-cyan px-4 py-2 rounded"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                `;
-                // هنا نحتاج لتحديد موظف معين للدردشة معه أو نتركها عامة
-                // لتسهيل الأمر مؤقتاً، سنجعلها غرفة دردشة واحدة للكل
-                setupLiveChat('GeneralChat'); // يمكن تغيير هذا إلى UID للموظف المحدد
-            }
-        }
-        
-        // إعداد الدردشة المباشرة
-        function setupLiveChat(chatRoomId) {
-            db.ref('chats/' + chatRoomId).on('value', snap => {
-                const box = document.getElementById('liveChatBox');
-                box.innerHTML = '';
-                snap.forEach(m => {
-                    const msg = m.val();
-                    const isMe = msg.sender === me.email;
-                    box.innerHTML += `
-                        <div class="flex ${isMe ? 'justify-end' : 'justify-start'}">
-                            <div class="chat-bubble ${isMe ? 'bg-cyan-600' : 'bg-slate-700'}" style="max-width: 70%;">
-                                ${msg.text}
-                            </div>
-                        </div>`;
-                });
-                box.scrollTop = box.scrollHeight; // التمرير للأسفل تلقائياً
-            });
-        }
-
-        async function sendChatMessage() {
-            const messageInput = document.getElementById('chatMessage');
-            const message = messageInput.value.trim();
-            if (message === '') return;
-
-            const chatRoomId = 'GeneralChat'; // نفس غرفة الدردشة لمراقبة المدير
-            await db.ref('chats/' + chatRoomId).push({
-                sender: me.email,
-                text: message,
-                timestamp: Date.now()
-            });
-            messageInput.value = '';
-        }
-
-        async function addWorkerAction() {
-            const email = document.getElementById('wEmail').value;
-            const pass = document.getElementById('wPass').value;
-            if(!email || !pass) return Swal.fire('تنبيه', 'املأ كل الحقول', 'info');
-
-            try {
-                // إنشاء الحساب في Firebase Authentication
-                const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
-                // إضافة البيانات إلى Realtime Database مع الدور 'worker'
-                await db.ref('users/' + userCredential.user.uid).set({
-                    uid: userCredential.user.uid,
-                    email: email,
-                    pass: pass, // حفظ الباسورد الصريح
-                    role: 'worker',
-                    name: email.split('@')[0],
-                    status: 'active'
-                });
-                Swal.fire('تم', `تم إنشاء حساب الموظف بنجاح: ${email} بكلمة مرور: ${pass}`, 'success');
-                closeModal();
-            } catch (error) {
-                Swal.fire('خطأ', 'فشل إنشاء حساب الموظف: ' + error.message, 'error');
             }
         }
 
-        async function submitPost() {
+        // --- 4. الأوامر البرمجية (Actions) ---
+        async function submitNewPost() {
             const title = document.getElementById('postTitle').value;
             const img = document.getElementById('postImg').value;
             const desc = document.getElementById('postDesc').value;
             const link = document.getElementById('postLink').value;
-            
-            if(!title || !img || !desc) return Swal.fire('تنبيه', 'املأ العنوان والصورة والوصف', 'info');
+
+            if(!title || !img || !desc) return Swal.fire('تنبيه', 'املأ البيانات الأساسية', 'info');
 
             const status = (me.role === 'admin' || me.email === MASTER_ADMIN) ? 'active' : 'pending';
-            
+
             await db.ref('posts').push({
                 title, img, desc, link, status,
-                authorName: me.name,
-                time: Date.now()
+                author: me.name, time: Date.now()
             });
-            
-            Swal.fire('نجاح', status === 'active' ? 'تم النشر بنجاح' : 'تم إرسال المنشور للمراجعة', 'success');
+
+            Swal.fire('تم', status === 'active' ? 'نُشر الخبر فوراً' : 'تم الإرسال للمدير للموافقة', 'success');
             closeModal();
+        }
+
+        async function createWorkerAccount() {
+            const email = document.getElementById('wEmail').value;
+            const pass = document.getElementById('wPass').value;
+            if(!email || !pass) return Swal.fire('تنبيه', 'املأ الحقول', 'info');
+
+            try {
+                const res = await auth.createUserWithEmailAndPassword(email, pass);
+                await db.ref('users/' + res.user.uid).set({
+                    uid: res.user.uid, email, pass, name: 'موظف ' + Date.now(), role: 'worker'
+                });
+                Swal.fire('نجاح', 'تم إنشاء حساب الموظف بنجاح', 'success');
+                closeModal();
+            } catch(e) { Swal.fire('خطأ', e.message, 'error'); }
         }
 
         function loadPosts() {
@@ -360,38 +274,36 @@
                 feed.innerHTML = '';
                 snap.forEach(p => {
                     const post = p.val();
-                    // المدير يشوف كل المنشورات (نشطة أو معلقة)
-                    // الآخرون يشوفون فقط المنشورات النشطة
                     if(post.status === 'active' || me.role === 'admin' || me.email === MASTER_ADMIN) {
                         feed.innerHTML += `
-                            <div class="glass p-4 rounded-3xl ${post.status === 'pending' ? 'border-2 border-amber-500' : ''}">
-                                <img src="${post.img}" class="rounded-xl mb-4 h-40 w-full object-cover">
-                                <h3 class="font-bold text-lg text-cyan-400">${post.title}</h3>
-                                <p class="text-sm text-slate-400 mb-2">${post.desc.substring(0, 150)}...</p>
-                                ${post.link ? `<a href="${post.link}" target="_blank" class="text-cyan-500 hover:underline text-sm block mb-2">قراءة المزيد</a>` : ''}
-                                ${post.status === 'pending' && (me.role === 'admin' || me.email === MASTER_ADMIN) ? 
-                                `<div class="mt-4 flex gap-2"><button onclick="approvePost('${p.key}')" class="bg-green-500 px-3 py-1 rounded text-white">موافقة</button><button onclick="deletePost('${p.key}')" class="bg-red-500 px-3 py-1 rounded text-white">رفض</button></div>` : ''}
-                                ${(me.role === 'admin' || me.email === MASTER_ADMIN) && post.status === 'active' ? 
-                                    `<div class="mt-2 text-right"><button onclick="deletePost('${p.key}')" class="text-red-500"><i class="fas fa-trash-alt"></i></button></div>` : ''}
+                            <div class="glass rounded-[2.5rem] overflow-hidden cyber-card animate__animated animate__fadeInUp">
+                                <img src="${post.img}" class="w-full h-56 object-cover">
+                                <div class="p-8 text-right">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <span class="text-[10px] bg-cyan-500 text-black px-3 py-1 rounded-full font-bold">TECH NEWS</span>
+                                        ${(me.role === 'admin' || me.email === MASTER_ADMIN) ? `<button onclick="deletePost('${p.key}')" class="text-red-500"><i class="fas fa-trash"></i></button>` : ''}
+                                    </div>
+                                    <h3 class="text-2xl font-black text-white mb-4">${post.title}</h3>
+                                    <p class="text-slate-400 text-sm leading-relaxed mb-6">${post.desc.substring(0, 150)}...</p>
+                                    <div class="flex justify-between items-center border-t border-slate-800 pt-6">
+                                        <a href="${post.link || '#'}" target="_blank" class="text-cyan-400 font-bold hover:underline flex items-center gap-2">قراءة المزيد <i class="fas fa-arrow-left text-xs"></i></a>
+                                        <span class="text-[10px] text-slate-600">بواسطة: ${post.author}</span>
+                                    </div>
+                                </div>
                             </div>`;
                     }
                 });
             });
         }
 
-        async function approvePost(id) { await db.ref('posts/'+id).update({status: 'active'}); Swal.fire('تم', 'نُشر المنشور', 'success'); }
-        async function deletePost(id) { 
-            const { isConfirmed } = await Swal.fire({ title: 'هل أنت متأكد؟', text: "لن تتمكن من استعادة هذا المنشور!", icon: 'warning', showCancelButton: true });
-            if (isConfirmed) await db.ref('posts/' + id).remove(); Swal.fire('تم الحذف', '', 'success');
-        }
-        
         async function deleteUser(uid) {
-            const { isConfirmed } = await Swal.fire({ title: 'طرد المستخدم؟', text: "سيتم حذف حسابه نهائياً!", icon: 'warning', showCancelButton: true });
-            if (isConfirmed) {
-                await db.ref('users/' + uid).remove();
-                // يمكن إضافة حذف المستخدم من Firebase Auth أيضاً إذا لزم الأمر
-                Swal.fire('تم الطرد', 'تم حذف حساب المستخدم بنجاح.', 'success');
-            }
+            const res = await Swal.fire({ title: 'طرد المستخدم؟', text: "سيتم حذف بياناته نهائياً", icon: 'warning', showCancelButton: true });
+            if(res.isConfirmed) db.ref('users/'+uid).remove();
+        }
+
+        async function deletePost(id) {
+            const res = await Swal.fire({ title: 'حذف المنشور؟', icon: 'warning', showCancelButton: true });
+            if(res.isConfirmed) db.ref('posts/'+id).remove();
         }
 
         function closeModal() { document.getElementById('mainModal').classList.add('hidden'); }
