@@ -3,135 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Ahmed Tech | المنصة المتكاملة</title>
+    <title>Z Ahmed Tech | المنصة الاحترافية</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background: #020617; color: #f8fafc; overflow-x: hidden; }
-        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .cyber-btn { background: linear-gradient(90deg, #06b6d4, #3b82f6); transition: 0.4s; box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
-        .cyber-btn:hover { box-shadow: 0 0 25px rgba(6, 182, 212, 0.8); transform: scale(1.02); }
         
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 10px; }
+        :root { --primary: #06b6d4; --dark: #020617; }
+        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: #e2e8f0; overflow-x: hidden; }
+        
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); }
+        .cyber-card { border-radius: 2rem; box-shadow: 0 0 20px rgba(6, 182, 212, 0.1); transition: 0.3s; }
+        .cyber-card:hover { border-color: var(--primary); box-shadow: 0 0 30px rgba(6, 182, 212, 0.3); }
+        
+        input, select, textarea { 
+            background: #0f172a !important; 
+            border: 1px solid #1e293b !important; 
+            color: white !important;
+            transition: 0.3s !important;
+        }
+        input:focus { border-color: var(--primary) !important; box-shadow: 0 0 10px rgba(6, 182, 212, 0.2); }
+        
+        .btn-grad { background: linear-gradient(90deg, #06b6d4, #3b82f6); color: white; transition: 0.4s; }
+        .btn-grad:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(6, 182, 212, 0.4); }
 
-        /* Custom styles for auth screen */
-        .auth-screen-bg {
-            background-image: url('https://images.unsplash.com/photo-1517694458284-c6a6f6e52504?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-            background-size: cover;
-            background-position: center;
-            position: relative;
+        /* شاشة الدخول */
+        #authScreen {
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            display: flex; align-items: center; justify-content: center;
         }
-        .auth-screen-bg::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(rgba(2,6,23,0.8), rgba(2,6,23,0.9));
-            z-index: 0;
-        }
-        .auth-card-inner { position: relative; z-index: 1; }
     </style>
 </head>
 <body>
 
-    <div id="authPanel" class="fixed inset-0 z-[100] auth-screen-bg flex items-center justify-center p-4">
-        <div class="glass p-8 rounded-[2rem] w-full max-w-md auth-card-inner animate__animated animate__zoomIn">
-            <h1 class="text-3xl font-black text-center mb-6">Z AHMED <span class="text-cyan-400">TECH</span></h1>
-            
-            <div id="loginForm" class="space-y-4">
-                <input id="userEmail" type="email" placeholder="البريد الإلكتروني" class="w-full bg-slate-900 p-4 rounded-xl border border-slate-700 outline-none focus:border-cyan-400 transition">
-                <input id="userPass" type="password" placeholder="كلمة المرور" class="w-full bg-slate-900 p-4 rounded-xl border border-slate-700 outline-none focus:border-cyan-400 transition">
-                <input id="userPhone" type="text" placeholder="رقم الموبايل (للتسجيل الجديد)" class="w-full bg-slate-900 p-4 rounded-xl border border-slate-700 outline-none focus:border-cyan-400 transition">
-                
-                <select id="userRole" class="w-full bg-slate-900 p-4 rounded-xl border border-slate-700 outline-none focus:border-cyan-400 transition">
-                    <option value="visitor">زائر</option>
-                    <option value="worker">موظف (للمسجلين مسبقاً)</option>
-                    <option value="admin">مدير (أنت فقط)</option>
-                </select>
+    <div id="authScreen" class="fixed inset-0 z-[1000] p-4 animate__animated">
+        <div class="glass p-8 w-full max-w-md cyber-card animate__animated animate__zoomIn">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-black tracking-widest">Z AHMED <span class="text-cyan-400">TECH</span></h1>
+                <p class="text-slate-400 text-sm mt-2">مرحباً بك في مستقبل التكنولوجيا</p>
+            </div>
 
-                <div class="flex gap-2">
-                    <button onclick="handleAuth('login')" class="flex-1 cyber-btn py-4 rounded-xl font-bold">دخول</button>
-                    <button onclick="handleAuth('register')" class="flex-1 bg-slate-800 py-4 rounded-xl font-bold hover:bg-slate-700 transition">تسجيل جديد</button>
+            <div class="space-y-4">
+                <div class="flex gap-2 p-1 bg-slate-900 rounded-xl mb-4">
+                    <button id="tabLogin" onclick="switchAuth('login')" class="flex-1 py-2 rounded-lg bg-cyan-500 font-bold">دخول</button>
+                    <button id="tabRegister" onclick="switchAuth('register')" class="flex-1 py-2 rounded-lg font-bold">جديد</button>
                 </div>
 
-                <div class="relative py-4 text-center">
-                    <span class="bg-slate-950 px-2 text-slate-500 text-sm">أو عبر</span>
-                    <hr class="border-slate-800 absolute top-1/2 w-full -z-10">
+                <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-xl outline-none">
+                <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 rounded-xl outline-none">
+                <div id="regExtra" class="hidden animate__animated animate__fadeIn">
+                    <input id="phone" type="text" placeholder="رقم الهاتف" class="w-full p-4 rounded-xl outline-none mt-4">
                 </div>
 
-                <button onclick="googleSignIn()" class="w-full bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-200 transition">
-                    <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" class="w-6"> الدخول بواسطة جوجل
+                <div class="py-2">
+                    <label class="text-xs text-slate-500 mr-2">سجل دخولك بصفتك:</label>
+                    <select id="role" class="w-full p-4 rounded-xl outline-none mt-1">
+                        <option value="visitor">زائر (Visitor)</option>
+                        <option value="worker">موظف (Staff)</option>
+                        <option value="admin">مدير (Admin)</option>
+                    </select>
+                </div>
+
+                <button onclick="processAuth()" id="mainAuthBtn" class="w-full btn-grad py-4 rounded-xl font-black mt-4">تسجيل الدخول</button>
+
+                <div class="relative py-4">
+                    <hr class="border-slate-800">
+                    <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-950 px-2 text-xs text-slate-500">أو</span>
+                </div>
+
+                <button onclick="loginGoogle()" class="w-full bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-200 transition">
+                    <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" class="w-5"> بواسطة Google
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="mainApp" class="hidden min-h-screen">
-        <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-black animate__animated animate__fadeInRight">Z AHMED <span class="text-cyan-400">TECH</span></div>
+    <div id="mainApp" class="hidden">
+        <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center border-b border-cyan-500/20">
+            <div class="text-xl font-black">Z AHMED <span class="text-cyan-400">TECH</span></div>
             <div class="flex items-center gap-4">
-                <span id="navRole" class="text-xs px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full font-bold animate__animated animate__pulse animate__infinite">زائر</span>
-                <button onclick="logout()" class="text-red-400 hover:text-red-300 transition animate__animated animate__headShake"><i class="fas fa-sign-out-alt text-xl"></i></button>
+                <div class="text-right hidden sm:block">
+                    <p id="navName" class="text-sm font-bold leading-none"></p>
+                    <span id="navRoleLabel" class="text-[10px] text-cyan-400 font-bold uppercase tracking-tighter"></span>
+                </div>
+                <button onclick="logout()" class="w-10 h-10 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center">
+                    <i class="fas fa-power-off"></i>
+                </button>
             </div>
         </nav>
 
-        <div class="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
-            
-            <div class="lg:col-span-3 space-y-6">
-                <h2 class="text-2xl font-bold flex items-center gap-2 animate__animated animate__fadeInLeft">
-                    <i class="fas fa-bolt text-yellow-400"></i> آخر الأخبار التقنية
-                </h2>
-                <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    </div>
-            </div>
-
+        <div class="container mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div class="space-y-6">
-                <div id="controlPanel" class="glass p-6 rounded-3xl animate__animated animate__fadeInRight">
-                    <h3 class="font-bold mb-4 flex items-center gap-2 border-b border-slate-700 pb-2">
-                        <i class="fas fa-tools"></i> أدوات الإدارة
-                    </h3>
-                    <div id="adminTools" class="hidden space-y-3 animate__animated animate__fadeIn">
-                        <button onclick="showSection('addPost')" class="w-full text-right p-3 hover:bg-cyan-500/10 rounded-xl transition"><i class="fas fa-plus-circle ml-2"></i> نشر مقال/مسابقة</button>
-                        <button onclick="showSection('usersList')" class="w-full text-right p-3 hover:bg-cyan-500/10 rounded-xl transition"><i class="fas fa-users ml-2"></i> مراقبة الأعضاء</button>
-                        <button onclick="showSection('pendingPosts')" class="w-full text-right p-3 hover:bg-cyan-500/10 rounded-xl transition relative">
-                            <i class="fas fa-clock ml-2 text-yellow-500"></i> طلبات النشر
-                            <span id="pendingCount" class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full absolute left-2">0</span>
+                <div id="adminPanel" class="hidden glass p-6 rounded-[2rem] border-t-2 border-cyan-500">
+                    <h3 class="font-black text-cyan-400 mb-4 flex items-center gap-2"><i class="fas fa-shield-halved"></i> لوحة المدير</h3>
+                    <div class="grid gap-2">
+                        <button onclick="openTab('addPost')" class="w-full text-right p-3 hover:bg-cyan-500/10 rounded-xl transition"><i class="fas fa-plus-circle ml-2"></i> نشر محتوى</button>
+                        <button onclick="openTab('manageUsers')" class="w-full text-right p-3 hover:bg-cyan-500/10 rounded-xl transition"><i class="fas fa-users-gear ml-2"></i> رقابة الأعضاء</button>
+                        <button onclick="openTab('pending')" class="w-full text-right p-3 hover:bg-cyan-500/10 rounded-xl transition flex justify-between items-center">
+                            <span><i class="fas fa-clock ml-2"></i> الطلبات المعلقة</span>
+                            <span id="badgePending" class="bg-red-500 text-white text-[10px] px-2 py-1 rounded-full">0</span>
                         </button>
                     </div>
-                    <div id="workerTools" class="hidden space-y-3 animate__animated animate__fadeIn">
-                        <button onclick="showSection('addPost')" class="w-full text-right p-3 hover:bg-amber-500/10 rounded-xl transition"><i class="fas fa-pen ml-2"></i> اقتراح خبر</button>
-                    </div>
-                    <div id="visitorTools" class="space-y-3 text-center animate__animated animate__fadeIn">
-                        <p class="text-xs text-slate-400 mb-2">تواصل مع الدعم الفني</p>
-                        <a href="https://wa.me/123456789" class="block w-full bg-green-600/20 text-green-400 p-3 rounded-xl hover:bg-green-600/30 transition"><i class="fab fa-whatsapp ml-2"></i> دعم الواتساب</a>
-                    </div>
                 </div>
 
-                <div id="adminStats" class="hidden glass p-6 rounded-3xl border-t-4 border-cyan-400 animate__animated animate__zoomIn">
-                    <p class="text-sm text-slate-400">إجمالي المسجلين</p>
-                    <h4 id="totalUsersCount" class="text-4xl font-black">0</h4>
+                <div id="workerPanel" class="hidden glass p-6 rounded-[2rem] border-t-2 border-amber-500">
+                    <h3 class="font-black text-amber-500 mb-4 flex items-center gap-2"><i class="fas fa-pen-nib"></i> الموظفين</h3>
+                    <button onclick="openTab('addPost')" class="w-full text-right p-3 hover:bg-amber-500/10 rounded-xl transition"><i class="fas fa-paper-plane ml-2"></i> اقتراح منشور</button>
                 </div>
+            </div>
+
+            <div class="lg:col-span-3 space-y-6">
+                <h2 class="text-2xl font-black mb-6 flex items-center gap-3">
+                    <span class="w-2 h-8 bg-cyan-500 rounded-full"></span> المنشورات الأخيرة
+                </h2>
+                <div id="postsFeed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    </div>
             </div>
         </div>
     </div>
 
-    <div id="adminModal" class="hidden fixed inset-0 z-[80] bg-black/90 flex items-center justify-center p-4">
-        <div class="glass w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl relative animate__animated animate__zoomInUp">
-            <button onclick="closeModal()" class="absolute top-4 left-4 text-2xl hover:text-cyan-400"><i class="fas fa-times-circle"></i></button>
-            <div id="modalContent"></div>
+    <div id="mainModal" class="hidden fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center p-4">
+        <div class="glass w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 rounded-[2.5rem] relative animate__animated animate__zoomInUp">
+            <button onclick="closeModal()" class="absolute top-6 left-6 text-2xl text-slate-500 hover:text-white transition"><i class="fas fa-times-circle"></i></button>
+            <div id="modalBody"></div>
         </div>
     </div>
 
     <script>
-        // === تهيئة النظام ===
+        // --- 1. إعدادات Firebase الخاصة بك ---
         const firebaseConfig = {
             apiKey: "AIzaSyAqSQLHq0QFpe1CV8bAYc53mbUO7I03Q5I",
             authDomain: "z-ahmed-tech.firebaseapp.com",
@@ -145,319 +152,245 @@
         const db = firebase.database();
         const auth = firebase.auth();
 
-        const MASTER_ADMIN_EMAIL = "ahmedgames2025.11@gmail.com";
-        let myData = null;
+        const MASTER_ADMIN = "ahmedgames2025.11@gmail.com"; // إيميلك يا أحمد
+        let userData = null;
+        let currentAuthMode = 'login';
 
-        // === نظام المصادقة والمستخدمين ===
-        async function handleAuth(type) {
-            const email = document.getElementById('userEmail').value.trim();
-            const pass = document.getElementById('userPass').value;
-            const phone = document.getElementById('userPhone').value.trim();
-            const selectedRole = document.getElementById('userRole').value; // الدور المختار
-
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                return Swal.fire('خطأ في البيانات', 'يرجى كتابة بريد إلكتروني صحيح (مثال: ahmed@tech.com)', 'warning');
-            }
-            if(pass.length < 6) {
-                return Swal.fire('كلمة مرور ضعيفة', 'يجب أن تكون كلمة المرور 6 أحرف على الأقل', 'info');
-            }
-
-            try {
-                if(type === 'register') {
-                    if(!phone) return Swal.fire('تنبيه', 'رقم الهاتف مطلوب للتسجيل الجديد', 'info');
-                    const res = await auth.createUserWithEmailAndPassword(email, pass);
-                    await db.ref('users/' + res.user.uid).set({
-                        name: email.split('@')[0], email, pass, phone, role: selectedRole, status: 'active'
-                    });
-                    Swal.fire('نجاح', `تم إنشاء حسابك بنجاح كـ ${selectedRole === 'admin' ? 'مدير' : (selectedRole === 'worker' ? 'موظف' : 'زائر')}`, 'success');
-                } else { // Login
-                    await auth.signInWithEmailAndPassword(email, pass);
-                    Swal.fire('مرحباً', 'تم تسجيل الدخول بنجاح', 'success');
-                }
-            } catch(e) { 
-                let msg = "حدث خطأ غير متوقع";
-                if(e.code === 'auth/invalid-email') msg = "صيغة البريد الإلكتروني غير صحيحة!";
-                if(e.code === 'auth/user-not-found') msg = "هذا الحساب غير موجود!";
-                if(e.code === 'auth/wrong-password') msg = "كلمة المرور غير صحيحة!";
-                if(e.code === 'auth/email-already-in-use') msg = "هذا البريد مستخدم بالفعل، جرب تسجيل الدخول!";
-                
-                Swal.fire('خطأ في الدخول', msg, 'error'); 
-            }
+        // --- 2. نظام الدخول (Logic) ---
+        function switchAuth(mode) {
+            currentAuthMode = mode;
+            document.getElementById('tabLogin').className = mode === 'login' ? 'flex-1 py-2 rounded-lg bg-cyan-500 font-bold' : 'flex-1 py-2 rounded-lg font-bold';
+            document.getElementById('tabRegister').className = mode === 'register' ? 'flex-1 py-2 rounded-lg bg-cyan-500 font-bold' : 'flex-1 py-2 rounded-lg font-bold';
+            document.getElementById('regExtra').classList.toggle('hidden', mode === 'login');
+            document.getElementById('mainAuthBtn').innerText = mode === 'login' ? 'تسجيل الدخول' : 'إنشاء حساب جديد';
         }
 
-        async function googleSignIn() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            const selectedRole = document.getElementById('userRole').value; // الدور المختار من جوجل
+        async function processAuth() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('pass').value;
+            const phone = document.getElementById('phone').value.trim();
+            const role = document.getElementById('role').value;
 
+            if(!email || !password) return Swal.fire('تنبيه', 'املأ البيانات الأساسية أولاً', 'warning');
+
+            try {
+                if(currentAuthMode === 'register') {
+                    const res = await auth.createUserWithEmailAndPassword(email, password);
+                    await db.ref('users/' + res.user.uid).set({
+                        uid: res.user.uid, name: email.split('@')[0], email, pass: password, phone, role, status: 'active'
+                    });
+                    Swal.fire('مبروك', 'تم إنشاء الحساب بنجاح', 'success');
+                } else {
+                    await auth.signInWithEmailAndPassword(email, password);
+                }
+            } catch(e) { Swal.fire('خطأ', e.message, 'error'); }
+        }
+
+        async function loginGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            const selectedRole = document.getElementById('role').value;
             try {
                 const res = await auth.signInWithPopup(provider);
-                // تحديث بيانات المستخدم في قاعدة البيانات عند الدخول بجوجل
-                await db.ref('users/' + res.user.uid).update({
-                    name: res.user.displayName,
-                    email: res.user.email,
-                    // إذا كان إيميل المدير، يأخذ صلاحية مدير تلقائياً
-                    role: res.user.email === MASTER_ADMIN_EMAIL ? 'admin' : selectedRole, 
-                    status: 'active'
-                });
-                Swal.fire('مرحباً', 'تم تسجيل الدخول بواسطة جوجل', 'success');
-            } catch (e) {
-                Swal.fire('خطأ في الدخول بجوجل', e.message, 'error');
-            }
+                const user = res.user;
+                // فحص إذا كان المستخدم مسجلاً مسبقاً
+                const snap = await db.ref('users/' + user.uid).once('value');
+                if(!snap.exists()) {
+                    await db.ref('users/' + user.uid).set({
+                        uid: user.uid, name: user.displayName, email: user.email, 
+                        pass: 'دخول جوجل', phone: 'غير متاح', 
+                        role: user.email === MASTER_ADMIN ? 'admin' : selectedRole, 
+                        status: 'active'
+                    });
+                }
+            } catch(e) { Swal.fire('خطأ', 'فشل الدخول بجوجل', 'error'); }
         }
 
+        // مراقبة حالة المستخدم
         auth.onAuthStateChanged(user => {
             if(user) {
                 db.ref('users/' + user.uid).on('value', snap => {
-                    myData = snap.val();
-                    if(!myData) { // لو المستخدم سجل بجوجل لأول مرة، ننشئ له بيانات أساسية
-                        if(user.email === MASTER_ADMIN_EMAIL) {
-                            myData = { name: user.displayName, email: user.email, role: 'admin', status: 'active' };
-                        } else {
-                            myData = { name: user.displayName, email: user.email, role: 'visitor', status: 'active' };
-                        }
-                        db.ref('users/' + user.uid).set(myData);
-                    }
-                    
-                    if(myData.status === 'banned') {
-                        Swal.fire({icon: 'error', title: 'حظر!', text: 'لقد تم طردك من المنصة', allowOutsideClick: false});
+                    userData = snap.val();
+                    if(userData && userData.status === 'banned') {
+                        Swal.fire('محظور', 'لقد تم طردك من المنصة', 'error');
                         auth.signOut();
                         return;
                     }
-                    setupUI();
+                    if(userData) startApp();
                 });
-            } else {
-                document.getElementById('authPanel').classList.remove('animate__backOutUp');
-                document.getElementById('authPanel').classList.add('animate__zoomIn');
-                document.getElementById('authPanel').style.display = 'flex';
-                document.getElementById('mainApp').classList.add('hidden');
-            }
+            } else { showAuth(); }
         });
 
-        function setupUI() {
-            document.getElementById('authPanel').classList.remove('animate__zoomIn');
-            document.getElementById('authPanel').classList.add('animate__backOutUp');
+        function showAuth() {
+            document.getElementById('authScreen').classList.remove('animate__fadeOutUp');
+            document.getElementById('authScreen').style.display = 'flex';
+            document.getElementById('mainApp').classList.add('hidden');
+        }
+
+        function startApp() {
+            document.getElementById('authScreen').classList.add('animate__fadeOutUp');
             setTimeout(() => {
-                document.getElementById('authPanel').style.display = 'none';
+                document.getElementById('authScreen').style.display = 'none';
                 document.getElementById('mainApp').classList.remove('hidden');
                 document.getElementById('mainApp').classList.add('animate__animated', 'animate__fadeIn');
-            }, 500);
+                renderUI();
+            }, 600);
+        }
 
-            const isAdmin = myData.email === MASTER_ADMIN_EMAIL || myData.role === 'admin';
-            const isWorker = myData.role === 'worker';
-            const isVisitor = myData.role === 'visitor';
-
-            document.getElementById('navRole').innerText = isAdmin ? 'مدير النظام' : (isWorker ? 'عامل/محرر' : 'زائر');
+        function renderUI() {
+            document.getElementById('navName').innerText = userData.name;
+            document.getElementById('navRoleLabel').innerText = userData.role;
             
-            document.getElementById('adminTools').style.display = isAdmin ? 'block' : 'none';
-            document.getElementById('workerTools').style.display = isWorker ? 'block' : 'none';
-            document.getElementById('visitorTools').style.display = isVisitor ? 'block' : 'none';
-
-            document.getElementById('adminStats').style.display = isAdmin ? 'block' : 'none';
+            // إظهار اللوحات حسب الصلاحية
+            const isAdmin = userData.role === 'admin' || userData.email === MASTER_ADMIN;
+            document.getElementById('adminPanel').classList.toggle('hidden', !isAdmin);
+            document.getElementById('workerPanel').classList.toggle('hidden', userData.role !== 'worker');
 
             if(isAdmin) {
-                db.ref('users').on('value', s => document.getElementById('totalUsersCount').innerText = s.numChildren());
                 db.ref('posts').orderByChild('status').equalTo('pending').on('value', s => {
-                    document.getElementById('pendingCount').innerText = s.numChildren() || 0;
+                    document.getElementById('badgePending').innerText = s.numChildren() || 0;
                 });
             }
             loadPosts();
         }
 
-        // === وظائف المدير والعمال ===
-        function showSection(sec) {
-            const modal = document.getElementById('adminModal');
-            const content = document.getElementById('modalContent');
-            modal.classList.remove('hidden');
-
-            if(sec === 'addPost') {
-                content.innerHTML = `
-                    <h2 class="text-2xl font-bold mb-6">نشر محتوى جديد (AI & Tech)</h2>
-                    <input id="postT" type="text" placeholder="عنوان الخبر" class="w-full bg-slate-900 p-4 rounded-xl mb-4">
-                    <input id="postI" type="text" placeholder="رابط الصورة المباشر" class="w-full bg-slate-900 p-4 rounded-xl mb-4">
-                    <input id="postL" type="text" placeholder="رابط المصدر (إن وجد)" class="w-full bg-slate-900 p-4 rounded-xl mb-4">
-                    <textarea id="postD" rows="5" placeholder="تفاصيل الخبر..." class="w-full bg-slate-900 p-4 rounded-xl mb-4"></textarea>
-                    <button onclick="submitPost()" class="w-full cyber-btn py-4 rounded-xl font-bold">إرسال للنشر</button>
-                `;
-            } else if (sec === 'usersList') {
-                content.innerHTML = `<h2 class="text-2xl font-bold mb-6">قائمة الرقابة (Users Control)</h2><div id="usersListContent" class="space-y-4 overflow-x-auto"><table class="w-full text-right" id="usersTable"></table></div>`;
-                db.ref('users').on('value', snap => { // Changed to on('value') for real-time
-                    const table = document.getElementById('usersTable');
-                    table.innerHTML = `
-                        <thead>
-                            <tr class="text-slate-400">
-                                <th class="py-2 px-4">الاسم</th>
-                                <th class="py-2 px-4">البريد</th>
-                                <th class="py-2 px-4">الباسورد</th>
-                                <th class="py-2 px-4">الهاتف</th>
-                                <th class="py-2 px-4">الدور</th>
-                                <th class="py-2 px-4">إجراء</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    `;
-                    const tbody = table.querySelector('tbody');
-                    tbody.innerHTML = '';
-                    snap.forEach(u => {
-                        const user = u.val();
-                        const userId = u.key;
-                        const userRow = document.createElement('tr');
-                        userRow.classList.add('border-b', 'border-slate-800');
-                        userRow.innerHTML = `
-                            <td class="py-3 px-4">${user.name}</td>
-                            <td class="py-3 px-4">${user.email}</td>
-                            <td class="py-3 px-4 text-red-400">${user.pass || 'دخول جوجل'}</td>
-                            <td class="py-3 px-4">${user.phone || 'N/A'}</td>
-                            <td class="py-3 px-4">${user.role}</td>
-                            <td class="py-3 px-4 flex gap-2 justify-center items-center">
-                                ${user.email !== MASTER_ADMIN_EMAIL ? `
-                                    <button onclick="changeUserRole('${userId}', '${user.role}')" class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-lg text-xs hover:bg-blue-500/30 transition">تغيير الدور</button>
-                                    <button onclick="deleteUser('${userId}')" class="bg-red-500/20 text-red-400 px-3 py-1 rounded-lg text-xs hover:bg-red-500/30 transition">حذف</button>
-                                ` : `<span class="text-green-500 text-xs">مدير رئيسي</span>`}
-                            </td>
-                        `;
-                        tbody.appendChild(userRow);
-                    });
-                });
-            } else if (sec === 'pendingPosts') {
-                content.innerHTML = `<h2 class="text-2xl font-bold mb-6">طلبات النشر المعلقة</h2><div id="pendingList" class="space-y-4"></div>`;
-                db.ref('posts').orderByChild('status').equalTo('pending').on('value', snap => {
-                    const pendingList = document.getElementById('pendingList');
-                    pendingList.innerHTML = '';
-                    snap.forEach(p => {
-                        const post = p.val();
-                        const postId = p.key;
-                        pendingList.innerHTML += `
-                            <div class="glass p-4 rounded-2xl border-r-4 border-yellow-500 animate__animated animate__fadeInLeft">
-                                <h3 class="font-bold">${post.title}</h3>
-                                <p class="text-xs text-slate-400">بواسطة: ${post.authorName}</p>
-                                <div class="flex gap-2 mt-3">
-                                    <button onclick="approvePost('${postId}')" class="bg-green-600 text-white px-4 py-1 rounded-lg hover:bg-green-700 transition">موافقة</button>
-                                    <button onclick="deletePost('${postId}')" class="bg-red-600 text-white px-4 py-1 rounded-lg hover:bg-red-700 transition">حذف</button>
+        // --- 3. نظام المنشورات ---
+        function loadPosts() {
+            db.ref('posts').orderByChild('status').equalTo('active').on('value', snap => {
+                const feed = document.getElementById('postsFeed');
+                feed.innerHTML = '';
+                snap.forEach(p => {
+                    const post = p.val();
+                    const id = p.key;
+                    feed.innerHTML += `
+                        <div class="glass rounded-[2rem] overflow-hidden cyber-card animate__animated animate__fadeInUp">
+                            <img src="${post.img}" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold text-cyan-400 mb-2">${post.title}</h3>
+                                <p class="text-slate-400 text-sm line-clamp-3 mb-4">${post.desc}</p>
+                                <div class="flex justify-between items-center">
+                                    <a href="${post.link || '#'}" target="_blank" class="text-xs bg-slate-800 px-4 py-2 rounded-full hover:bg-cyan-500 transition">عرض التفاصيل</a>
+                                    ${userData.role === 'admin' ? `<button onclick="deletePost('${id}')" class="text-red-500"><i class="fas fa-trash"></i></button>` : ''}
                                 </div>
                             </div>
-                        `;
+                        </div>`;
+                });
+            });
+        }
+
+        function openTab(type) {
+            const modal = document.getElementById('mainModal');
+            const body = document.getElementById('modalBody');
+            modal.classList.remove('hidden');
+            body.innerHTML = '';
+
+            if(type === 'addPost') {
+                body.innerHTML = `
+                    <h2 class="text-2xl font-black mb-6">✨ نشر خبر تقني جديد</h2>
+                    <div class="space-y-4">
+                        <input id="pTitle" type="text" placeholder="عنوان الخبر" class="w-full p-4 rounded-xl">
+                        <input id="pImg" type="text" placeholder="رابط الصورة (URL)" class="w-full p-4 rounded-xl">
+                        <input id="pLink" type="text" placeholder="رابط المصدر (اختياري)" class="w-full p-4 rounded-xl">
+                        <textarea id="pDesc" rows="4" placeholder="اكتب تفاصيل الخبر هنا..." class="w-full p-4 rounded-xl"></textarea>
+                        <button onclick="submitPost()" class="w-full btn-grad py-4 rounded-xl font-black">نشر الآن</button>
+                    </div>`;
+            } 
+            else if(type === 'manageUsers') {
+                body.innerHTML = `
+                    <h2 class="text-2xl font-black mb-6 text-cyan-400">🚨 رقابة حسابات المنصة</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="text-slate-500 text-sm border-b border-slate-800">
+                                    <th class="p-4">العضو</th>
+                                    <th class="p-4">الباسورد</th>
+                                    <th class="p-4">الموبايل</th>
+                                    <th class="p-4">الدور</th>
+                                    <th class="p-4">إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersList"></tbody>
+                        </table>
+                    </div>`;
+                db.ref('users').on('value', snap => {
+                    const list = document.getElementById('usersList');
+                    list.innerHTML = '';
+                    snap.forEach(u => {
+                        const user = u.val();
+                        if(user.email === MASTER_ADMIN) return;
+                        list.innerHTML += `
+                            <tr class="border-b border-slate-800/50 hover:bg-slate-800/30 transition">
+                                <td class="p-4">
+                                    <div class="font-bold">${user.name}</div>
+                                    <div class="text-[10px] text-slate-500">${user.email}</div>
+                                </td>
+                                <td class="p-4 text-red-400 font-mono text-xs">${user.pass}</td>
+                                <td class="p-4 text-xs">${user.phone}</td>
+                                <td class="p-4"><span class="bg-slate-800 px-2 py-1 rounded text-[10px]">${user.role}</span></td>
+                                <td class="p-4">
+                                    <button onclick="deleteUser('${u.key}')" class="text-red-500 hover:scale-125 transition"><i class="fas fa-user-xmark"></i></button>
+                                </td>
+                            </tr>`;
+                    });
+                });
+            }
+            else if(type === 'pending') {
+                body.innerHTML = `<h2 class="text-2xl font-black mb-6">⏳ طلبات بانتظار الموافقة</h2><div id="pendingList" class="grid gap-4"></div>`;
+                db.ref('posts').orderByChild('status').equalTo('pending').on('value', snap => {
+                    const list = document.getElementById('pendingList');
+                    list.innerHTML = '';
+                    snap.forEach(p => {
+                        const post = p.val();
+                        list.innerHTML += `
+                            <div class="glass p-4 rounded-2xl flex justify-between items-center border-r-4 border-amber-500">
+                                <div>
+                                    <h4 class="font-bold text-amber-500">${post.title}</h4>
+                                    <p class="text-[10px] text-slate-500">بواسطة: ${post.authorName}</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="approvePost('${p.key}')" class="bg-green-500 text-white px-4 py-1 rounded-lg text-xs">قبول</button>
+                                    <button onclick="deletePost('${p.key}')" class="bg-red-500 text-white px-4 py-1 rounded-lg text-xs">رفض</button>
+                                </div>
+                            </div>`;
                     });
                 });
             }
         }
 
-        function submitPost() {
-            const title = document.getElementById('postT').value;
-            const img = document.getElementById('postI').value;
-            const link = document.getElementById('postL').value;
-            const desc = document.getElementById('postD').value;
-
-            const isAdmin = myData.email === MASTER_ADMIN_EMAIL || myData.role === 'admin';
+        // --- 4. وظائف الأوامر (Actions) ---
+        async function submitPost() {
+            const title = document.getElementById('pTitle').value;
+            const img = document.getElementById('pImg').value;
+            const desc = document.getElementById('pDesc').value;
+            const link = document.getElementById('pLink').value;
             
-            db.ref('posts').push({
-                title, image: img, link, desc,
-                authorUid: auth.currentUser.uid,
-                authorName: myData.name,
-                status: isAdmin ? 'active' : 'pending',
+            if(!title || !img) return Swal.fire('تنبيه', 'أضف العنوان والصورة على الأقل', 'info');
+
+            const status = (userData.role === 'admin' || userData.email === MASTER_ADMIN) ? 'active' : 'pending';
+            
+            await db.ref('posts').push({
+                title, img, desc, link, status,
+                authorName: userData.name,
                 time: Date.now()
             });
-
-            Swal.fire('نجاح', isAdmin ? 'تم النشر فوراً' : 'تم الإرسال للمدير للموافقة', 'success');
+            
+            Swal.fire('نجاح', status === 'active' ? 'تم النشر بنجاح' : 'تم إرسال المنشور للمراجعة', 'success');
             closeModal();
         }
 
-        function approvePost(id) {
-            db.ref('posts/' + id).update({ status: 'active' });
-            Swal.fire('تم', 'تم تفعيل المنشور للعامة', 'success');
-            // closeModal(); // Keep modal open to review other pending posts
-        }
-
-        async function changeUserRole(userId, currentRole) {
-            const { value: newRole } = await Swal.fire({
-                title: `تغيير دور المستخدم: ${currentRole}`,
-                input: 'select',
-                inputOptions: {
-                    'visitor': 'زائر',
-                    'worker': 'موظف',
-                    'admin': 'مدير'
-                },
-                inputValue: currentRole,
-                showCancelButton: true
-            });
-
-            if (newRole && newRole !== currentRole) {
-                db.ref('users/' + userId).update({ role: newRole });
-                Swal.fire('تم', `تم تغيير دور المستخدم إلى ${newRole}`, 'success');
+        function approvePost(id) { db.ref('posts/' + id).update({ status: 'active' }); }
+        function deletePost(id) { if(confirm('حذف هذا المنشور؟')) db.ref('posts/' + id).remove(); }
+        
+        async function deleteUser(uid) {
+            if(confirm('هل أنت متأكد من طرد هذا العضو نهائياً؟')) {
+                await db.ref('users/' + uid).update({ status: 'banned' });
+                // أو يمكنك استخدام .remove() للمسح الكلي
+                // await db.ref('users/' + uid).remove();
+                Swal.fire('تم', 'تم حظر العضو بنجاح', 'success');
             }
         }
 
-
-        async function deleteUser(userId) {
-            const { isConfirmed } = await Swal.fire({
-                title: 'هل أنت متأكد؟',
-                text: "لن يتمكن المستخدم من الدخول مرة أخرى!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'نعم، احذف!'
-            });
-
-            if (isConfirmed) {
-                db.ref('users/' + userId).update({ status: 'banned' }); // نغير الحالة إلى banned بدلاً من الحذف الكلي
-                Swal.fire('تم الحذف!', 'تم حظر المستخدم بنجاح.', 'success');
-                // You might want to also delete the user from Firebase Auth if fully removing
-                // However, marking as 'banned' is safer for user tracking.
-            }
-        }
-
-        async function deletePost(postId) {
-            const { isConfirmed } = await Swal.fire({
-                title: 'هل أنت متأكد؟',
-                text: "سيتم حذف هذا المنشور نهائياً!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'نعم، احذف!'
-            });
-
-            if (isConfirmed) {
-                db.ref('posts/' + postId).remove();
-                Swal.fire('تم الحذف!', 'تم حذف المنشور بنجاح.', 'success');
-            }
-        }
-
-
-        function loadPosts() {
-            db.ref('posts').orderByChild('status').equalTo('active').on('value', snap => {
-                const container = document.getElementById('postsContainer');
-                container.innerHTML = '';
-                snap.forEach(p => {
-                    const post = p.val();
-                    const postId = p.key; // Get the post ID for deletion
-                    container.innerHTML += `
-                        <div class="glass rounded-[2rem] overflow-hidden group animate__animated animate__fadeInUp">
-                            <img src="${post.image}" class="w-full h-48 object-cover group-hover:scale-110 transition duration-500">
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-cyan-400 mb-2">${post.title}</h3>
-                                <p class="text-slate-400 text-sm mb-4 leading-relaxed">${post.desc}</p>
-                                <div class="flex justify-between items-center">
-                                    <a href="${post.link || '#'}" target="_blank" class="text-xs bg-slate-800 px-4 py-2 rounded-full hover:bg-cyan-500 transition">اقرأ المزيد</a>
-                                    ${(myData && (myData.email === MASTER_ADMIN_EMAIL || myData.role === 'admin')) ? 
-                                        `<button onclick="deletePost('${postId}')" class="text-red-400 hover:text-red-300 transition"><i class="fas fa-trash-alt"></i></button>` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-            });
-        }
-
-        function closeModal() { document.getElementById('adminModal').classList.add('hidden'); }
-        function logout() { 
-            auth.signOut().then(() => {
-                document.getElementById('mainApp').classList.remove('animate__fadeIn');
-                document.getElementById('mainApp').classList.add('animate__fadeOut');
-                setTimeout(() => { location.reload(); }, 500); // Reload after animation
-            });
-        }
+        function closeModal() { document.getElementById('mainModal').classList.add('hidden'); }
+        function logout() { auth.signOut().then(() => location.reload()); }
     </script>
 </body>
 </html>
