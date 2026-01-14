@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Ahmed Tech | المنصة الرسمية</title>
+    <title>Z Ahmed Tech | المنصة الاحترافية</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -23,11 +23,11 @@
         .btn-cyan { background: linear-gradient(90deg, #06b6d4, #3b82f6); color: white; transition: 0.3s; }
         .btn-cyan:hover { box-shadow: 0 0 20px rgba(6, 182, 212, 0.4); transform: scale(1.02); }
         input, textarea { background: #0f172a !important; border: 1px solid #1e293b !important; color: white !important; }
-        .chat-box { height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 10px; }
+        .chat-box { height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 10px; }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 10px; }
-        .star-rating { color: #475569; cursor: pointer; font-size: 2rem; transition: 0.2s; }
         .star-rating.active { color: #fbbf24; }
+        .preview-box { border: 2px dashed #1e293b; padding: 20px; border-radius: 20px; }
     </style>
 </head>
 <body>
@@ -35,18 +35,15 @@
     <div id="authScreen" class="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950 p-4">
         <div class="glass p-8 w-full max-w-md rounded-[2.5rem] text-center cyber-card animate__animated animate__zoomIn">
             <h1 class="text-4xl font-black mb-2 tracking-tighter uppercase">Z Ahmed <span class="text-cyan-400">Tech</span></h1>
-            <p class="text-slate-500 text-xs mb-8">لوحة التحكم المركزية للمنصة</p>
-            
+            <p class="text-slate-500 text-xs mb-8">تسجيل الدخول للمنصة</p>
             <div class="space-y-4">
                 <button onclick="googleSignIn()" class="w-full bg-white text-black py-4 rounded-xl font-bold flex items-center justify-center gap-3">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20"> الدخول عبر جوجل
                 </button>
-                <div class="flex items-center gap-2 py-2">
-                    <hr class="flex-grow border-slate-800"> <span class="text-xs text-slate-500">للمدير فقط</span> <hr class="flex-grow border-slate-800">
-                </div>
-                <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-xl outline-none">
+                <div class="py-2 text-xs text-slate-600">أو الإدارة فقط</div>
+                <input id="email" type="email" placeholder="البريد" class="w-full p-4 rounded-xl outline-none">
                 <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 rounded-xl outline-none">
-                <button onclick="login()" class="w-full btn-cyan py-4 rounded-xl font-bold text-lg">دخول</button>
+                <button onclick="login()" class="w-full btn-cyan py-4 rounded-xl font-bold">دخول الإدارة</button>
             </div>
         </div>
     </div>
@@ -55,40 +52,39 @@
         <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center border-b border-white/5">
             <div class="text-2xl font-black uppercase">Z Ahmed <span class="text-cyan-400">Tech</span></div>
             <div class="flex items-center gap-4">
-                <span id="navRole" class="text-[10px] font-bold bg-cyan-500/20 text-cyan-400 px-3 py-1 rounded-full uppercase tracking-widest text-center min-w-[60px]">USER</span>
-                <button onclick="logout()" class="text-red-500 hover:text-red-400 transition"><i class="fas fa-power-off text-xl"></i></button>
+                <span id="navRole" class="text-[10px] font-bold bg-cyan-500/20 text-cyan-400 px-3 py-1 rounded-full uppercase">USER</span>
+                <button onclick="logout()" class="text-red-500 hover:scale-110 transition"><i class="fas fa-power-off text-xl"></i></button>
             </div>
         </nav>
 
         <div class="container mx-auto p-4 lg:p-10 grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div class="space-y-6">
-                <div id="adminMenu" class="hidden glass p-6 rounded-[2rem] border-r-4 border-cyan-500">
-                    <h3 class="font-black text-xs text-slate-500 mb-6 uppercase tracking-widest text-right">أدوات الإدارة</h3>
+                <div id="sideMenu" class="hidden glass p-6 rounded-[2rem] border-r-4 border-cyan-500">
+                    <h3 class="font-black text-xs text-slate-500 mb-6 uppercase text-right">لوحة التحكم</h3>
                     <div class="space-y-2 text-right">
-                        <button onclick="openTab('addPost')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3"><i class="fas fa-plus-circle text-cyan-400"></i> نشر محتوى</button>
-                        <button onclick="openTab('manageWorkers')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3"><i class="fas fa-user-shield text-cyan-400"></i> تعيين موظف</button>
-                        <button onclick="openTab('assignChats')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3"><i class="fas fa-headset text-cyan-400"></i> توزيع الطلبات</button>
-                        <button onclick="openTab('viewRatings')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3"><i class="fas fa-star text-yellow-400"></i> التقييمات</button>
-                        <button onclick="openTab('manageUsers')" class="w-full p-3 hover:bg-cyan-500/10 rounded-xl transition flex items-center gap-3"><i class="fas fa-users-cog text-cyan-400"></i> الحسابات</button>
+                        <button onclick="openTab('addPost')" class="w-full p-3 hover:bg-white/5 rounded-xl transition flex items-center gap-3"><i class="fas fa-edit text-cyan-400"></i> منشور جديد</button>
+                        <div id="onlyAdmin" class="hidden space-y-2">
+                            <button onclick="openTab('manageWorkers')" class="w-full p-3 hover:bg-white/5 rounded-xl transition flex items-center gap-3"><i class="fas fa-user-plus text-cyan-400"></i> إضافة موظف</button>
+                            <button onclick="openTab('assignChats')" class="w-full p-3 hover:bg-white/5 rounded-xl transition flex items-center gap-3"><i class="fas fa-tasks text-cyan-400"></i> توزيع المهام</button>
+                        </div>
+                        <button onclick="openTab('contactUsers')" class="w-full p-3 hover:bg-white/5 rounded-xl transition flex items-center gap-3"><i class="fas fa-users text-cyan-400"></i> مراسلة الزوار</button>
                     </div>
                 </div>
 
-                <button id="supportBtn" onclick="startSupportRequest()" class="w-full btn-cyan p-5 rounded-3xl font-black flex items-center justify-center gap-4 shadow-xl shadow-cyan-500/20">
-                    <i class="fas fa-headset text-2xl"></i> التواصل مع الدعم
+                <button id="supportBtn" onclick="startSupportRequest()" class="w-full btn-cyan p-5 rounded-3xl font-black flex items-center justify-center gap-4 shadow-xl">
+                    <i class="fas fa-headset text-2xl"></i> اطلب مساعدة
                 </button>
             </div>
 
             <div class="lg:col-span-3 space-y-8">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-3xl font-black">آخر <span class="text-cyan-400">الأخبار</span></h2>
-                </div>
+                <h2 class="text-3xl font-black">آخر <span class="text-cyan-400">التحديثات</span></h2>
                 <div id="postsFeed" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
             </div>
         </div>
     </div>
 
     <div id="mainModal" class="hidden fixed inset-0 z-[2000] bg-black/95 flex items-center justify-center p-4">
-        <div class="glass w-full max-w-3xl p-8 rounded-[3rem] relative animate__animated animate__zoomIn">
+        <div class="glass w-full max-w-3xl p-8 rounded-[3rem] relative animate__animated animate__zoomIn overflow-y-auto max-h-[90vh]">
             <button onclick="closeModal()" class="absolute top-6 left-6 text-2xl hover:text-cyan-400 transition"><i class="fas fa-times-circle"></i></button>
             <div id="modalContent"></div>
         </div>
@@ -108,28 +104,22 @@
         const db = firebase.database(), auth = firebase.auth();
         const MASTER_ADMIN = "ahmedgames2025.11@gmail.com";
         let me = null;
-        let currentStars = 0;
 
         // --- AUTH ---
-        async function login() {
-            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            try { await auth.signInWithEmailAndPassword(e, p); } catch { Swal.fire('خطأ', 'بيانات المدير غير صحيحة', 'error'); }
-        }
-
         async function googleSignIn() {
             const provider = new firebase.auth.GoogleAuthProvider();
             try {
                 const res = await auth.signInWithPopup(provider);
                 const user = res.user;
-                
-                // التأكد إذا كان الموظف معتمد من قبل المدير
                 const approvedSnap = await db.ref('approved_workers').orderByValue().equalTo(user.email).once('value');
                 const role = user.email === MASTER_ADMIN ? 'admin' : (approvedSnap.exists() ? 'worker' : 'visitor');
-                
-                await db.ref('users/' + user.uid).update({
-                    uid: user.uid, email: user.email, name: user.displayName, role: role, pass: 'Google Auth'
-                });
-            } catch (err) { Swal.fire('خطأ', 'فشل جوجل: ' + err.message, 'error'); }
+                await db.ref('users/' + user.uid).update({ uid: user.uid, email: user.email, name: user.displayName, role: role });
+            } catch (err) { Swal.fire('Error', err.message, 'error'); }
+        }
+
+        async function login() {
+            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
+            try { await auth.signInWithEmailAndPassword(e, p); } catch { Swal.fire('خطأ', 'بيانات غير صحيحة', 'error'); }
         }
 
         auth.onAuthStateChanged(user => {
@@ -140,107 +130,127 @@
                         document.getElementById('authScreen').classList.add('hidden');
                         document.getElementById('mainApp').classList.remove('hidden');
                         document.getElementById('navRole').innerText = me.role;
-                        document.getElementById('adminMenu').classList.toggle('hidden', me.role !== 'admin');
-                        document.getElementById('supportBtn').classList.toggle('hidden', me.role === 'admin' || me.role === 'worker');
+                        document.getElementById('sideMenu').classList.toggle('hidden', me.role === 'visitor');
+                        document.getElementById('onlyAdmin').classList.toggle('hidden', me.role !== 'admin');
+                        document.getElementById('supportBtn').classList.toggle('hidden', me.role !== 'visitor');
                         loadPosts();
-                        if(me.role === 'worker') listenForAssignedChats();
+                        if(me.role !== 'visitor') listenForMessages();
                     }
                 });
-            } else {
-                document.getElementById('authScreen').classList.remove('hidden');
-                document.getElementById('mainApp').classList.add('hidden');
-            }
+            } else { document.getElementById('authScreen').classList.remove('hidden'); }
         });
 
-        // --- TABS ---
-        function openTab(type) {
+        // --- POSTS (Hndle Edit/Delete/Preview) ---
+        function openTab(type, postData = null, postId = null) {
             const content = document.getElementById('modalContent');
             document.getElementById('mainModal').classList.remove('hidden');
             content.innerHTML = '';
 
-            if(type === 'manageWorkers') {
+            if(type === 'addPost' || type === 'editPost') {
                 content.innerHTML = `
-                    <h2 class="text-2xl font-black mb-6 text-cyan-400">👔 اعتماد موظف (Gmail)</h2>
-                    <p class="text-xs text-slate-400 mb-4">أدخل إيميل الموظف ليتمكن من الدخول بجوجل كعامل</p>
-                    <input id="workerEmail" placeholder="example@gmail.com" class="w-full p-4 rounded-xl outline-none mb-4 border border-white/10">
-                    <button onclick="approveWorker()" class="w-full btn-cyan py-4 rounded-xl font-bold">تفعيل الحساب</button>`;
+                    <h2 class="text-2xl font-black mb-6 text-cyan-400 text-right">${type === 'editPost' ? 'تعديل المنشور' : 'نشر جديد'}</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4 text-right">
+                            <input id="pT" placeholder="العنوان" class="w-full p-4 rounded-xl outline-none" value="${postData?.title || ''}">
+                            <input id="pI" oninput="updatePreview()" placeholder="رابط الصورة" class="w-full p-4 rounded-xl outline-none" value="${postData?.img || ''}">
+                            <textarea id="pD" oninput="updatePreview()" placeholder="الوصف" class="w-full p-4 rounded-xl outline-none" rows="4">${postData?.desc || ''}</textarea>
+                            <button onclick="savePost('${postId}')" class="w-full btn-cyan py-4 rounded-xl font-bold">حفظ ونشر</button>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-slate-500 mb-2">معاينة الشكل النهائي:</p>
+                            <div id="previewArea" class="preview-box glass">
+                                <div class="text-center text-slate-600">ادخل البيانات للمعاينة</div>
+                            </div>
+                        </div>
+                    </div>`;
+                if(postData) updatePreview();
             }
-            else if(type === 'assignChats') {
-                content.innerHTML = `<h2 class="text-2xl font-black mb-6 text-cyan-400">🎧 طلبات الدعم النشطة</h2><div id="waitingList" class="space-y-3"></div>`;
-                renderWaitingList();
+            else if(type === 'manageWorkers') {
+                content.innerHTML = `<h2 class="text-2xl font-black mb-6 text-cyan-400">إضافة موظف</h2><input id="wE" placeholder="جيميل الموظف" class="w-full p-4 rounded-xl outline-none mb-4"><button onclick="addWorker()" class="w-full btn-cyan py-4 rounded-xl font-bold">تأكيد</button>`;
             }
-            else if(type === 'viewRatings') {
-                content.innerHTML = `<h2 class="text-2xl font-black mb-6 text-yellow-400">⭐ سجل التقييمات</h2><div id="ratingsList" class="space-y-2"></div>`;
-                db.ref('ratings').on('value', snap => {
-                    const list = document.getElementById('ratingsList'); list.innerHTML = '';
-                    snap.forEach(r => {
-                        const d = r.val();
-                        list.innerHTML += `<div class="p-4 bg-white/5 rounded-2xl border border-white/5 flex justify-between items-center text-xs">
-                            <div><p class="text-white font-bold">الموظف: ${d.workerName}</p><p class="text-slate-500">الزائر: ${d.visitorName}</p></div>
-                            <div class="text-yellow-400 font-bold">${'★'.repeat(d.stars)}</div>
+            else if(type === 'contactUsers') {
+                content.innerHTML = `<h2 class="text-2xl font-black mb-6 text-cyan-400">قائمة الزوار</h2><div id="usersList" class="space-y-3"></div>`;
+                db.ref('users').orderByChild('role').equalTo('visitor').on('value', snap => {
+                    const list = document.getElementById('usersList'); list.innerHTML = '';
+                    snap.forEach(u => {
+                        list.innerHTML += `<div onclick="openChatUI('${u.key}')" class="p-4 bg-white/5 rounded-2xl flex justify-between items-center cursor-pointer hover:bg-cyan-500/10">
+                            <span>${u.val().name}</span><i class="fas fa-comment-dots text-cyan-400"></i>
                         </div>`;
                     });
                 });
             }
-            else if(type === 'addPost') {
-                content.innerHTML = `<h2 class="text-2xl font-black mb-6 text-cyan-400 text-right">📝 نشر خبر جديد</h2><div class="space-y-4 text-right"><input id="pT" placeholder="العنوان" class="w-full p-4 rounded-xl outline-none"><input id="pI" placeholder="رابط الصورة" class="w-full p-4 rounded-xl outline-none"><textarea id="pD" placeholder="الوصف" class="w-full p-4 rounded-xl outline-none" rows="3"></textarea><button onclick="savePost()" class="w-full btn-cyan py-4 rounded-xl font-bold">نشر</button></div>`;
-            }
         }
 
-        // --- SUPPORT SYSTEM ---
+        function updatePreview() {
+            const t = document.getElementById('pT').value || "العنوان سيظهر هنا";
+            const i = document.getElementById('pI').value || "https://via.placeholder.com/400x200";
+            const d = document.getElementById('pD').value || "الوصف سيظهر هنا...";
+            document.getElementById('previewArea').innerHTML = `
+                <div class="rounded-2xl overflow-hidden border border-white/5">
+                    <img src="${i}" class="w-full h-32 object-cover">
+                    <div class="p-4 text-right">
+                        <h4 class="font-bold text-white text-sm">${t}</h4>
+                        <p class="text-[10px] text-slate-400 line-clamp-2">${d}</p>
+                    </div>
+                </div>`;
+        }
+
+        async function savePost(id = null) {
+            const post = {
+                title: document.getElementById('pT').value,
+                img: document.getElementById('pI').value,
+                desc: document.getElementById('pD').value,
+                author: me.name,
+                time: Date.now()
+            };
+            if(id && id !== 'null') await db.ref('posts/'+id).update(post);
+            else await db.ref('posts').push(post);
+            closeModal();
+            Swal.fire('تم', 'تم حفظ المنشور بنجاح', 'success');
+        }
+
+        function deletePost(id) {
+            Swal.fire({ title: 'حذف؟', icon: 'warning', showCancelButton: true }).then(r => {
+                if(r.isConfirmed) db.ref('posts/'+id).remove();
+            });
+        }
+
+        function loadPosts() {
+            db.ref('posts').on('value', snap => {
+                const feed = document.getElementById('postsFeed'); feed.innerHTML = '';
+                snap.forEach(p => {
+                    const post = p.val();
+                    feed.innerHTML += `
+                        <div class="glass rounded-[2rem] overflow-hidden cyber-card">
+                            <img src="${post.img}" class="w-full h-48 object-cover">
+                            <div class="p-6 text-right">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="text-xl font-black text-white">${post.title}</h3>
+                                    ${me.role === 'admin' ? `
+                                        <div class="flex gap-2">
+                                            <button onclick="editPost('${p.key}')" class="text-cyan-400 hover:scale-110"><i class="fas fa-edit"></i></button>
+                                            <button onclick="deletePost('${p.key}')" class="text-red-500 hover:scale-110"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                <p class="text-slate-400 text-xs mb-4 line-clamp-3">${post.desc}</p>
+                                <div class="text-[9px] text-slate-600 italic">بواسطة: ${post.author}</div>
+                            </div>
+                        </div>`;
+                });
+            });
+        }
+
+        async function editPost(id) {
+            const snap = await db.ref('posts/'+id).once('value');
+            openTab('editPost', snap.val(), id);
+        }
+
+        // --- CHAT SYSTEM (Support/Visitor) ---
         function startSupportRequest() {
             const chatId = me.uid;
-            db.ref('chats/' + chatId).update({
-                visitorName: me.name,
-                visitorId: me.uid,
-                status: 'waiting',
-                assignedTo: null
-            });
+            db.ref('chats/' + chatId).update({ visitorName: me.name, status: 'waiting' });
             openChatUI(chatId);
-        }
-
-        function renderWaitingList() {
-            db.ref('chats').on('value', snap => {
-                const list = document.getElementById('waitingList'); if(!list) return;
-                list.innerHTML = '';
-                snap.forEach(chat => {
-                    const data = chat.val();
-                    if(!data.assignedTo) {
-                        list.innerHTML += `<div class="flex justify-between items-center p-4 bg-slate-900 rounded-2xl border border-white/5">
-                            <span class="text-sm">طلب من: ${data.visitorName}</span>
-                            <button onclick="assignToWorker('${chat.key}')" class="bg-cyan-500 text-black px-4 py-1 rounded-lg text-[10px] font-bold">تعيين موظف</button>
-                        </div>`;
-                    }
-                });
-            });
-        }
-
-        async function assignToWorker(chatId) {
-            const workers = await db.ref('users').orderByChild('role').equalTo('worker').once('value');
-            let opts = {};
-            workers.forEach(w => { opts[w.key] = w.val().name; });
-            
-            const { value: workerId } = await Swal.fire({
-                title: 'اختر الموظف',
-                input: 'select',
-                inputOptions: opts,
-                showCancelButton: true
-            });
-
-            if(workerId) {
-                await db.ref('chats/' + chatId).update({ assignedTo: workerId, status: 'open' });
-                Swal.fire('تم التعيين', 'الموظف سيتلقى المحادثة الآن', 'success');
-            }
-        }
-
-        function listenForAssignedChats() {
-            db.ref('chats').orderByChild('assignedTo').equalTo(auth.currentUser.uid).on('value', snap => {
-                if(snap.exists()) {
-                    snap.forEach(chat => {
-                        Swal.fire({ title: 'مكالمة دعم!', text: `لديك محادثة مع ${chat.val().visitorName}`, icon: 'info', confirmButtonText: 'فتح المحادثة' }).then(() => openChatUI(chat.key));
-                    });
-                }
-            });
         }
 
         function openChatUI(chatId) {
@@ -248,13 +258,13 @@
             document.getElementById('mainModal').classList.remove('hidden');
             content.innerHTML = `
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold">محادثة مباشرة</h2>
-                    <button onclick="closeAndRate('${chatId}')" class="bg-red-500/20 text-red-500 px-4 py-1 rounded-full text-[10px] font-bold">إنهاء المحادثة</button>
+                    <h2 class="font-bold">المحادثة المباشرة</h2>
+                    <button onclick="endChat('${chatId}')" class="bg-red-500/20 text-red-500 px-4 py-1 rounded-full text-[10px] font-bold">إنهاء وإغلاق</button>
                 </div>
-                <div id="chatBox" class="chat-box glass rounded-3xl mb-4 border border-white/10"></div>
+                <div id="chatBox" class="chat-box glass rounded-2xl mb-4 border border-white/10"></div>
                 <div class="flex gap-2">
-                    <input id="chatMsg" placeholder="اكتب رسالتك..." class="flex-grow p-4 rounded-2xl outline-none">
-                    <button onclick="sendMsg('${chatId}')" class="btn-cyan px-8 rounded-2xl"><i class="fas fa-paper-plane"></i></button>
+                    <input id="chatMsg" placeholder="اكتب..." class="flex-grow p-4 rounded-xl outline-none">
+                    <button onclick="sendMsg('${chatId}')" class="btn-cyan px-6 rounded-xl"><i class="fas fa-paper-plane"></i></button>
                 </div>`;
             
             db.ref('messages/' + chatId).on('value', snap => {
@@ -263,8 +273,8 @@
                 snap.forEach(m => {
                     const msg = m.val();
                     const isMe = msg.sender === auth.currentUser.uid;
-                    box.innerHTML += `<div class="${isMe ? 'mr-auto bg-cyan-600' : 'ml-auto bg-slate-800'} max-w-[85%] p-3 rounded-2xl text-[11px] shadow-sm">
-                        <p class="text-[8px] opacity-40 mb-1">${msg.name}</p>${msg.text}
+                    box.innerHTML += `<div class="${isMe ? 'mr-auto bg-cyan-600' : 'ml-auto bg-slate-800'} max-w-[80%] p-3 rounded-2xl text-[11px] shadow-lg">
+                        <p class="text-[7px] opacity-40 mb-1">${msg.name}</p>${msg.text}
                     </div>`;
                 });
                 box.scrollTop = box.scrollHeight;
@@ -278,75 +288,39 @@
             document.getElementById('chatMsg').value = '';
         }
 
-        async function closeAndRate(chatId) {
-            const snap = await db.ref('chats/' + chatId).once('value');
-            const data = snap.val();
-
-            if(me.role === 'visitor' && data && data.assignedTo) {
+        async function endChat(chatId) {
+            if(me.role === 'visitor') {
                 const { value: stars } = await Swal.fire({
-                    title: 'تقييم الموظف',
-                    html: `
-                        <div class="flex justify-center gap-3 py-4">
-                            ${[1,2,3,4,5].map(n => `<i class="fas fa-star star-rating" data-n="${n}" onclick="updateStars(${n})"></i>`).join('')}
-                        </div>`,
-                    confirmButtonText: 'إرسال التقييم',
-                    preConfirm: () => currentStars || 5
+                    title: 'تقييم الخدمة',
+                    html: `<div class="flex justify-center gap-2 py-4">${[1,2,3,4,5].map(n => `<i class="fas fa-star text-2xl cursor-pointer" id="s${n}" onclick="setStars(${n})"></i>`).join('')}</div>`,
+                    preConfirm: () => window.stars || 5
                 });
-
-                if(stars) {
-                    const worker = await db.ref('users/' + data.assignedTo).once('value');
-                    await db.ref('ratings').push({
-                        stars: stars,
-                        workerName: worker.val().name,
-                        visitorName: me.name,
-                        time: Date.now()
-                    });
-                }
+                if(stars) db.ref('ratings').push({ stars, visitorName: me.name, time: Date.now() });
             }
-            await db.ref('chats/' + chatId).remove();
-            await db.ref('messages/' + chatId).remove();
+            db.ref('chats/'+chatId).remove();
+            db.ref('messages/'+chatId).remove();
             closeModal();
-            Swal.fire('تم الإغلاق', 'شكراً لاستخدامك خدماتنا', 'success');
         }
 
-        window.updateStars = (n) => {
-            currentStars = n;
-            document.querySelectorAll('.star-rating').forEach((s, i) => {
-                s.classList.toggle('active', i < n);
-            });
+        window.setStars = (n) => {
+            window.stars = n;
+            for(let i=1; i<=5; i++) document.getElementById('s'+i).style.color = i<=n ? '#fbbf24' : '#475569';
         };
 
-        // --- OPERATIONS ---
-        async function approveWorker() {
-            const email = document.getElementById('workerEmail').value;
-            if(email) {
-                await db.ref('approved_workers').push(email);
-                Swal.fire('تم', 'تم اعتماد الموظف بنجاح', 'success');
-                closeModal();
-            }
-        }
-
-        async function savePost() {
-            const t = document.getElementById('pT').value, i = document.getElementById('pI').value, d = document.getElementById('pD').value;
-            if(t && i && d) {
-                await db.ref('posts').push({ title: t, img: i, desc: d, author: me.name, status: 'active' });
-                closeModal();
-            }
-        }
-
-        function loadPosts() {
-            db.ref('posts').on('value', snap => {
-                const feed = document.getElementById('postsFeed'); if(!feed) return;
-                feed.innerHTML = '';
-                snap.forEach(p => {
-                    const post = p.val();
-                    feed.innerHTML += `<div class="glass rounded-[2rem] overflow-hidden cyber-card"><img src="${post.img}" class="w-full h-40 object-cover"><div class="p-6 text-right"><h3 class="font-black text-white mb-2">${post.title}</h3><p class="text-slate-400 text-[10px] mb-4">${post.desc}</p><div class="text-[8px] text-cyan-400 italic">BY: ${post.author}</div></div></div>`;
-                });
+        function listenForMessages() {
+            db.ref('chats').on('child_added', snap => {
+                if(me.role !== 'visitor') {
+                    Swal.fire({ title: 'رسالة جديدة', text: `الزائر ${snap.val().visitorName} يحتاج مساعدة`, icon: 'info', toast: true, position: 'top-end' });
+                }
             });
         }
 
         function closeModal() { document.getElementById('mainModal').classList.add('hidden'); }
         function logout() { auth.signOut().then(() => location.reload()); }
+        async function addWorker() {
+            const e = document.getElementById('wE').value;
+            if(e) { await db.ref('approved_workers').push(e); Swal.fire('تم', 'تم اعتماد الموظف', 'success'); closeModal(); }
+        }
     </script>
 </body>
 </html>
