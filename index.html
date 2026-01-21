@@ -96,9 +96,7 @@
             <div class="max-w-xl mx-auto mt-10 glass p-8 animate__animated animate__zoomIn">
                 <img id="dlImg" class="w-32 h-32 mx-auto rounded-3xl shadow-2xl mb-4">
                 <h2 id="dlTitle" class="text-2xl font-black mb-2"></h2>
-                
                 <div id="dlDesc" class="desc-box text-slate-400 italic"></div>
-
                 <div id="dlTimer">
                     <p class="mb-2 text-xs opacity-60">جاري فحص الرابط...</p>
                     <div class="text-5xl font-black text-blue-500 mb-6" id="dlNum">00</div>
@@ -113,10 +111,14 @@
         <div class="glass bg-slate-900 w-full max-w-lg p-8 space-y-4 animate__animated animate__slideInUp">
             <h2 class="text-xl font-bold border-b border-white/10 pb-2">نشر جديد | Z Ahmed Tech</h2>
             <input id="postTitle" placeholder="عنوان المنشور" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
-            <input id="postImg" placeholder="رابط الصورة (Image URL)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+            
+            <div class="space-y-2">
+                <label class="text-xs text-slate-400 block">اختر صورة المنشور:</label>
+                <input type="file" id="fileInput" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
+                <input id="postImg" placeholder="أو ضع رابط صورة جاهز هنا" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-xs mt-2">
+            </div>
             
             <textarea id="postDesc" placeholder="اكتب وصف المنشور هنا..." class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 h-24 outline-none"></textarea>
-            
             <input id="btnName" placeholder="اسم الزر (مثال: تحميل مباشر)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
             <input id="postLink" placeholder="الرابط (URL)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
             
@@ -197,7 +199,7 @@
         function deleteUser(uid) {
             Swal.fire({
                 title: 'هل أنت متأكد؟',
-                text: "سيتم حذف الحساب نهائياً من Z Ahmed Tech",
+                text: "سيتم حذف الحساب نهائياً",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -261,30 +263,48 @@
         function updateWaitTime(v) { if(me.role === 'admin') db.ref('settings/time').set(parseInt(v)); Swal.fire('نجاح', 'تم تحديث وقت العداد', 'success'); }
         function deletePost(id) { if(confirm('حذف هذا المنشور؟')) db.ref('posts/'+id).remove(); }
         
-        function savePost() {
+        // تحويل الصورة المرفوعة إلى Base64
+        async function savePost() {
             const title = document.getElementById('postTitle').value;
-            const img = document.getElementById('postImg').value;
             const desc = document.getElementById('postDesc').value;
             const bName = document.getElementById('btnName').value;
             const link = document.getElementById('postLink').value;
+            const file = document.getElementById('fileInput').files[0];
+            let imgUrl = document.getElementById('postImg').value;
 
-            if(!title || !link) return Swal.fire('خطأ', 'يرجى ملء العنوان والرابط على الأقل', 'error');
+            if(!title || !link) return Swal.fire('خطأ', 'يرجى ملء العنوان والرابط', 'error');
 
+            // إذا كان هناك ملف مرفوع، نقوم بمعالجته
+            if(file) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function () {
+                    imgUrl = reader.result;
+                    pushToFirebase(title, imgUrl, desc, bName, link);
+                };
+            } else {
+                pushToFirebase(title, imgUrl, desc, bName, link);
+            }
+        }
+
+        function pushToFirebase(title, img, desc, bName, link) {
             db.ref('posts').push({
                 title: title,
-                img: img,
+                img: img || 'https://via.placeholder.com/150',
                 desc: desc,
                 btnName: bName,
                 link: link
+            }).then(() => {
+                document.getElementById('postModal').classList.add('hidden');
+                Swal.fire('تم النشر', 'تمت إضافة المنشور بنجاح', 'success');
+                // تنظيف
+                document.getElementById('postTitle').value = '';
+                document.getElementById('postImg').value = '';
+                document.getElementById('postDesc').value = '';
+                document.getElementById('btnName').value = '';
+                document.getElementById('postLink').value = '';
+                document.getElementById('fileInput').value = '';
             });
-            document.getElementById('postModal').classList.add('hidden');
-            Swal.fire('تم النشر', 'تمت إضافة المنشور إلى Z Ahmed Tech', 'success');
-            // تنظيف الخانات
-            document.getElementById('postTitle').value = '';
-            document.getElementById('postImg').value = '';
-            document.getElementById('postDesc').value = '';
-            document.getElementById('btnName').value = '';
-            document.getElementById('postLink').value = '';
         }
     </script>
 </body>
