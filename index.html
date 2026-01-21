@@ -32,7 +32,7 @@
 
     <div id="authScreen" class="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950 p-4">
         <div class="glass p-8 w-full max-w-md rounded-[2.5rem] text-center animate__animated animate__zoomIn">
-            <h1 class="text-4xl font-black mb-8 uppercase text-white">Z Ahmed Tech <span class="text-cyan-400">Tech</span></h1>
+            <h1 class="text-4xl font-black mb-8 uppercase text-white">Z Ahmed <span class="text-cyan-400">Tech</span></h1>
             <div class="space-y-4">
                 <button onclick="googleSignIn()" class="w-full bg-white text-black py-4 rounded-xl font-bold flex items-center justify-center gap-3">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20"> دخول بجوجل
@@ -47,7 +47,7 @@
 
     <div id="mainApp" class="hidden">
         <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center border-b border-white/5">
-            <div class="text-2xl font-black uppercase cursor-pointer" onclick="goHome()">Z <span class="text-cyan-400">Tech</span></div>
+            <div class="text-2xl font-black uppercase cursor-pointer" onclick="goHome()">Z Ahmed <span class="text-cyan-400">Tech</span></div>
             <div class="flex items-center gap-4">
                 <span id="navRole" class="text-[9px] font-bold bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full uppercase italic">USER</span>
                 <button onclick="logout()" class="text-red-500"><i class="fas fa-power-off"></i></button>
@@ -77,7 +77,7 @@
                 </div>
 
                 <div class="lg:col-span-3">
-                    <h2 class="text-3xl font-black mb-8 text-right text-white italic">آخر <span class="text-cyan-400">التحديثات</span></h2>
+                    <h2 class="text-3xl font-black mb-8 text-right text-white italic">أحدث <span class="text-cyan-400">التحديثات</span></h2>
                     <div id="postsFeed" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
                 </div>
             </div>
@@ -91,7 +91,7 @@
                     <h3 class="text-xl font-bold">يتم تحضير المحتوى...</h3>
                 </div>
                 <div id="actualContent" class="hidden space-y-6 text-right">
-                    <button onclick="goHome()" class="text-cyan-400 mb-4"><i class="fas fa-arrow-right"></i> رجوع</button>
+                    <button onclick="goHome()" class="text-cyan-400 mb-4"><i class="fas fa-arrow-right"></i> رجوع للرئيسية</button>
                     <img id="detailImg" class="w-full h-80 object-cover rounded-[2rem] shadow-2xl">
                     <h1 id="detailTitle" class="text-4xl font-black"></h1>
                     <div id="detailDesc" class="text-lg text-slate-300 leading-relaxed py-6 border-t border-white/5"></div>
@@ -123,7 +123,6 @@
         const MASTER_ADMIN = "ahmedgames2025.11@gmail.com";
         let me = null;
 
-        // Auth
         async function googleSignIn() {
             const provider = new firebase.auth.GoogleAuthProvider();
             try {
@@ -159,7 +158,6 @@
             } else { document.getElementById('authScreen').classList.remove('hidden'); }
         });
 
-        // Posts Logic
         let globalWaitTime = 5;
         function loadWaitTime() { db.ref('settings/waitTime').on('value', s => { globalWaitTime = s.val() || 5; if(document.getElementById('waitTimer')) document.getElementById('waitTimer').value = globalWaitTime; }); }
         function saveWaitTime(v) { db.ref('settings/waitTime').set(v); }
@@ -174,7 +172,7 @@
                             <img src="${post.img}" class="w-full h-40 object-cover">
                             <div class="p-4 text-right">
                                 <h3 class="font-bold text-lg">${post.title}</h3>
-                                <p class="text-cyan-400 text-[10px] mt-2 italic">إقرأ الآن <i class="fas fa-arrow-left"></i></p>
+                                <p class="text-cyan-400 text-[10px] mt-2 italic">عرض التفاصيل <i class="fas fa-arrow-left"></i></p>
                                 ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="text-red-500 text-[10px] mt-2">حذف</button>` : ''}
                             </div>
                         </div>`;
@@ -208,7 +206,6 @@
             document.getElementById('actionBtnContainer').innerHTML = post.btnLink ? `<a href="${post.btnLink}" class="btn-cyan px-8 py-3 rounded-xl font-bold">${post.btnText || 'دخول'}</a>` : '';
         }
 
-        // Admin Features
         function openAdminModal(type) {
             const content = document.getElementById('modalContent');
             document.getElementById('adminModal').classList.remove('hidden');
@@ -219,9 +216,9 @@
                     <div class="flex gap-2 mb-2"><input id="pI" placeholder="رابط الصورة" class="flex-grow p-4 text-xs"><input type="file" onchange="upImg(this)" class="w-1/3"></div>
                     <textarea id="pD" placeholder="الوصف" class="w-full p-4 mb-2" rows="4"></textarea>
                     <div class="flex gap-2"><input id="pBtnT" placeholder="نص الزر" class="w-1/2 p-4"><input id="pBtnL" placeholder="رابط الزر" class="w-1/2 p-4"></div>
-                    <button onclick="savePost()" class="w-full btn-cyan p-4 mt-4 rounded-xl font-bold">نشر</button>`;
+                    <button onclick="savePost()" class="w-full btn-cyan p-4 mt-4 rounded-xl font-bold">نشر الآن</button>`;
             } else if(type === 'manageUsers') {
-                content.innerHTML = `<h2 class="text-xl font-bold mb-4">إدارة المستخدمين</h2><div id="usersList" class="space-y-2"></div>`;
+                content.innerHTML = `<h2 class="text-xl font-bold mb-4">إدارة مستخدمي Z Ahmed Tech</h2><div id="usersList" class="space-y-2"></div>`;
                 db.ref('users').on('value', s => {
                     const list = document.getElementById('usersList'); list.innerHTML = '';
                     s.forEach(u => {
@@ -236,12 +233,12 @@
                     });
                 });
             } else if(type === 'viewChats') {
-                content.innerHTML = `<h2 class="text-xl font-bold mb-4">مراقبة الرسائل والتقييمات</h2><div id="chatsList" class="space-y-2"></div>`;
+                content.innerHTML = `<h2 class="text-xl font-bold mb-4">مراقبة الشات والتقييمات</h2><div id="chatsList" class="space-y-2"></div>`;
                 db.ref('chats').on('value', s => {
                     const list = document.getElementById('chatsList'); list.innerHTML = '';
                     s.forEach(c => {
                         list.innerHTML += `<div onclick="openChatUI('${c.key}')" class="p-4 bg-white/5 rounded-xl flex justify-between cursor-pointer">
-                            <span class="text-yellow-400 text-[10px]">${c.val().rating ? '⭐ '+c.val().rating : 'بدون تقييم'}</span>
+                            <span class="text-yellow-400 text-[10px]">${c.val().rating ? '⭐ '+c.val().rating : 'قيد الانتظار'}</span>
                             <span class="text-xs">${c.val().userName}</span>
                         </div>`;
                     });
@@ -249,13 +246,12 @@
             }
         }
 
-        // Chat & Support
         function startChat() { openChatUI(me.uid); }
         function openChatUI(chatId) {
             const content = document.getElementById('modalContent');
             document.getElementById('adminModal').classList.remove('hidden');
             content.innerHTML = `
-                <h3 class="font-bold mb-2">المحادثة الدعم الفني</h3>
+                <h3 class="font-bold mb-2">الدعم الفني - Z Ahmed Tech</h3>
                 <div id="chatBox" class="chat-box glass rounded-xl mb-4"></div>
                 <div class="flex gap-2">
                     <input id="msgInp" placeholder="اكتب رسالتك..." class="flex-grow p-4 outline-none">
@@ -287,16 +283,16 @@
             document.getElementById('msgInp').value = '';
         }
 
-        function rateWorker(id, v) { db.ref('chats/' + id).update({ rating: v }); Swal.fire('شكراً', 'تم حفظ تقييمك لموظف الخدمة', 'success'); }
+        function rateWorker(id, v) { db.ref('chats/' + id).update({ rating: v }); Swal.fire('شكراً', 'تم التقييم بنجاح', 'success'); }
         function updateRole(uid, role) { db.ref('users/' + uid).update({ role }); }
         function upImg(i) { if(i.files[0]) { const r = new FileReader(); r.onload = e => document.getElementById('pI').value = e.target.result; r.readAsDataURL(i.files[0]); } }
         async function savePost() {
-            const post = { title:document.getElementById('pT').value, img:document.getElementById('pI').value, desc:document.getElementById('pD').value, btnText:document.getElementById('pBtnT').value, btnLink:document.getElementById('pBtnL').value, time:Date.now() };
+            const post = { title:document.getElementById('pT').value, img:document.getElementById('pI').value, desc:document.getElementById('pD').value, btnText:document.getElementById('pBtnT').value, btnLink:document.getElementById('pBtnL').value, author:me.name, time:Date.now() };
             await db.ref('posts').push(post); closeModal();
+            Swal.fire('تم', 'نشر الخبر بنجاح', 'success');
         }
         function deletePost(id) { db.ref('posts/'+id).remove(); }
     </script>
 </body>
-                        </html>
-    
+                                                                                                    </html>
 
