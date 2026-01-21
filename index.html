@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Ahmed Tech | Ultimate Platform</title>
+    <title>Z Ahmed Tech | Dashboard Pro</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -14,96 +15,143 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; transition: 0.3s; }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; transition: background 0.4s, color 0.4s; overflow-x: hidden; }
         
-        /* Mode Colors */
-        .light-mode { background: #f8fafc; color: #1e293b; }
         .dark-mode { background: #020617; color: #f1f5f9; }
-        
-        .light-mode .glass { background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .dark-mode .glass { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.05); }
+        .light-mode { background: #f1f5f9; color: #0f172a; }
 
-        .btn-main { background: #2563eb; color: white; border-radius: 12px; transition: 0.3s; }
+        .glass { backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
+        .dark-mode .glass { background: rgba(15, 23, 42, 0.8); }
+        .light-mode .glass { background: rgba(255, 255, 255, 0.9); border-color: #e2e8f0; }
+
+        .btn-google { background: white; color: #1f2937; border: 1px solid #e5e7eb; transition: 0.3s; }
+        .btn-google:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
         .admin-only { display: none !important; }
-        body.is-admin .admin-only { display: flex !important; }
+        body.is-admin .admin-only { display: block !important; }
         
-        .loader-bar { width: 100%; height: 6px; background: #cbd5e1; border-radius: 10px; overflow: hidden; margin: 15px 0; }
-        .progress { width: 0%; height: 100%; background: #2563eb; transition: 1s linear; }
-        
-        [dir="ltr"] { text-align: left; }
-        [dir="rtl"] { text-align: right; }
+        .progress-ring { transition: 0.4s ease; }
+        .nav-link { position: relative; transition: 0.3s; }
+        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: #3b82f6; transition: 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+
+        .stat-card { border-left: 4px solid #3b82f6; }
     </style>
 </head>
 <body class="dark-mode">
 
-    <div id="authScreen" class="fixed inset-0 z-[5000] flex items-center justify-center bg-slate-950">
-        <div class="glass p-10 w-full max-w-md rounded-[2.5rem] text-center">
-            <h1 class="text-3xl font-black mb-8">Z Ahmed Tech</h1>
+    <div id="authLayout" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950">
+        <div class="glass p-10 w-full max-w-md text-center animate__animated animate__zoomIn">
+            <h1 class="text-3xl font-black mb-2">Z Ahmed Tech</h1>
+            <p class="text-slate-500 text-xs mb-8 uppercase tracking-widest">Premium Tech Solution</p>
+            
             <div class="space-y-4">
-                <input id="email" type="email" placeholder="Email" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-white">
-                <input id="pass" type="password" placeholder="Password" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-white">
-                <button onclick="handleLogin()" class="w-full btn-main py-4 font-bold">Sign In</button>
-                <button onclick="handleGoogle()" class="w-full bg-white text-black py-4 rounded-xl font-bold flex items-center justify-center gap-2">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20"> Google
+                <input id="email" type="email" placeholder="Email" class="w-full p-4 rounded-2xl bg-slate-900/50 border border-slate-700 outline-none focus:border-blue-500 transition">
+                <input id="pass" type="password" placeholder="Password" class="w-full p-4 rounded-2xl bg-slate-900/50 border border-slate-700 outline-none focus:border-blue-500 transition">
+                <button onclick="loginEmail()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold transition-all shadow-lg shadow-blue-900/20">Sign In</button>
+                
+                <div class="flex items-center gap-3 py-2">
+                    <hr class="flex-grow border-slate-800"> <span class="text-slate-600 text-[10px]">OR</span> <hr class="flex-grow border-slate-800">
+                </div>
+
+                <button onclick="loginGoogle()" class="w-full btn-google py-4 rounded-2xl font-black flex items-center justify-center gap-3">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="22">
+                    Continue with Google
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="app" class="hidden min-h-screen">
-        <nav class="glass sticky top-0 z-[100] px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-black text-blue-500">Z Ahmed Tech</div>
-            <div class="flex items-center gap-3">
-                <button onclick="toggleMode()" class="p-2 rounded-full hover:bg-slate-500/20"><i class="fas fa-adjust"></i></button>
-                <button onclick="toggleLang()" class="p-2 text-xs font-bold uppercase" id="langBtn">EN</button>
-                <button onclick="logout()" class="text-red-500 p-2"><i class="fas fa-sign-out-alt"></i></button>
+    <div id="mainApp" class="hidden min-h-screen">
+        <nav class="glass sticky top-4 mx-4 z-[1000] px-6 py-4 flex justify-between items-center shadow-2xl">
+            <div class="flex items-center gap-4">
+                <span class="text-xl font-black tracking-tighter text-blue-500">Z Ahmed Tech</span>
+                <div class="hidden md:flex gap-4 text-xs font-bold">
+                    <button onclick="showPage('home')" class="nav-link" id="navHome">Home</button>
+                    <button onclick="showPage('admin')" class="nav-link admin-only" id="navAdmin">Admin Panel</button>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-slate-500/10 hover:bg-slate-500/20 transition"><i class="fas fa-moon"></i></button>
+                <button onclick="logout()" class="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition"><i class="fas fa-power-off"></i></button>
             </div>
         </nav>
 
-        <div class="container mx-auto px-4 py-8">
-            <div class="flex flex-wrap gap-4 mb-8 justify-center">
-                <a href="https://t.me/Z_Ahmed_Tech" target="_blank" class="bg-blue-500 text-white px-6 py-2 rounded-full font-bold shadow-lg"><i class="fab fa-telegram"></i> Telegram</a>
-                <a href="https://www.youtube.com/@Z_Ahmed_Tech" target="_blank" class="bg-red-600 text-white px-6 py-2 rounded-full font-bold shadow-lg"><i class="fab fa-youtube"></i> YouTube</a>
-                
-                <div class="admin-only flex items-center gap-2 bg-slate-800 p-2 rounded-full border border-blue-500">
-                    <button onclick="openAddModal()" class="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold"><i class="fas fa-plus"></i></button>
-                    <input type="number" id="waitSet" onchange="updateWait(this.value)" class="w-12 bg-transparent text-white text-center text-xs outline-none" title="Set Wait Time">
+        <div id="pageHome" class="container mx-auto px-6 py-10 animate__animated animate__fadeIn">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-black italic" id="txtExplore">Explore Applications</h2>
+                <div class="flex gap-2">
+                    <a href="https://t.me/Z_Ahmed_Tech" target="_blank" class="w-10 h-10 flex items-center justify-center rounded-xl bg-blue-500 text-white shadow-lg shadow-blue-500/20"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="https://www.youtube.com/@Z_Ahmed_Tech" target="_blank" class="w-10 h-10 flex items-center justify-center rounded-xl bg-red-600 text-white shadow-lg shadow-red-500/20"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div id="postsGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+        </div>
+
+        <div id="pageAdmin" class="hidden container mx-auto px-6 py-10 animate__animated animate__fadeIn">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+                <div class="glass p-6 stat-card">
+                    <p class="text-xs font-bold text-slate-500 uppercase">الزوار المتصلين الآن</p>
+                    <h3 id="onlineCount" class="text-4xl font-black mt-2 text-blue-500">0</h3>
+                </div>
+                <div class="glass p-6 stat-card" style="border-color: #10b981;">
+                    <p class="text-xs font-bold text-slate-500 uppercase">إجمالي الحسابات</p>
+                    <h3 id="usersCount" class="text-4xl font-black mt-2 text-emerald-500">0</h3>
+                </div>
+                <div class="glass p-6 stat-card" style="border-color: #f59e0b;">
+                    <button onclick="openPostModal()" class="w-full h-full flex flex-col items-center justify-center gap-2 font-bold hover:text-orange-500 transition">
+                        <i class="fas fa-plus-circle text-2xl"></i> إضافة منشور جديد
+                    </button>
                 </div>
             </div>
 
-            <div id="grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass p-8">
+                    <h4 class="font-bold mb-6 border-b border-white/5 pb-4">قائمة المسجلين</h4>
+                    <div id="usersList" class="space-y-4 max-h-[400px] overflow-y-auto pr-2"></div>
+                </div>
+                <div class="glass p-8">
+                    <h4 class="font-bold mb-6 border-b border-white/5 pb-4">الإعدادات العامة</h4>
+                    <div class="space-y-4">
+                        <label class="text-xs font-bold text-slate-500 uppercase">وقت عداد الانتظار (ثواني)</label>
+                        <input type="number" id="waitInput" onchange="updateWaitTime(this.value)" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 outline-none">
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div id="dlView" class="hidden fixed inset-0 z-[200] bg-inherit overflow-y-auto p-6">
-            <div class="max-w-2xl mx-auto mt-20 glass p-8 rounded-[3rem] text-center">
-                <img id="dlImg" class="w-32 h-32 mx-auto rounded-3xl mb-6 shadow-xl">
-                <h2 id="dlTitle" class="text-2xl font-bold mb-4"></h2>
-                <div id="timerContainer">
-                    <p id="waitTxt" class="text-sm opacity-60 mb-2">Preparing link...</p>
-                    <div class="loader-bar"><div id="bar" class="progress"></div></div>
-                    <p id="timer" class="text-4xl font-black text-blue-500">00</p>
+        <div id="pageDl" class="hidden fixed inset-0 z-[500] bg-inherit p-6 overflow-y-auto">
+            <div class="max-w-xl mx-auto mt-12 glass p-10 text-center animate__animated animate__backInUp">
+                <img id="dlImg" class="w-32 h-32 mx-auto rounded-[2rem] shadow-2xl mb-6">
+                <h2 id="dlTitle" class="text-3xl font-black mb-4"></h2>
+                <div id="dlTimer">
+                    <p class="text-slate-500 text-sm mb-4">جاري فحص وتجهيز الرابط الآمن...</p>
+                    <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-4">
+                        <div id="dlBar" class="h-full bg-blue-500 transition-all duration-1000"></div>
+                    </div>
+                    <span id="dlNum" class="text-5xl font-black text-blue-500 italic">00</span>
                 </div>
-                <div id="btnArea" class="hidden pt-6"></div>
-                <button onclick="closeDl()" class="mt-8 text-blue-500 font-bold" id="backBtn">Back</button>
+                <div id="dlFinal" class="hidden pt-6"></div>
+                <button onclick="showPage('home')" class="mt-10 text-slate-500 font-bold hover:text-blue-500 transition">← العودة للرئيسية</button>
             </div>
         </div>
     </div>
 
-    <div id="modal" class="hidden fixed inset-0 z-[500] bg-black/80 flex items-center justify-center p-4">
-        <div class="bg-white text-black w-full max-w-lg p-8 rounded-3xl space-y-4">
-            <h3 class="font-bold text-xl">New Post</h3>
-            <input id="nT" placeholder="Title">
-            <input id="nI" placeholder="Image URL">
-            <textarea id="nD" placeholder="Description" class="w-full border p-3 rounded-xl"></textarea>
-            <input id="nBL" placeholder="Download Link">
-            <button onclick="savePost()" class="w-full btn-main py-4">Publish</button>
-            <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-full text-gray-500">Close</button>
+    <div id="postModal" class="hidden fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center p-4">
+        <div class="glass bg-slate-900 w-full max-w-lg p-10 space-y-4 animate__animated animate__fadeInDown">
+            <h2 class="text-xl font-bold">إنشاء منشور جديد</h2>
+            <input id="postTitle" placeholder="عنوان التطبيق">
+            <input id="postImg" placeholder="رابط صورة الأيقونة">
+            <textarea id="postDesc" placeholder="وصف موجز للمحتوى" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700 outline-none"></textarea>
+            <input id="postLink" placeholder="رابط التحميل المباشر">
+            <button onclick="savePost()" class="w-full bg-blue-600 py-4 rounded-xl font-bold">نشر الآن</button>
+            <button onclick="document.getElementById('postModal').classList.add('hidden')" class="w-full text-slate-500 text-sm">إلغاء</button>
         </div>
     </div>
 
     <script>
-        const config = {
+        const firebaseConfig = {
             apiKey: "AIzaSyAqSQLHq0QFpe1CV8bAYc53mbUO7I03Q5I",
             authDomain: "z-ahmed-tech.firebaseapp.com",
             databaseURL: "https://z-ahmed-tech-default-rtdb.firebaseio.com",
@@ -112,119 +160,141 @@
             messagingSenderId: "422229166590",
             appId: "1:422229166590:web:67e75f72cd8ea1dd5058af"
         };
-        firebase.initializeApp(config);
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.database();
-        const ADMIN = "ahmedgames2025.11@gmail.com";
-        let me = null, waitTime = 10, isDark = true, lang = 'AR';
+        const OWNER = "ahmedgames2025.11@gmail.com";
+        let currentUser = null, waitTime = 10;
 
-        // --- Auth ---
-        function handleLogin() {
-            auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value);
+        // --- نظام تسجيل الدخول ---
+        function loginEmail() {
+            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
+            auth.signInWithEmailAndPassword(e, p).catch(err => Swal.fire('Error', 'Invalid login', 'error'));
         }
-        function handleGoogle() {
+        function loginGoogle() {
             auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
         }
         function logout() { auth.signOut().then(() => location.reload()); }
 
         auth.onAuthStateChanged(user => {
             if(user) {
+                // تتبع الحضور (Online Users)
+                const myPresence = db.ref(`online/${user.uid}`);
+                myPresence.set(true);
+                myPresence.onDisconnect().remove();
+
                 db.ref('users/' + user.uid).on('value', snap => {
-                    me = snap.val();
-                    if(!me) {
-                        const role = (user.email === ADMIN) ? 'admin' : 'visitor';
-                        db.ref('users/' + user.uid).set({ email: user.email, role: role });
-                    } else {
-                        if(me.role === 'admin') document.body.classList.add('is-admin');
-                        document.getElementById('authScreen').classList.add('hidden');
-                        document.getElementById('app').classList.remove('hidden');
-                        db.ref('settings/time').on('value', s => { 
-                            waitTime = s.val() || 10;
-                            document.getElementById('waitSet').value = waitTime;
+                    currentUser = snap.val();
+                    if(!currentUser) {
+                        db.ref('users/' + user.uid).set({ 
+                            name: user.displayName || 'Tech User', 
+                            email: user.email, 
+                            role: (user.email === OWNER) ? 'admin' : 'visitor' 
                         });
-                        load();
+                    } else {
+                        if(currentUser.role === 'admin') document.body.classList.add('is-admin');
+                        document.getElementById('authLayout').classList.add('hidden');
+                        document.getElementById('mainApp').classList.remove('hidden');
+                        initDashboard();
+                        loadPosts();
                     }
                 });
             }
         });
 
-        // --- Core ---
-        function load() {
+        // --- لوحة التحكم والبيانات ---
+        function initDashboard() {
+            // عداد المتصلين
+            db.ref('online').on('value', snap => {
+                document.getElementById('onlineCount').innerText = snap.numChildren();
+            });
+            // قائمة الحسابات
+            db.ref('users').on('value', snap => {
+                document.getElementById('usersCount').innerText = snap.numChildren();
+                const list = document.getElementById('usersList');
+                list.innerHTML = '';
+                snap.forEach(u => {
+                    const user = u.val();
+                    list.innerHTML += `<div class="p-3 bg-white/5 rounded-xl flex justify-between items-center text-xs">
+                        <div><p class="font-bold">${user.name}</p><p class="opacity-50">${user.email}</p></div>
+                        <span class="px-2 py-1 rounded bg-blue-500/20 text-blue-500 uppercase">${user.role}</span>
+                    </div>`;
+                });
+            });
+            // وقت الانتظار
+            db.ref('settings/time').on('value', s => {
+                waitTime = s.val() || 10;
+                document.getElementById('waitInput').value = waitTime;
+            });
+        }
+
+        // --- إدارة المنشورات ---
+        function loadPosts() {
             db.ref('posts').on('value', snap => {
-                const grid = document.getElementById('grid'); grid.innerHTML = '';
+                const grid = document.getElementById('postsGrid'); grid.innerHTML = '';
                 snap.forEach(p => {
+                    const post = p.val();
                     grid.innerHTML += `
-                        <div class="glass p-3 rounded-2xl text-center cursor-pointer hover:scale-105 transition" onclick="openDl('${p.key}')">
-                            <img src="${p.val().img}" class="w-full aspect-square rounded-xl object-cover mb-2 shadow-sm">
-                            <h3 class="text-xs font-bold truncate">${p.val().title}</h3>
-                            ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="text-red-500 text-[10px] mt-2">Delete</button>` : ''}
+                        <div class="glass p-3 rounded-[1.5rem] text-center cursor-pointer group hover:border-blue-500 transition" onclick="openDownload('${p.key}')">
+                            <div class="overflow-hidden rounded-2xl mb-3 aspect-square">
+                                <img src="${post.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            </div>
+                            <h3 class="text-[11px] font-bold truncate px-2">${post.title}</h3>
+                            ${currentUser.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="mt-2 text-[10px] text-red-500 hover:underline">Delete</button>` : ''}
                         </div>`;
                 });
             });
         }
 
-        async function openDl(id) {
-            const snap = await db.ref('posts/'+id).once('value');
-            const post = snap.val();
-            document.getElementById('dlView').classList.remove('hidden');
+        async function openDownload(id) {
+            const snap = await db.ref('posts/'+id).once('value'), post = snap.val();
+            showPage('dl');
             document.getElementById('dlImg').src = post.img;
             document.getElementById('dlTitle').innerText = post.title;
             
-            let c = (me.role === 'admin') ? 0 : waitTime;
-            document.getElementById('timer').innerText = c;
-            document.getElementById('bar').style.width = '0%';
-            document.getElementById('btnArea').classList.add('hidden');
-            document.getElementById('timerContainer').classList.remove('hidden');
+            let count = (currentUser.role === 'admin') ? 0 : waitTime;
+            document.getElementById('dlNum').innerText = count;
+            document.getElementById('dlBar').style.width = '0%';
+            document.getElementById('dlTimer').classList.remove('hidden');
+            document.getElementById('dlFinal').classList.add('hidden');
 
-            if(c === 0) { showFinal(post.link); return; }
+            if(count === 0) { renderLink(post.link); return; }
 
             const itv = setInterval(() => {
-                c--;
-                document.getElementById('timer').innerText = c;
-                document.getElementById('bar').style.width = (100 - (c * (100/waitTime))) + '%';
-                if(c <= 0) { clearInterval(itv); showFinal(post.link); }
+                count--;
+                document.getElementById('dlNum').innerText = count;
+                document.getElementById('dlBar').style.width = (100 - (count * (100/waitTime))) + '%';
+                if(count <= 0) { clearInterval(itv); renderLink(post.link); }
             }, 1000);
         }
 
-        function showFinal(link) {
-            document.getElementById('timerContainer').classList.add('hidden');
-            document.getElementById('btnArea').classList.remove('hidden');
-            document.getElementById('btnArea').innerHTML = `<a href="${link}" target="_blank" class="w-full block btn-main py-4 text-lg font-bold">Download Now</a>`;
+        function renderLink(link) {
+            document.getElementById('dlTimer').classList.add('hidden');
+            document.getElementById('dlFinal').classList.remove('hidden');
+            document.getElementById('dlFinal').innerHTML = `<a href="${link}" target="_blank" class="w-full block bg-blue-600 py-5 rounded-3xl text-xl font-black shadow-xl animate__animated animate__pulse animate__infinite">Download Link</a>`;
         }
 
-        // --- Tools ---
-        function toggleMode() {
-            isDark = !isDark;
-            document.body.className = isDark ? 'dark-mode' : 'light-mode';
+        // --- أدوات المساعدة ---
+        function showPage(p) {
+            ['pageHome', 'pageAdmin', 'pageDl'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById('page' + p.charAt(0).toUpperCase() + p.slice(1)).classList.remove('hidden');
         }
-
-        function toggleLang() {
-            lang = (lang === 'AR') ? 'EN' : 'AR';
-            document.getElementById('langBtn').innerText = lang;
-            const html = document.getElementById('mainHtml');
-            if(lang === 'EN') {
-                html.dir = 'ltr'; html.lang = 'en';
-                document.getElementById('waitTxt').innerText = "Preparing link...";
-                document.getElementById('backBtn').innerText = "Back";
-            } else {
-                html.dir = 'rtl'; html.lang = 'ar';
-                document.getElementById('waitTxt').innerText = "جاري تجهيز الرابط...";
-                document.getElementById('backBtn').innerText = "العودة";
-            }
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode');
         }
-
-        function openAddModal() { document.getElementById('modal').classList.remove('hidden'); }
-        function closeDl() { document.getElementById('dlView').classList.add('hidden'); }
-        function updateWait(v) { if(me.role === 'admin') db.ref('settings/time').set(parseInt(v)); }
+        function openPostModal() { document.getElementById('postModal').classList.remove('hidden'); }
+        function updateWaitTime(v) { if(currentUser.role === 'admin') db.ref('settings/time').set(parseInt(v)); }
+        function deletePost(id) { if(confirm('Delete?')) db.ref('posts/'+id).remove(); }
         function savePost() {
             db.ref('posts').push({
-                title: document.getElementById('nT').value,
-                img: document.getElementById('nI').value,
-                desc: document.getElementById('nD').value,
-                link: document.getElementById('nBL').value
+                title: document.getElementById('postTitle').value,
+                img: document.getElementById('postImg').value,
+                desc: document.getElementById('postDesc').value,
+                link: document.getElementById('postLink').value,
+                time: Date.now()
             });
-            document.getElementById('modal').classList.add('hidden');
+            document.getElementById('postModal').classList.add('hidden');
         }
-        function deletePost(id) { if(confirm('Delete?')) db.ref('posts/'+id).remove(); }
     </script>
 </body>
 </html>
