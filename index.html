@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z Ahmed Tech | المنصة الرسمية</title>
     
-    <title>Z Ahmed Tech | المنصة التقنية المتكاملة 2026</title>
-    <meta name="description" content="منصة Z Ahmed Tech هي وجهتك الأولى للحصول على أحدث البرومبتات، الأخبار التقنية، وشروحات الذكاء الاصطناعي الحصرية.">
-    <meta name="keywords" content="Z Ahmed Tech, زد أحمد تك, تقنية, ذكاء اصطناعي, برومبتات, برمجيات">
-    
+    <meta name="description" content="منصة Z Ahmed Tech الحصرية للأخبار والملفات التقنية 2026.">
+    <meta name="keywords" content="Z Ahmed Tech, زد أحمد تك, تقنية, برومبت">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,108 +18,132 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
-        :root { --primary: #06b6d4; --secondary: #3b82f6; --dark: #020617; }
-        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: #f1f5f9; scroll-behavior: smooth; overflow-x: hidden; }
-        .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .btn-gradient { background: linear-gradient(135deg, var(--primary), var(--secondary)); transition: 0.4s; }
-        .btn-gradient:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(6, 182, 212, 0.5); }
-        .cyber-card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.4s; position: relative; overflow: hidden; }
-        .cyber-card:hover { border-color: var(--primary); transform: scale(1.02); }
-        .loading-circle { transition: stroke-dashoffset 1s linear; }
-        input, textarea, select { background: #0f172a !important; border: 1px solid #334155 !important; color: white !important; border-radius: 12px !important; outline: none; padding: 12px !important; width: 100%; }
-        input:focus { border-color: var(--primary) !important; }
-        .chat-box { height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap');
+        :root { --main: #06b6d4; --bg: #020617; --card: rgba(15, 23, 42, 0.9); }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: #e2e8f0; scroll-behavior: smooth; overflow-x: hidden; }
+        
+        /* Glassmorphism */
+        .glass { background: var(--card); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); }
+        .btn-main { background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white; transition: 0.4s; font-weight: 700; }
+        .btn-main:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(6, 182, 212, 0.4); }
+
+        /* Animation & UI */
+        .cyber-card { transition: 0.3s; cursor: pointer; border-radius: 20px; overflow: hidden; background: #0f172a; border: 1px solid #1e293b; }
+        .cyber-card:hover { border-color: var(--main); transform: translateY(-5px); }
+        
+        input, textarea, select { background: #0f172a !important; border: 1px solid #334155 !important; color: white !important; border-radius: 12px; padding: 12px; width: 100%; outline: none; }
+        input:focus { border-color: var(--main); }
+
+        .chat-area { height: 300px; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .wait-circle { transition: stroke-dashoffset 1s linear; }
+        
+        /* Admin Only Labels */
+        .admin-only { display: none; }
+        body.is-admin .admin-only { display: block; }
     </style>
 </head>
 <body>
 
-    <div id="authScreen" class="fixed inset-0 z-[2000] flex items-center justify-center bg-[#020617] p-4">
-        <div class="glass p-10 w-full max-w-md rounded-[2.5rem] text-center animate__animated animate__fadeInDown">
-            <h1 class="text-5xl font-black italic tracking-tighter mb-8 text-white">Z AHMED <span class="text-cyan-400">TECH</span></h1>
-            <div class="space-y-4">
-                <input id="loginEmail" type="email" placeholder="البريد الإلكتروني">
-                <input id="loginPass" type="password" placeholder="كلمة المرور">
-                <button onclick="handleLogin()" id="loginBtn" class="w-full btn-gradient py-4 rounded-xl font-black">دخول للمنصة</button>
-                <div class="flex items-center gap-3 my-2"><hr class="flex-grow border-slate-800"><span class="text-[10px] text-slate-600 font-bold uppercase">أو عبر</span><hr class="flex-grow border-slate-800"></div>
-                <button onclick="googleSignIn()" class="w-full bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-slate-200 transition">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20"> Google
+    <div id="authScreen" class="fixed inset-0 z-[2000] flex items-center justify-center bg-[#020617]">
+        <div class="glass p-10 w-full max-w-md rounded-[2.5rem] text-center animate__animated animate__zoomIn">
+            <h1 class="text-5xl font-black italic mb-8">Z AHMED <span class="text-cyan-400">TECH</span></h1>
+            <div class="space-y-4 text-right">
+                <label class="text-xs mr-2 text-slate-500">البريد الإلكتروني</label>
+                <input id="loginEmail" type="email" placeholder="example@mail.com">
+                <label class="text-xs mr-2 text-slate-500">كلمة المرور</label>
+                <input id="loginPass" type="password" placeholder="••••••••">
+                <button onclick="handleLogin()" id="loginBtn" class="w-full btn-main py-4 rounded-xl mt-4">دخول آمن للمنصة</button>
+                <div class="flex items-center gap-2"><hr class="flex-grow border-slate-800"> <span class="text-[10px]">أو</span> <hr class="flex-grow border-slate-800"></div>
+                <button onclick="googleSignIn()" class="w-full bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-3">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="18"> Google Account
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="mainApp" class="hidden min-h-screen">
-        <nav class="glass sticky top-0 z-[100] px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-black italic cursor-pointer" onclick="goHome()">Z.A <span class="text-cyan-400 text-3xl">T</span></div>
-            <div class="flex items-center gap-6">
-                <div class="hidden md:flex flex-col items-end">
-                    <span id="userName" class="text-sm font-bold">...</span>
-                    <span id="userRole" class="text-[9px] uppercase font-black text-cyan-400">USER</span>
+    <div id="mainApp" class="hidden min-h-screen pb-20">
+        <nav class="glass sticky top-0 z-[100] px-6 py-4 flex justify-between items-center border-b border-white/5">
+            <div class="text-2xl font-black italic cursor-pointer" onclick="goHome()">Z.A <span class="text-cyan-400">TECH</span></div>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p id="userName" class="text-sm font-bold">...</p>
+                    <p id="userRoleBadge" class="text-[9px] font-black text-cyan-400 uppercase tracking-widest">VISITOR</p>
                 </div>
-                <button onclick="logout()" class="text-red-500 hover:scale-110 transition"><i class="fas fa-power-off text-xl"></i></button>
+                <button onclick="logout()" class="w-10 h-10 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all"><i class="fas fa-power-off"></i></button>
             </div>
         </nav>
 
         <div class="container mx-auto px-4 py-8 lg:px-12">
-            <div id="homeView" class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                <div class="lg:col-span-3 space-y-6">
-                    <div id="adminMenu" class="hidden glass p-6 rounded-3xl animate__animated animate__fadeInLeft">
-                        <h3 class="text-xs font-black text-slate-500 uppercase mb-4 tracking-tighter">لوحة التحكم</h3>
-                        <div class="flex flex-col gap-2">
-                            <button onclick="openPanel('addPost')" class="w-full text-right p-3 rounded-xl hover:bg-white/5 transition flex justify-between items-center group">
-                                <span class="text-sm font-bold group-hover:text-cyan-400">نشر خبر</span><i class="fas fa-plus-circle text-cyan-400"></i>
+            <div id="homeView" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <div class="lg:col-span-3 space-y-4">
+                    <div class="admin-only glass p-6 rounded-3xl animate__animated animate__fadeInLeft">
+                        <h3 class="text-xs font-black text-slate-500 uppercase mb-4 tracking-widest border-b border-white/5 pb-2">لوحة التحكم العليا</h3>
+                        <div class="space-y-2">
+                            <button onclick="openModal('addPost')" class="w-full text-right p-3 rounded-xl hover:bg-cyan-500/10 flex justify-between items-center group">
+                                <span class="text-sm font-bold">نشر محتوى جديد</span> <i class="fas fa-plus-circle text-cyan-400"></i>
                             </button>
-                            <button onclick="openPanel('users')" class="w-full text-right p-3 rounded-xl hover:bg-white/5 transition flex justify-between items-center group">
-                                <span class="text-sm font-bold group-hover:text-cyan-400">الرتب</span><i class="fas fa-user-shield text-cyan-400"></i>
+                            <button onclick="openModal('manageUsers')" class="w-full text-right p-3 rounded-xl hover:bg-cyan-500/10 flex justify-between items-center group">
+                                <span class="text-sm font-bold">إدارة الرتب</span> <i class="fas fa-users-cog text-cyan-400"></i>
                             </button>
-                            <div class="mt-4 pt-4 border-t border-white/5">
-                                <p class="text-[10px] text-slate-500 mb-2">وقت العداد (ثواني)</p>
-                                <input type="number" id="waitTimeInput" onchange="updateWaitTime(this.value)" class="text-center">
+                            <button onclick="openModal('allChats')" class="w-full text-right p-3 rounded-xl hover:bg-cyan-500/10 flex justify-between items-center group">
+                                <span class="text-sm font-bold">رسائل المستخدمين</span> <i class="fas fa-comments text-cyan-400"></i>
+                            </button>
+                            <div class="pt-4 border-t border-white/5 mt-2">
+                                <p class="text-[10px] text-slate-500 mb-1">وقت انتظار الزوار (ثواني)</p>
+                                <input type="number" id="waitTimeSetting" onchange="setWaitTime(this.value)" class="text-center font-bold">
                             </div>
                         </div>
                     </div>
+
                     <div class="glass p-6 rounded-3xl">
-                        <button onclick="openChat()" class="w-full btn-gradient py-4 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-xl"><i class="fas fa-headset"></i> دعم مباشر</button>
+                        <button onclick="openSupportChat()" class="w-full btn-main py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg">
+                            <i class="fas fa-headset"></i> الدعم الفني المباشر
+                        </button>
                     </div>
                 </div>
 
                 <div class="lg:col-span-9">
-                    <h2 class="text-3xl font-black mb-8 italic">آخر <span class="text-cyan-400">التحديثات</span></h2>
-                    <div id="postsFeed" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+                    <h2 class="text-3xl font-black mb-8 italic">اكتشف <span class="text-cyan-400">المستقبل</span></h2>
+                    <div id="postsFeed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        </div>
                 </div>
             </div>
 
             <div id="detailView" class="hidden max-w-4xl mx-auto animate__animated animate__fadeIn">
-                <div id="waitScreen" class="py-20 text-center space-y-8">
+                <div id="waitTimerScreen" class="py-20 text-center space-y-6">
                     <div class="relative inline-flex items-center justify-center">
                         <svg class="w-32 h-32 transform -rotate-90">
-                            <circle cx="64" cy="64" r="56" stroke="#1e293b" stroke-width="8" fill="transparent" />
-                            <circle id="waitCircle" cx="64" cy="64" r="56" stroke="#06b6d4" stroke-width="8" fill="transparent" stroke-dasharray="351.8" stroke-dashoffset="351.8" class="loading-circle" />
+                            <circle cx="64" cy="64" r="58" stroke="#1e293b" stroke-width="8" fill="transparent" />
+                            <circle id="progressCircle" cx="64" cy="64" r="58" stroke="#06b6d4" stroke-width="8" fill="transparent" stroke-dasharray="364.4" stroke-dashoffset="364.4" class="wait-circle" />
                         </svg>
-                        <span id="counterText" class="absolute text-4xl font-black"></span>
+                        <span id="timerNumber" class="absolute text-4xl font-black"></span>
                     </div>
-                    <h2 class="text-2xl font-bold">جاري التحميل من Z Ahmed Tech...</h2>
+                    <p class="text-slate-400 italic">Z Ahmed Tech - جاري التحقق من أمان الروابط...</p>
                 </div>
-                <div id="postContent" class="hidden space-y-8 text-right pb-20">
-                    <button onclick="goHome()" class="text-cyan-400 font-bold mb-6"><i class="fas fa-arrow-right"></i> رجوع</button>
-                    <img id="postImg" class="w-full h-[400px] object-cover rounded-[2.5rem] border border-white/5 shadow-2xl">
-                    <h1 id="postTitle" class="text-5xl font-black"></h1>
-                    <div id="postDesc" class="text-xl text-slate-300 leading-relaxed whitespace-pre-wrap"></div>
-                    <div id="postAction" class="flex justify-center pt-10"></div>
+
+                <div id="postFinalContent" class="hidden space-y-8 text-right pb-20">
+                    <button onclick="goHome()" class="text-cyan-400 font-bold mb-4 flex items-center gap-2 hover:gap-4 transition-all">
+                        <i class="fas fa-arrow-right"></i> رجوع للرئيسية
+                    </button>
+                    <img id="detailImg" class="w-full h-96 object-cover rounded-[2.5rem] shadow-2xl border border-white/5">
+                    <h1 id="detailTitle" class="text-5xl font-black"></h1>
+                    <div id="detailDesc" class="text-xl text-slate-300 leading-[1.8] whitespace-pre-wrap"></div>
+                    <div id="detailAction" class="flex justify-center pt-10"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="masterModal" class="hidden fixed inset-0 z-[500] bg-black/95 flex items-center justify-center p-4">
+    <div id="masterModal" class="hidden fixed inset-0 z-[500] bg-black/90 flex items-center justify-center p-4">
         <div class="glass w-full max-w-2xl p-8 rounded-[2.5rem] relative overflow-y-auto max-h-[90vh]">
-            <button onclick="closeModal()" class="absolute top-6 left-6 text-2xl text-slate-500"><i class="fas fa-times-circle"></i></button>
-            <div id="modalBody" class="text-right"></div>
+            <button onclick="closeModal()" class="absolute top-6 left-6 text-2xl text-slate-500 hover:text-white"><i class="fas fa-times-circle"></i></button>
+            <div id="modalContent" class="text-right"></div>
         </div>
     </div>
 
     <script>
+        // تكوين Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAqSQLHq0QFpe1CV8bAYc53mbUO7I03Q5I",
             authDomain: "z-ahmed-tech.firebaseapp.com",
@@ -131,63 +155,68 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database(), auth = firebase.auth();
-        const MASTER_ADMIN = "ahmedgames2025.11@gmail.com";
-        let currentUser = null, selectedFileBase64 = null, waitTime = 5;
+        const OWNER_EMAIL = "ahmedgames2025.11@gmail.com"; // إيميلك كأدمن رئيسي
 
-        // --- AUTH ---
+        let me = null, globalWaitTime = 5, uploadBase64 = "";
+
+        // --- نظام الدخول ---
         async function handleLogin() {
             const e = document.getElementById('loginEmail').value, p = document.getElementById('loginPass').value;
-            if(!e || !p) return Swal.fire('تنبيه', 'أكمل الحقول', 'warning');
-            try { await auth.signInWithEmailAndPassword(e, p); } catch (err) { Swal.fire('خطأ', 'البيانات غير صحيحة', 'error'); }
+            if(!e || !p) return Swal.fire('تنبيه', 'أدخل بياناتك', 'warning');
+            try { await auth.signInWithEmailAndPassword(e, p); } catch(err) { Swal.fire('فشل', 'خطأ في الحساب', 'error'); }
         }
 
         async function googleSignIn() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            provider.setCustomParameters({ prompt: 'select_account' });
-            try { await auth.signInWithPopup(provider); } catch (e) {
-                if(e.code === 'auth/operation-not-allowed') Swal.fire('تنبيه', 'يجب تفعيل Google في Firebase أولاً', 'error');
-                else Swal.fire('خطأ', e.message, 'error');
-            }
+            try { await auth.signInWithPopup(provider); } catch(err) { console.log(err); }
         }
 
         auth.onAuthStateChanged(user => {
             if(user) {
                 db.ref('users/' + user.uid).on('value', snap => {
-                    currentUser = snap.val();
-                    if(!currentUser) {
-                        const role = (user.email === MASTER_ADMIN) ? 'admin' : 'visitor';
+                    me = snap.val();
+                    if(!me) {
+                        const role = (user.email === OWNER_EMAIL) ? 'admin' : 'visitor';
                         db.ref('users/' + user.uid).set({ uid: user.uid, email: user.email, name: user.displayName || 'User', role: role });
                         return;
                     }
-                    setupUI();
+                    if(me.role === 'admin') document.body.classList.add('is-admin');
+                    else document.body.classList.remove('is-admin');
+                    
+                    document.getElementById('authScreen').classList.add('hidden');
+                    document.getElementById('mainApp').classList.remove('hidden');
+                    document.getElementById('userName').innerText = me.name;
+                    document.getElementById('userRoleBadge').innerText = me.role;
+                    
+                    db.ref('settings/waitTime').on('value', s => { 
+                        globalWaitTime = s.val() || 5; 
+                        if(document.getElementById('waitTimeSetting')) document.getElementById('waitTimeSetting').value = globalWaitTime;
+                    });
+                    loadPosts();
                 });
-            } else { document.getElementById('authScreen').classList.remove('hidden'); document.getElementById('mainApp').classList.add('hidden'); }
+            } else {
+                document.getElementById('authScreen').classList.remove('hidden');
+            }
         });
 
-        function setupUI() {
-            document.getElementById('authScreen').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            document.getElementById('userName').innerText = currentUser.name;
-            document.getElementById('userRole').innerText = currentUser.role;
-            if(currentUser.role === 'admin' || currentUser.role === 'worker') document.getElementById('adminMenu').classList.remove('hidden');
-            db.ref('settings/waitTime').on('value', s => { waitTime = s.val() || 5; if(document.getElementById('waitTimeInput')) document.getElementById('waitTimeInput').value = waitTime; });
-            loadPosts();
-        }
-
-        // --- POSTS ---
+        // --- إدارة المحتوى ---
         function loadPosts() {
             db.ref('posts').on('value', snap => {
-                const feed = document.getElementById('postsFeed'); feed.innerHTML = '';
-                let posts = []; snap.forEach(p => posts.unshift({id: p.key, ...p.val()}));
+                const feed = document.getElementById('postsFeed');
+                feed.innerHTML = '';
+                let posts = [];
+                snap.forEach(p => { posts.unshift({id: p.key, ...p.val()}) });
                 posts.forEach(post => {
                     feed.innerHTML += `
-                        <div class="cyber-card glass p-4 rounded-[2rem] group cursor-pointer" onclick="openPost('${post.id}')">
-                            <img src="${post.img}" class="w-full h-44 object-cover rounded-2xl mb-4 transition group-hover:scale-105">
-                            <div class="text-right">
-                                <h3 class="text-lg font-bold">${post.title}</h3>
+                        <div class="cyber-card group animate__animated animate__fadeInUp" onclick="openPost('${post.id}')">
+                            <img src="${post.img}" class="w-full h-52 object-cover">
+                            <div class="p-6 text-right">
+                                <h3 class="text-xl font-bold group-hover:text-cyan-400 transition">${post.title}</h3>
                                 <div class="flex justify-between items-center mt-4">
                                     <span class="text-[10px] text-slate-500">${new Date(post.time).toLocaleDateString()}</span>
-                                    ${currentUser.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${post.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>` : ''}
+                                    <div class="admin-only">
+                                        <button onclick="event.stopPropagation(); deletePost('${post.id}')" class="text-red-500 hover:scale-125 transition"><i class="fas fa-trash"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>`;
@@ -196,90 +225,91 @@
         }
 
         async function openPost(id) {
-            const snap = await db.ref('posts/' + id).once('value'), post = snap.val();
+            const snap = await db.ref('posts/'+id).once('value'), post = snap.val();
             document.getElementById('homeView').classList.add('hidden');
             document.getElementById('detailView').classList.remove('hidden');
-            window.scrollTo(0,0);
-            if(currentUser.role === 'admin' || currentUser.role === 'worker') { renderPost(post); return; }
-            document.getElementById('waitScreen').classList.remove('hidden');
-            document.getElementById('postContent').classList.add('hidden');
-            let count = waitTime;
-            document.getElementById('counterText').innerText = count;
+            
+            if(me.role === 'admin') { renderFinalPost(post); return; }
+
+            document.getElementById('waitTimerScreen').classList.remove('hidden');
+            document.getElementById('postFinalContent').classList.add('hidden');
+            
+            let count = globalWaitTime;
+            document.getElementById('timerNumber').innerText = count;
             const timer = setInterval(() => {
-                count--; document.getElementById('counterText').innerText = count;
-                document.getElementById('waitCircle').style.strokeDashoffset = 351.8 - (351.8 * (waitTime - count) / waitTime);
-                if(count <= 0) { clearInterval(timer); renderPost(post); }
+                count--;
+                document.getElementById('timerNumber').innerText = count;
+                document.getElementById('progressCircle').style.strokeDashoffset = 364.4 - (364.4 * (globalWaitTime - count) / globalWaitTime);
+                if(count <= 0) { clearInterval(timer); renderFinalPost(post); }
             }, 1000);
         }
 
-        function renderPost(post) {
-            document.getElementById('waitScreen').classList.add('hidden');
-            document.getElementById('postContent').classList.remove('hidden');
-            document.getElementById('postImg').src = post.img;
-            document.getElementById('postTitle').innerText = post.title;
-            document.getElementById('postDesc').innerText = post.desc;
-            document.getElementById('postAction').innerHTML = post.btnLink ? `<a href="${post.btnLink}" target="_blank" class="btn-gradient px-12 py-4 rounded-2xl font-black text-xl">تحميل / عرض</a>` : '';
+        function renderFinalPost(post) {
+            document.getElementById('waitTimerScreen').classList.add('hidden');
+            document.getElementById('postFinalContent').classList.remove('hidden');
+            document.getElementById('detailImg').src = post.img;
+            document.getElementById('detailTitle').innerText = post.title;
+            document.getElementById('detailDesc').innerText = post.desc;
+            document.getElementById('detailAction').innerHTML = post.btnLink ? `<a href="${post.btnLink}" target="_blank" class="btn-main px-12 py-5 rounded-3xl text-xl shadow-2xl">${post.btnText || 'انتقال الآن'}</a>` : '';
         }
 
-        // --- ADMIN & TOOLS ---
-        function openPanel(type) {
-            const body = document.getElementById('modalBody'); document.getElementById('masterModal').classList.remove('hidden');
+        // --- لوحة التحكم (مودال) ---
+        function openModal(type) {
+            const content = document.getElementById('modalContent');
+            document.getElementById('masterModal').classList.remove('hidden');
+            
             if(type === 'addPost') {
-                body.innerHTML = `
-                    <h2 class="text-2xl font-black mb-4">نشر خبر جديد</h2>
-                    <input id="nT" placeholder="العنوان" class="mb-2">
-                    <div class="p-4 border-2 border-dashed border-slate-700 rounded-2xl text-center bg-slate-900/50 mb-2">
-                        <input type="file" accept="image/*" onchange="processFile(event)" class="text-xs">
-                        <img id="nP" class="hidden w-full h-32 object-cover rounded-xl mt-2">
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold mb-6 text-cyan-400">نشر خبر جديد</h2>
+                    <input id="newT" placeholder="عنوان الخبر" class="mb-4">
+                    <div class="mb-4 p-6 border-2 border-dashed border-slate-700 rounded-2xl text-center bg-slate-900/50">
+                        <input type="file" accept="image/*" onchange="previewImg(event)" class="text-xs mb-2">
+                        <img id="uploadPrev" class="hidden w-full h-40 object-cover rounded-xl mt-2">
                     </div>
-                    <input id="nI" placeholder="رابط صورة خارجي (اختياري)" class="mb-2">
-                    <textarea id="nD" placeholder="الوصف..." rows="4" class="mb-2"></textarea>
-                    <div class="grid grid-cols-2 gap-2 mb-4"><input id="nBT" placeholder="نص الزر"><input id="nBL" placeholder="رابط الزر"></div>
-                    <button onclick="publish()" class="w-full btn-gradient py-4 rounded-xl font-bold">نشر الآن</button>`;
-            } else if(type === 'users') {
-                body.innerHTML = `<h2 class="text-2xl font-black mb-4">إدارة الرتب</h2><div id="uL" class="space-y-2"></div>`;
+                    <input id="newI" placeholder="أو رابط صورة خارجي" class="mb-4">
+                    <textarea id="newD" placeholder="تفاصيل الخبر..." rows="5" class="mb-4"></textarea>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <input id="newBT" placeholder="نص الزر">
+                        <input id="newBL" placeholder="رابط التحميل">
+                    </div>
+                    <button onclick="saveNewPost()" class="w-full btn-main py-4 rounded-xl">نشر الخبر فوراً</button>`;
+            } else if(type === 'manageUsers') {
+                content.innerHTML = `<h2 class="text-2xl font-bold mb-6">إدارة المستخدمين</h2><div id="uList" class="space-y-3"></div>`;
                 db.ref('users').once('value', s => {
-                    const l = document.getElementById('uL');
+                    const l = document.getElementById('uList');
                     s.forEach(u => {
-                        l.innerHTML += `<div class="glass p-3 rounded-xl flex justify-between items-center text-xs">
-                            <select onchange="changeRole('${u.key}', this.value)"><option value="visitor" ${u.val().role==='visitor'?'selected':''}>Visitor</option><option value="worker" ${u.val().role==='worker'?'selected':''}>Worker</option><option value="admin" ${u.val().role==='admin'?'selected':''}>Admin</option></select>
-                            <span>${u.val().email}</span>
+                        l.innerHTML += `<div class="glass p-4 rounded-2xl flex justify-between items-center">
+                            <select onchange="changeRole('${u.key}', this.value)" class="!w-auto !py-1 !text-xs">
+                                <option value="visitor" ${u.val().role==='visitor'?'selected':''}>Visitor</option>
+                                <option value="admin" ${u.val().role==='admin'?'selected':''}>Admin</option>
+                            </select>
+                            <div class="text-right"><p class="font-bold text-sm">${u.val().name}</p><p class="text-[10px] text-slate-500">${u.val().email}</p></div>
                         </div>`;
                     });
                 });
             }
         }
 
-        function processFile(e) {
+        // --- المساعدة ---
+        function previewImg(e) {
             const reader = new FileReader();
-            reader.onload = (ev) => { selectedFileBase64 = ev.target.result; document.getElementById('nP').src = selectedFileBase64; document.getElementById('nP').classList.remove('hidden'); };
+            reader.onload = (ev) => { uploadBase64 = ev.target.result; document.getElementById('uploadPrev').src = uploadBase64; document.getElementById('uploadPrev').classList.remove('hidden'); };
             reader.readAsDataURL(e.target.files[0]);
         }
 
-        async function publish() {
-            const img = selectedFileBase64 || document.getElementById('nI').value;
-            if(!img || !document.getElementById('nT').value) return Swal.fire('خطأ', 'أكمل البيانات', 'error');
-            await db.ref('posts').push({ title: document.getElementById('nT').value, img, desc: document.getElementById('nD').value, btnText: document.getElementById('nBT').value, btnLink: document.getElementById('nBL').value, time: Date.now() });
-            selectedFileBase64 = null; closeModal(); Swal.fire('تم', 'نشر الخبر', 'success');
+        async function saveNewPost() {
+            const title = document.getElementById('newT').value, img = uploadBase64 || document.getElementById('newI').value;
+            if(!title || !img) return Swal.fire('خطأ', 'العنوان والصورة مطلوبان', 'error');
+            await db.ref('posts').push({ title, img, desc: document.getElementById('newD').value, btnText: document.getElementById('newBT').value, btnLink: document.getElementById('newBL').value, time: Date.now() });
+            uploadBase64 = ""; closeModal(); Swal.fire('تم', 'تم النشر بنجاح', 'success');
         }
 
-        function openChat() {
+        function openSupportChat() {
             document.getElementById('masterModal').classList.remove('hidden');
-            document.getElementById('modalBody').innerHTML = `<h2 class="text-xl font-black mb-4">الدعم المباشر</h2><div id="cB" class="chat-box glass bg-black/40 p-4 rounded-2xl mb-4 text-sm"></div><div class="flex gap-2"><input id="cI" placeholder="رسالتك..."><button onclick="send()" class="btn-gradient px-4 rounded-xl"><i class="fas fa-paper-plane"></i></button></div>`;
-            db.ref('messages/' + currentUser.uid).on('value', snap => {
-                const box = document.getElementById('cB'); if(!box) return; box.innerHTML = '';
-                snap.forEach(m => { box.innerHTML += `<div class="${m.val().sender === currentUser.uid ? 'mr-auto bg-cyan-600' : 'ml-auto bg-slate-800'} p-2 rounded-xl max-w-[80%]">${m.val().text}</div>`; });
+            document.getElementById('modalContent').innerHTML = `<h2 class="text-xl font-bold mb-4">دعم Z Ahmed Tech</h2><div id="msgBox" class="chat-area glass rounded-2xl mb-4 text-sm"></div><div class="flex gap-2"><input id="msgInp" placeholder="كيف يمكننا مساعدتك؟"><button onclick="sendMsg()" class="btn-main px-6 rounded-xl"><i class="fas fa-paper-plane"></i></button></div>`;
+            db.ref('chats/' + (me.role === 'admin' ? 'admin_view' : me.uid)).on('value', snap => {
+                const box = document.getElementById('msgBox'); if(!box) return; box.innerHTML = '';
+                snap.forEach(m => { box.innerHTML += `<div class="${m.val().sender === me.uid ? 'mr-auto bg-cyan-600' : 'ml-auto bg-slate-800'} p-3 rounded-2xl max-w-[80%]">${m.val().text}</div>`; });
                 box.scrollTop = box.scrollHeight;
             });
-        }
-
-        function send() { const t = document.getElementById('cI').value; if(t) { db.ref('messages/'+currentUser.uid).push({sender:currentUser.uid, text:t}); document.getElementById('cI').value=''; } }
-        function closeModal() { document.getElementById('masterModal').classList.add('hidden'); }
-        function goHome() { document.getElementById('homeView').classList.remove('hidden'); document.getElementById('detailView').classList.add('hidden'); }
-        function logout() { auth.signOut().then(() => location.reload()); }
-        function deletePost(id) { if(confirm('حذف؟')) db.ref('posts/'+id).remove(); }
-        function changeRole(uid, role) { db.ref('users/'+uid).update({role}); }
-        function updateWaitTime(v) { db.ref('settings/waitTime').set(parseInt(v)); }
-    </script>
-</body>
-</html>
+  
