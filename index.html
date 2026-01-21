@@ -27,6 +27,7 @@
         body.is-admin .admin-only { display: block !important; }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        .desc-box { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; margin: 15px 0; font-size: 0.9rem; line-height: 1.6; }
     </style>
 </head>
 <body class="dark-mode">
@@ -36,9 +37,9 @@
             <h1 class="text-3xl font-black mb-2 text-white">Z Ahmed Tech</h1>
             <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-widest">Premium Dashboard</p>
             <div class="space-y-4">
-                <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none">
-                <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none">
-                <button onclick="loginEmail()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold">دخول</button>
+                <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none text-white">
+                <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none text-white">
+                <button onclick="loginEmail()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold hover:bg-blue-700 transition">دخول</button>
                 <button onclick="loginGoogle()" class="w-full btn-google py-4 rounded-2xl font-bold flex items-center justify-center gap-3">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="22"> جوجل
                 </button>
@@ -68,12 +69,12 @@
 
         <div id="pageAdmin" class="hidden container mx-auto px-6 py-10 animate__animated animate__fadeIn">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                <div class="glass p-6">
+                <div class="glass p-6 border-l-4 border-blue-500">
                     <p class="text-xs font-bold text-slate-500 uppercase">المتصلون الآن</p>
                     <h3 id="onlineCount" class="text-4xl font-black text-blue-500">0</h3>
                 </div>
                 <div class="glass p-6">
-                    <button onclick="openPostModal()" class="w-full h-full bg-blue-600 rounded-2xl font-black text-white py-4 shadow-xl">إضافة منشور جديد</button>
+                    <button onclick="openPostModal()" class="w-full h-full bg-blue-600 rounded-2xl font-black text-white py-4 shadow-xl hover:bg-blue-700 transition">إضافة منشور جديد</button>
                 </div>
             </div>
 
@@ -83,36 +84,44 @@
                     <div id="usersList" class="space-y-3 overflow-y-auto max-h-[500px]"></div>
                 </div>
                 <div class="glass p-8 text-center">
-                    <h4 class="font-bold mb-6">إعدادات العداد</h4>
-                    <input type="number" id="waitInput" class="w-32 p-4 rounded-xl bg-slate-900 border border-slate-700 text-center font-black mb-4">
-                    <button onclick="updateWaitTime(document.getElementById('waitInput').value)" class="w-full bg-slate-700 py-3 rounded-xl font-bold">حفظ الثواني</button>
+                    <h4 class="font-bold mb-6 italic">إعدادات النظام</h4>
+                    <p class="text-xs text-slate-500 mb-2">تعديل ثواني عداد الانتظار</p>
+                    <input type="number" id="waitInput" class="w-32 p-4 rounded-xl bg-slate-900 border border-slate-700 text-center font-black mb-4 outline-none focus:border-blue-500">
+                    <button onclick="updateWaitTime(document.getElementById('waitInput').value)" class="w-full bg-slate-800 py-3 rounded-xl font-bold hover:bg-slate-700 transition">حفظ التغييرات</button>
                 </div>
             </div>
         </div>
 
         <div id="pageDl" class="hidden fixed inset-0 z-[500] bg-inherit p-6 text-center overflow-y-auto">
-            <div class="max-w-xl mx-auto mt-20 glass p-10 animate__animated animate__zoomIn">
-                <img id="dlImg" class="w-32 h-32 mx-auto rounded-3xl shadow-2xl mb-6">
-                <h2 id="dlTitle" class="text-2xl font-black mb-4"></h2>
+            <div class="max-w-xl mx-auto mt-10 glass p-8 animate__animated animate__zoomIn">
+                <img id="dlImg" class="w-32 h-32 mx-auto rounded-3xl shadow-2xl mb-4">
+                <h2 id="dlTitle" class="text-2xl font-black mb-2"></h2>
+                
+                <div id="dlDesc" class="desc-box text-slate-400 italic"></div>
+
                 <div id="dlTimer">
-                    <p class="mb-4 opacity-60">جاري تجهيز طلبك...</p>
+                    <p class="mb-2 text-xs opacity-60">جاري فحص الرابط...</p>
                     <div class="text-5xl font-black text-blue-500 mb-6" id="dlNum">00</div>
                 </div>
                 <div id="dlFinal" class="hidden animate__animated animate__bounceIn"></div>
-                <button onclick="showPage('home')" class="mt-8 text-blue-500 font-bold">← العودة</button>
+                <button onclick="showPage('home')" class="mt-8 text-blue-500 font-bold hover:underline">← العودة للرئيسية</button>
             </div>
         </div>
     </div>
 
     <div id="postModal" class="hidden fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center p-4">
         <div class="glass bg-slate-900 w-full max-w-lg p-8 space-y-4 animate__animated animate__slideInUp">
-            <h2 class="text-xl font-bold">نشر جديد على Z Ahmed Tech</h2>
-            <input id="postTitle" placeholder="عنوان المنشور">
-            <input id="postImg" placeholder="رابط الصورة">
-            <input id="btnName" placeholder="اسم الزر (مثال: تحميل التطبيق)">
-            <input id="postLink" placeholder="رابط الزر (URL)">
-            <div class="flex gap-4">
-                <button onclick="savePost()" class="flex-grow bg-blue-600 py-4 rounded-xl font-bold">نشر</button>
+            <h2 class="text-xl font-bold border-b border-white/10 pb-2">نشر جديد | Z Ahmed Tech</h2>
+            <input id="postTitle" placeholder="عنوان المنشور" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+            <input id="postImg" placeholder="رابط الصورة (Image URL)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+            
+            <textarea id="postDesc" placeholder="اكتب وصف المنشور هنا..." class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 h-24 outline-none"></textarea>
+            
+            <input id="btnName" placeholder="اسم الزر (مثال: تحميل مباشر)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+            <input id="postLink" placeholder="الرابط (URL)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+            
+            <div class="flex gap-4 pt-2">
+                <button onclick="savePost()" class="flex-grow bg-blue-600 py-4 rounded-xl font-bold shadow-lg">نشر المنشور</button>
                 <button onclick="document.getElementById('postModal').classList.add('hidden')" class="px-6 bg-slate-700 rounded-xl">إلغاء</button>
             </div>
         </div>
@@ -134,7 +143,7 @@
         let me = null, waitTime = 10;
 
         function loginEmail() {
-            auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert("خطأ"));
+            auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value).catch(e => Swal.fire('خطأ', 'البيانات غير صحيحة', 'error'));
         }
         function loginGoogle() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
         function logout() { auth.signOut().then(() => location.reload()); }
@@ -170,12 +179,12 @@
                 const list = document.getElementById('usersList'); list.innerHTML = '';
                 s.forEach(u => {
                     const user = u.val();
-                    list.innerHTML += `<div class="p-4 bg-white/5 rounded-2xl flex justify-between items-center">
+                    list.innerHTML += `<div class="p-4 bg-white/5 rounded-2xl flex justify-between items-center animate__animated animate__fadeIn">
                         <div class="text-xs">
                             <p class="font-bold">${user.name}</p>
                             <p class="opacity-40">${user.email}</p>
                         </div>
-                        ${user.email !== ADMIN_EMAIL ? `<button onclick="deleteUser('${user.uid}')" class="text-red-500 text-xs font-bold hover:underline">حذف الحساب</button>` : '<span class="text-blue-500 text-[10px]">الأدمن الرئيسي</span>'}
+                        ${user.email !== ADMIN_EMAIL ? `<button onclick="deleteUser('${user.uid}')" class="text-red-500 text-xs font-bold hover:bg-red-500/10 p-2 rounded-lg transition">حذف</button>` : '<span class="text-blue-500 text-[10px] font-bold">المؤسس</span>'}
                     </div>`;
                 });
             });
@@ -186,10 +195,19 @@
         }
 
         function deleteUser(uid) {
-            if(confirm("هل أنت متأكد من حذف هذا المستخدم نهائياً؟")) {
-                db.ref('users/' + uid).remove();
-                Swal.fire('تم', 'تم إزالة الحساب من القاعدة', 'success');
-            }
+            Swal.fire({
+                title: 'هل أنت متأكد؟',
+                text: "سيتم حذف الحساب نهائياً من Z Ahmed Tech",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'نعم، حذف'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    db.ref('users/' + uid).remove();
+                    Swal.fire('تم!', 'تم حذف المستخدم.', 'success');
+                }
+            })
         }
 
         function loadPosts() {
@@ -198,10 +216,10 @@
                 snap.forEach(p => {
                     const post = p.val();
                     grid.innerHTML += `
-                        <div class="glass p-3 rounded-[1.8rem] text-center cursor-pointer group hover:border-blue-500 transition" onclick="openDownload('${p.key}')">
-                            <img src="${post.img}" class="w-full aspect-square object-cover rounded-2xl mb-3 shadow-lg">
-                            <h3 class="text-[11px] font-black truncate">${post.title}</h3>
-                            ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="mt-2 text-[9px] text-red-500">حذف المنشور</button>` : ''}
+                        <div class="glass p-3 rounded-[1.8rem] text-center cursor-pointer group hover:border-blue-500 transition animate__animated animate__zoomIn" onclick="openDownload('${p.key}')">
+                            <img src="${post.img}" class="w-full aspect-square object-cover rounded-2xl mb-3 shadow-lg group-hover:scale-105 transition duration-500">
+                            <h3 class="text-[11px] font-black truncate px-1">${post.title}</h3>
+                            ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="mt-2 text-[10px] text-red-500 opacity-60 hover:opacity-100 italic">حذف المنشور</button>` : ''}
                         </div>`;
                 });
             });
@@ -212,6 +230,8 @@
             showPage('dl');
             document.getElementById('dlImg').src = post.img;
             document.getElementById('dlTitle').innerText = post.title;
+            document.getElementById('dlDesc').innerText = post.desc || "لا يوجد وصف لهذا المنشور";
+            
             let count = (me.role === 'admin') ? 0 : waitTime;
             document.getElementById('dlNum').innerText = count;
             document.getElementById('dlTimer').classList.remove('hidden');
@@ -228,25 +248,43 @@
         function renderLink(link, btnName) {
             document.getElementById('dlTimer').classList.add('hidden');
             document.getElementById('dlFinal').classList.remove('hidden');
-            document.getElementById('dlFinal').innerHTML = `<a href="${link}" target="_blank" class="w-full block bg-blue-600 py-5 rounded-3xl text-xl font-black shadow-xl">${btnName || 'تحميل الآن'}</a>`;
+            document.getElementById('dlFinal').innerHTML = `<a href="${link}" target="_blank" class="w-full block bg-blue-600 py-5 rounded-3xl text-xl font-black shadow-xl animate__animated animate__pulse animate__infinite">${btnName || 'تحميل الآن'}</a>`;
         }
 
         function showPage(p) {
             ['pageHome', 'pageAdmin', 'pageDl'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById('page' + p.charAt(0).toUpperCase() + p.slice(1)).classList.remove('hidden');
+            window.scrollTo(0,0);
         }
         function toggleTheme() { document.body.classList.toggle('dark-mode'); document.body.classList.toggle('light-mode'); }
         function openPostModal() { document.getElementById('postModal').classList.remove('hidden'); }
-        function updateWaitTime(v) { if(me.role === 'admin') db.ref('settings/time').set(parseInt(v)); }
-        function deletePost(id) { if(confirm('Delete?')) db.ref('posts/'+id).remove(); }
+        function updateWaitTime(v) { if(me.role === 'admin') db.ref('settings/time').set(parseInt(v)); Swal.fire('نجاح', 'تم تحديث وقت العداد', 'success'); }
+        function deletePost(id) { if(confirm('حذف هذا المنشور؟')) db.ref('posts/'+id).remove(); }
+        
         function savePost() {
+            const title = document.getElementById('postTitle').value;
+            const img = document.getElementById('postImg').value;
+            const desc = document.getElementById('postDesc').value;
+            const bName = document.getElementById('btnName').value;
+            const link = document.getElementById('postLink').value;
+
+            if(!title || !link) return Swal.fire('خطأ', 'يرجى ملء العنوان والرابط على الأقل', 'error');
+
             db.ref('posts').push({
-                title: document.getElementById('postTitle').value,
-                img: document.getElementById('postImg').value,
-                btnName: document.getElementById('btnName').value,
-                link: document.getElementById('postLink').value
+                title: title,
+                img: img,
+                desc: desc,
+                btnName: bName,
+                link: link
             });
             document.getElementById('postModal').classList.add('hidden');
+            Swal.fire('تم النشر', 'تمت إضافة المنشور إلى Z Ahmed Tech', 'success');
+            // تنظيف الخانات
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postImg').value = '';
+            document.getElementById('postDesc').value = '';
+            document.getElementById('btnName').value = '';
+            document.getElementById('postLink').value = '';
         }
     </script>
 </body>
