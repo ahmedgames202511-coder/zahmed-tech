@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="mainHtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Ahmed Tech | المنصة التقنية</title>
+    <title>Z Ahmed Tech | Ultimate Platform</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -15,180 +14,96 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; transition: 0.3s; }
         
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background-color: #f3f4f6; 
-            color: #1f2937;
-            margin: 0;
-            padding: 0;
-        }
+        /* Mode Colors */
+        .light-mode { background: #f8fafc; color: #1e293b; }
+        .dark-mode { background: #020617; color: #f1f5f9; }
+        
+        .light-mode .glass { background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .dark-mode .glass { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.05); }
 
-        /* Navbar Like E5tarle */
-        .nav-modern {
-            background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        /* App Cards Like E5tarle */
-        .app-card {
-            background: white;
-            border-radius: 20px;
-            padding: 15px;
-            transition: 0.3s;
-            border: 1px solid #e5e7eb;
-            text-align: center;
-        }
-        .app-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-        }
-        .app-icon {
-            width: 100%;
-            aspect-ratio: 1/1;
-            border-radius: 18px;
-            object-cover: cover;
-            margin-bottom: 12px;
-        }
-
-        .btn-main {
-            background: #2563eb;
-            color: white;
-            font-weight: bold;
-            border-radius: 12px;
-            padding: 12px 25px;
-            transition: 0.3s;
-        }
-        .btn-main:hover { background: #1d4ed8; }
-
-        /* Admin Layout */
-        .admin-only { display: none; }
-        body.is-admin .admin-only { display: block; }
-
-        /* Auth Screen */
-        #authOverlay {
-            background: #ffffff;
-            z-index: 9999;
-        }
-
-        .loader-bar {
-            width: 100%;
-            height: 8px;
-            background: #e5e7eb;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-        .loader-progress {
-            width: 0%;
-            height: 100%;
-            background: #2563eb;
-            transition: 1s linear;
-        }
+        .btn-main { background: #2563eb; color: white; border-radius: 12px; transition: 0.3s; }
+        .admin-only { display: none !important; }
+        body.is-admin .admin-only { display: flex !important; }
+        
+        .loader-bar { width: 100%; height: 6px; background: #cbd5e1; border-radius: 10px; overflow: hidden; margin: 15px 0; }
+        .progress { width: 0%; height: 100%; background: #2563eb; transition: 1s linear; }
+        
+        [dir="ltr"] { text-align: left; }
+        [dir="rtl"] { text-align: right; }
     </style>
 </head>
-<body>
+<body class="dark-mode">
 
-    <div id="authOverlay" class="fixed inset-0 flex items-center justify-center p-6">
-        <div class="w-full max-w-md text-center">
-            <h1 class="text-4xl font-black text-blue-600 mb-2 uppercase">Z AHMED <span class="text-gray-800">TECH</span></h1>
-            <p class="text-gray-500 mb-8 text-sm">مرحباً بك في عالم التقنية</p>
-            
-            <div class="bg-white p-8 rounded-3xl shadow-2xl space-y-4">
-                <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 bg-gray-50 border rounded-xl outline-none focus:border-blue-500">
-                <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 bg-gray-50 border rounded-xl outline-none focus:border-blue-500">
-                <button onclick="loginWithEmail()" class="w-full btn-main text-lg shadow-lg">دخول</button>
-                <div class="text-gray-400 text-xs">أو سجل عبر</div>
-                <button onclick="loginWithGoogle()" class="w-full border-2 border-gray-100 p-4 rounded-xl flex items-center justify-center gap-3 font-bold hover:bg-gray-50 transition">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20">
-                    Google
+    <div id="authScreen" class="fixed inset-0 z-[5000] flex items-center justify-center bg-slate-950">
+        <div class="glass p-10 w-full max-w-md rounded-[2.5rem] text-center">
+            <h1 class="text-3xl font-black mb-8">Z Ahmed Tech</h1>
+            <div class="space-y-4">
+                <input id="email" type="email" placeholder="Email" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-white">
+                <input id="pass" type="password" placeholder="Password" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-white">
+                <button onclick="handleLogin()" class="w-full btn-main py-4 font-bold">Sign In</button>
+                <button onclick="handleGoogle()" class="w-full bg-white text-black py-4 rounded-xl font-bold flex items-center justify-center gap-2">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20"> Google
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="appBody" class="hidden">
-        <nav class="nav-modern sticky top-0 z-[100] px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-black text-blue-600 cursor-pointer" onclick="goHome()">Z.A TECH</div>
-            <div class="flex items-center gap-4">
-                <div class="text-left admin-only bg-blue-50 px-3 py-1 rounded-full">
-                    <span class="text-[10px] font-bold text-blue-600">ADMIN MODE</span>
-                </div>
-                <button onclick="logout()" class="text-gray-400 hover:text-red-500"><i class="fas fa-sign-out-alt text-xl"></i></button>
+    <div id="app" class="hidden min-h-screen">
+        <nav class="glass sticky top-0 z-[100] px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-black text-blue-500">Z Ahmed Tech</div>
+            <div class="flex items-center gap-3">
+                <button onclick="toggleMode()" class="p-2 rounded-full hover:bg-slate-500/20"><i class="fas fa-adjust"></i></button>
+                <button onclick="toggleLang()" class="p-2 text-xs font-bold uppercase" id="langBtn">EN</button>
+                <button onclick="logout()" class="text-red-500 p-2"><i class="fas fa-sign-out-alt"></i></button>
             </div>
         </nav>
 
         <div class="container mx-auto px-4 py-8">
-            <div class="flex flex-wrap gap-3 mb-8 justify-center">
-                <a href="https://t.me/Z_Ahmed_Tech" target="_blank" class="bg-[#229ED9] text-white px-5 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-md hover:opacity-90">
-                    <i class="fab fa-telegram-plane"></i> قناة التلجرام
-                </a>
-                <a href="https://www.youtube.com/@Z_Ahmed_Tech" target="_blank" class="bg-[#ff0000] text-white px-5 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-md hover:opacity-90">
-                    <i class="fab fa-youtube"></i> قناة اليوتيوب
-                </a>
-                <button onclick="openAdminTools()" class="admin-only bg-gray-800 text-white px-5 py-2 rounded-full text-sm font-bold flex items-center gap-2">
-                    <i class="fas fa-plus"></i> إضافة مقال
-                </button>
-            </div>
-
-            <div id="homeContent">
-                <h2 class="text-xl font-bold mb-6 border-r-4 border-blue-600 pr-3">أحدث الشروحات والتطبيقات</h2>
-                <div id="postsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                    </div>
-            </div>
-
-            <div id="downloadPage" class="hidden max-w-3xl mx-auto py-10">
-                <div class="bg-white p-10 rounded-[2.5rem] shadow-xl text-center">
-                    <img id="dIcon" class="w-32 h-32 mx-auto rounded-3xl shadow-lg mb-6">
-                    <h1 id="dTitle" class="text-3xl font-black mb-4"></h1>
-                    
-                    <div id="countdownArea" class="py-10">
-                        <p class="text-gray-500 font-bold mb-2">جاري فحص وتجهيز الرابط...</p>
-                        <div class="loader-bar"><div id="progressBar" class="loader-progress"></div></div>
-                        <p id="timer" class="text-4xl font-black text-blue-600">00</p>
-                    </div>
-
-                    <div id="resultArea" class="hidden animate__animated animate__fadeIn">
-                        <div class="bg-green-50 text-green-600 p-4 rounded-2xl mb-8 font-bold text-sm">
-                             تم فحص الرابط بنجاح، الملف آمن وجاهز للتحميل
-                        </div>
-                        <div id="customButtonPlace"></div>
-                    </div>
-
-                    <div class="mt-10 pt-10 border-t text-right">
-                        <h3 class="font-bold mb-4">الوصف:</h3>
-                        <p id="dDesc" class="text-gray-600 leading-relaxed"></p>
-                        <button onclick="goHome()" class="mt-8 text-blue-600 font-bold"><i class="fas fa-arrow-right"></i> العودة للرئيسية</button>
-                    </div>
+            <div class="flex flex-wrap gap-4 mb-8 justify-center">
+                <a href="https://t.me/Z_Ahmed_Tech" target="_blank" class="bg-blue-500 text-white px-6 py-2 rounded-full font-bold shadow-lg"><i class="fab fa-telegram"></i> Telegram</a>
+                <a href="https://www.youtube.com/@Z_Ahmed_Tech" target="_blank" class="bg-red-600 text-white px-6 py-2 rounded-full font-bold shadow-lg"><i class="fab fa-youtube"></i> YouTube</a>
+                
+                <div class="admin-only flex items-center gap-2 bg-slate-800 p-2 rounded-full border border-blue-500">
+                    <button onclick="openAddModal()" class="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold"><i class="fas fa-plus"></i></button>
+                    <input type="number" id="waitSet" onchange="updateWait(this.value)" class="w-12 bg-transparent text-white text-center text-xs outline-none" title="Set Wait Time">
                 </div>
+            </div>
+
+            <div id="grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+        </div>
+
+        <div id="dlView" class="hidden fixed inset-0 z-[200] bg-inherit overflow-y-auto p-6">
+            <div class="max-w-2xl mx-auto mt-20 glass p-8 rounded-[3rem] text-center">
+                <img id="dlImg" class="w-32 h-32 mx-auto rounded-3xl mb-6 shadow-xl">
+                <h2 id="dlTitle" class="text-2xl font-bold mb-4"></h2>
+                <div id="timerContainer">
+                    <p id="waitTxt" class="text-sm opacity-60 mb-2">Preparing link...</p>
+                    <div class="loader-bar"><div id="bar" class="progress"></div></div>
+                    <p id="timer" class="text-4xl font-black text-blue-500">00</p>
+                </div>
+                <div id="btnArea" class="hidden pt-6"></div>
+                <button onclick="closeDl()" class="mt-8 text-blue-500 font-bold" id="backBtn">Back</button>
             </div>
         </div>
     </div>
 
-    <div id="adminModal" class="hidden fixed inset-0 z-[500] bg-black/60 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-xl p-8 rounded-3xl shadow-2xl relative">
-            <button onclick="closeModal()" class="absolute top-6 left-6 text-gray-400"><i class="fas fa-times-circle text-2xl"></i></button>
-            <h2 class="text-2xl font-bold mb-6">إضافة محتوى جديد</h2>
-            <div class="space-y-4">
-                <input id="nT" placeholder="عنوان التطبيق / الشرح">
-                <div class="flex gap-4">
-                    <input id="nI" placeholder="رابط الأيقونة (Image URL)" class="flex-1">
-                    <input type="file" id="fI" onchange="handleImage(event)" class="hidden">
-                    <button onclick="document.getElementById('fI').click()" class="bg-gray-100 px-4 rounded-xl text-xs font-bold">رفع ملف</button>
-                </div>
-                <textarea id="nD" placeholder="اكتب وصفاً مفصلاً للمحتوى..." rows="4" class="w-full p-4 border rounded-xl"></textarea>
-                <div class="grid grid-cols-2 gap-4">
-                    <input id="nBN" placeholder="اسم زر التحميل">
-                    <input id="nBL" placeholder="الرابط النهائي">
-                </div>
-                <button onclick="savePost()" class="w-full btn-main py-4 rounded-xl shadow-lg">نشر الآن</button>
-            </div>
+    <div id="modal" class="hidden fixed inset-0 z-[500] bg-black/80 flex items-center justify-center p-4">
+        <div class="bg-white text-black w-full max-w-lg p-8 rounded-3xl space-y-4">
+            <h3 class="font-bold text-xl">New Post</h3>
+            <input id="nT" placeholder="Title">
+            <input id="nI" placeholder="Image URL">
+            <textarea id="nD" placeholder="Description" class="w-full border p-3 rounded-xl"></textarea>
+            <input id="nBL" placeholder="Download Link">
+            <button onclick="savePost()" class="w-full btn-main py-4">Publish</button>
+            <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-full text-gray-500">Close</button>
         </div>
     </div>
 
     <script>
-        const firebaseConfig = {
+        const config = {
             apiKey: "AIzaSyAqSQLHq0QFpe1CV8bAYc53mbUO7I03Q5I",
             authDomain: "z-ahmed-tech.firebaseapp.com",
             databaseURL: "https://z-ahmed-tech-default-rtdb.firebaseio.com",
@@ -197,142 +112,119 @@
             messagingSenderId: "422229166590",
             appId: "1:422229166590:web:67e75f72cd8ea1dd5058af"
         };
-        firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(config);
         const auth = firebase.auth(), db = firebase.database();
-        const ADMIN_EMAIL = "ahmedgames2025.11@gmail.com";
-        let userProfile = null, uploadedImg = "", waitSec = 10;
+        const ADMIN = "ahmedgames2025.11@gmail.com";
+        let me = null, waitTime = 10, isDark = true, lang = 'AR';
 
-        // --- Auth Functions ---
-        function loginWithEmail() {
-            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            auth.signInWithEmailAndPassword(e, p).catch(err => Swal.fire('خطأ', 'بيانات الدخول غير صحيحة', 'error'));
+        // --- Auth ---
+        function handleLogin() {
+            auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value);
         }
-
-        function loginWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(err => Swal.fire('تنبيه', 'يرجى السماح بالـ Popups', 'warning'));
+        function handleGoogle() {
+            auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
         }
-
         function logout() { auth.signOut().then(() => location.reload()); }
 
         auth.onAuthStateChanged(user => {
             if(user) {
                 db.ref('users/' + user.uid).on('value', snap => {
-                    userProfile = snap.val();
-                    if(!userProfile) {
-                        const role = (user.email === ADMIN_EMAIL) ? 'admin' : 'visitor';
-                        db.ref('users/' + user.uid).set({ uid: user.uid, email: user.email, name: user.displayName, role: role });
+                    me = snap.val();
+                    if(!me) {
+                        const role = (user.email === ADMIN) ? 'admin' : 'visitor';
+                        db.ref('users/' + user.uid).set({ email: user.email, role: role });
                     } else {
-                        if(userProfile.role === 'admin') document.body.classList.add('is-admin');
-                        document.getElementById('authOverlay').classList.add('hidden');
-                        document.getElementById('appBody').classList.remove('hidden');
-                        loadPosts();
+                        if(me.role === 'admin') document.body.classList.add('is-admin');
+                        document.getElementById('authScreen').classList.add('hidden');
+                        document.getElementById('app').classList.remove('hidden');
+                        db.ref('settings/time').on('value', s => { 
+                            waitTime = s.val() || 10;
+                            document.getElementById('waitSet').value = waitTime;
+                        });
+                        load();
                     }
                 });
             }
         });
 
-        // --- Post Management ---
-        function loadPosts() {
+        // --- Core ---
+        function load() {
             db.ref('posts').on('value', snap => {
-                const grid = document.getElementById('postsGrid');
-                grid.innerHTML = '';
+                const grid = document.getElementById('grid'); grid.innerHTML = '';
                 snap.forEach(p => {
-                    const post = p.val();
                     grid.innerHTML += `
-                        <div class="app-card cursor-pointer" onclick="goToDownload('${p.key}')">
-                            <img src="${post.img}" class="app-icon shadow-md">
-                            <h3 class="font-bold text-sm text-gray-800 h-10 overflow-hidden mb-2">${post.title}</h3>
-                            <span class="text-[10px] bg-blue-50 text-blue-600 px-3 py-1 rounded-full font-black uppercase tracking-tighter">تحميل الآن</span>
-                            ${userProfile.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="block mx-auto mt-4 text-red-400 text-xs hover:text-red-600"><i class="fas fa-trash"></i> حذف</button>` : ''}
+                        <div class="glass p-3 rounded-2xl text-center cursor-pointer hover:scale-105 transition" onclick="openDl('${p.key}')">
+                            <img src="${p.val().img}" class="w-full aspect-square rounded-xl object-cover mb-2 shadow-sm">
+                            <h3 class="text-xs font-bold truncate">${p.val().title}</h3>
+                            ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="text-red-500 text-[10px] mt-2">Delete</button>` : ''}
                         </div>`;
                 });
             });
         }
 
-        async function goToDownload(id) {
+        async function openDl(id) {
             const snap = await db.ref('posts/'+id).once('value');
             const post = snap.val();
-            document.getElementById('homeContent').classList.add('hidden');
-            document.getElementById('downloadPage').classList.remove('hidden');
-            window.scrollTo(0,0);
-
-            // تصفية البيانات
-            document.getElementById('dIcon').src = post.img;
-            document.getElementById('dTitle').innerText = post.title;
-            document.getElementById('dDesc').innerText = post.desc;
+            document.getElementById('dlView').classList.remove('hidden');
+            document.getElementById('dlImg').src = post.img;
+            document.getElementById('dlTitle').innerText = post.title;
             
-            // Reset UI
-            document.getElementById('countdownArea').classList.remove('hidden');
-            document.getElementById('resultArea').classList.add('hidden');
-            document.getElementById('progressBar').style.width = '0%';
+            let c = (me.role === 'admin') ? 0 : waitTime;
+            document.getElementById('timer').innerText = c;
+            document.getElementById('bar').style.width = '0%';
+            document.getElementById('btnArea').classList.add('hidden');
+            document.getElementById('timerContainer').classList.remove('hidden');
 
-            if(userProfile.role === 'admin') { startTimer(1, post); return; }
-            startTimer(waitSec, post);
-        }
+            if(c === 0) { showFinal(post.link); return; }
 
-        function startTimer(seconds, post) {
-            let count = seconds;
-            document.getElementById('timer').innerText = count;
-            const step = 100 / seconds;
-            
-            const interval = setInterval(() => {
-                count--;
-                document.getElementById('timer').innerText = (count < 10 ? '0' : '') + count;
-                document.getElementById('progressBar').style.width = (100 - (count * step)) + '%';
-                
-                if(count <= 0) {
-                    clearInterval(interval);
-                    document.getElementById('countdownArea').classList.add('hidden');
-                    document.getElementById('resultArea').classList.remove('hidden');
-                    document.getElementById('customButtonPlace').innerHTML = `
-                        <a href="${post.btnLink}" target="_blank" class="w-full block btn-main text-xl py-5 rounded-2xl shadow-2xl animate__animated animate__pulse animate__infinite">
-                            <i class="fas fa-download ml-2"></i> ${post.btnName || 'بدء التحميل الآن'}
-                        </a>`;
-                }
+            const itv = setInterval(() => {
+                c--;
+                document.getElementById('timer').innerText = c;
+                document.getElementById('bar').style.width = (100 - (c * (100/waitTime))) + '%';
+                if(c <= 0) { clearInterval(itv); showFinal(post.link); }
             }, 1000);
         }
 
-        // --- Admin Tools ---
-        function openAdminTools() { document.getElementById('adminModal').classList.remove('hidden'); }
-        function closeModal() { document.getElementById('adminModal').classList.add('hidden'); }
-        function goHome() { 
-            document.getElementById('homeContent').classList.remove('hidden'); 
-            document.getElementById('downloadPage').classList.add('hidden'); 
+        function showFinal(link) {
+            document.getElementById('timerContainer').classList.add('hidden');
+            document.getElementById('btnArea').classList.remove('hidden');
+            document.getElementById('btnArea').innerHTML = `<a href="${link}" target="_blank" class="w-full block btn-main py-4 text-lg font-bold">Download Now</a>`;
         }
 
-        function handleImage(e) {
-            const reader = new FileReader();
-            reader.onload = (ev) => uploadedImg = ev.target.result;
-            reader.readAsDataURL(e.target.files[0]);
+        // --- Tools ---
+        function toggleMode() {
+            isDark = !isDark;
+            document.body.className = isDark ? 'dark-mode' : 'light-mode';
         }
 
+        function toggleLang() {
+            lang = (lang === 'AR') ? 'EN' : 'AR';
+            document.getElementById('langBtn').innerText = lang;
+            const html = document.getElementById('mainHtml');
+            if(lang === 'EN') {
+                html.dir = 'ltr'; html.lang = 'en';
+                document.getElementById('waitTxt').innerText = "Preparing link...";
+                document.getElementById('backBtn').innerText = "Back";
+            } else {
+                html.dir = 'rtl'; html.lang = 'ar';
+                document.getElementById('waitTxt').innerText = "جاري تجهيز الرابط...";
+                document.getElementById('backBtn').innerText = "العودة";
+            }
+        }
+
+        function openAddModal() { document.getElementById('modal').classList.remove('hidden'); }
+        function closeDl() { document.getElementById('dlView').classList.add('hidden'); }
+        function updateWait(v) { if(me.role === 'admin') db.ref('settings/time').set(parseInt(v)); }
         function savePost() {
-            const title = document.getElementById('nT').value;
-            const img = uploadedImg || document.getElementById('nI').value;
-            if(!title || !img) return Swal.fire('تنبيه', 'يجب إدخال العنوان والصورة', 'warning');
-            
             db.ref('posts').push({
-                title, img, 
+                title: document.getElementById('nT').value,
+                img: document.getElementById('nI').value,
                 desc: document.getElementById('nD').value,
-                btnName: document.getElementById('nBN').value,
-                btnLink: document.getElementById('nBL').value,
-                time: Date.now()
+                link: document.getElementById('nBL').value
             });
-            uploadedImg = ""; closeModal(); 
-            Swal.fire('تم النجاح', 'تم نشر المقال بنجاح', 'success');
+            document.getElementById('modal').classList.add('hidden');
         }
-
-        function deletePost(id) {
-            Swal.fire({
-                title: 'حذف؟',
-                text: "لن تتمكن من التراجع عن الحذف",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'نعم، احذف'
-            }).then(r => { if(r.isConfirmed) db.ref('posts/'+id).remove(); });
-        }
+        function deletePost(id) { if(confirm('Delete?')) db.ref('posts/'+id).remove(); }
     </script>
 </body>
-                </html>
-                
+</html>
