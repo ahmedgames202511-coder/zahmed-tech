@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Ahmed Tech | Dashboard Pro</title>
+    <title>Z Ahmed Tech | Ultimate Dashboard</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -17,155 +17,108 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
         body { font-family: 'Cairo', sans-serif; transition: 0.4s; overflow-x: hidden; }
-        
         .dark-mode { background: #020617; color: #f1f5f9; }
         .light-mode { background: #f8fafc; color: #0f172a; }
-
         .glass { backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
         .dark-mode .glass { background: rgba(15, 23, 42, 0.8); }
         .light-mode .glass { background: rgba(255, 255, 255, 0.9); border-color: #e2e8f0; }
-
-        /* Google Button Style */
-        .btn-google { 
-            background: #ffffff; 
-            color: #1f2937; 
-            border: 1px solid #e5e7eb; 
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-google:hover { transform: scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-
+        .btn-google { background: #ffffff; color: #1f2937; border: 1px solid #e5e7eb; transition: 0.3s; }
         .admin-only { display: none !important; }
         body.is-admin .admin-only { display: block !important; }
-        
-        .nav-link { position: relative; transition: 0.3s; cursor: pointer; }
-        .nav-link:hover { color: #3b82f6; }
-
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
     </style>
 </head>
 <body class="dark-mode">
 
     <div id="authLayout" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950">
-        <div class="glass p-10 w-full max-w-md text-center animate__animated animate__backInDown">
-            <h1 class="text-4xl font-black mb-2 tracking-tighter text-white">Z AHMED <span class="text-blue-500">TECH</span></h1>
-            <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-[0.3em]">The Future of Tech</p>
-            
+        <div class="glass p-10 w-full max-w-md text-center animate__animated animate__zoomIn">
+            <h1 class="text-3xl font-black mb-2 text-white">Z Ahmed Tech</h1>
+            <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-widest">Premium Dashboard</p>
             <div class="space-y-4">
-                <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none focus:border-blue-500 transition">
-                <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none focus:border-blue-500 transition">
-                <button onclick="loginEmail()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-900/40 transition">تسجيل الدخول</button>
-                
-                <div class="flex items-center gap-3 py-2 text-slate-700">
-                    <hr class="flex-grow border-slate-800"> <span>أو</span> <hr class="flex-grow border-slate-800">
-                </div>
-
+                <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none">
+                <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none">
+                <button onclick="loginEmail()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold">دخول</button>
                 <button onclick="loginGoogle()" class="w-full btn-google py-4 rounded-2xl font-bold flex items-center justify-center gap-3">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="22">
-                    متابعة بواسطة جوجل
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="22"> جوجل
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="mainApp" class="hidden min-h-screen">
+    <div id="mainApp" class="hidden min-h-screen pb-20">
         <nav class="glass sticky top-4 mx-4 z-[1000] px-6 py-4 flex justify-between items-center shadow-2xl">
             <div class="flex items-center gap-6">
-                <span class="text-xl font-black text-blue-500 italic">Z.A TECH</span>
+                <span class="text-xl font-black text-blue-500">Z Ahmed Tech</span>
                 <div class="hidden md:flex gap-6 text-sm font-bold">
-                    <span onclick="showPage('home')" class="nav-link">الرئيسية</span>
-                    <span onclick="showPage('admin')" class="nav-link admin-only">لوحة التحكم</span>
+                    <span onclick="showPage('home')" class="cursor-pointer hover:text-blue-500 transition">الرئيسية</span>
+                    <span onclick="showPage('admin')" class="cursor-pointer hover:text-blue-500 transition admin-only">لوحة الأدمن</span>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 transition"><i class="fas fa-adjust text-blue-500"></i></button>
-                <button onclick="logout()" class="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition"><i class="fas fa-sign-out-alt"></i></button>
+            <div class="flex items-center gap-3">
+                <button onclick="toggleTheme()" class="p-2"><i class="fas fa-adjust"></i></button>
+                <button onclick="logout()" class="text-red-500 p-2"><i class="fas fa-power-off"></i></button>
             </div>
         </nav>
 
         <div id="pageHome" class="container mx-auto px-6 py-10 animate__animated animate__fadeIn">
-            <div class="flex justify-between items-center mb-8 border-r-4 border-blue-600 pr-4">
-                <div>
-                    <h2 class="text-2xl font-black italic">اكتشف التطبيقات</h2>
-                    <p class="text-xs text-slate-500">أحدث الشروحات والتطبيقات الحصرية</p>
-                </div>
-            </div>
+            <h2 class="text-2xl font-black mb-8 border-r-4 border-blue-500 pr-4">المحتوى المتاح</h2>
             <div id="postsGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
         </div>
 
         <div id="pageAdmin" class="hidden container mx-auto px-6 py-10 animate__animated animate__fadeIn">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                <div class="glass p-6 border-r-4 border-blue-500">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                <div class="glass p-6">
                     <p class="text-xs font-bold text-slate-500 uppercase">المتصلون الآن</p>
-                    <h3 id="onlineCount" class="text-5xl font-black mt-2 text-blue-500">0</h3>
+                    <h3 id="onlineCount" class="text-4xl font-black text-blue-500">0</h3>
                 </div>
-                <div class="glass p-6 border-r-4 border-emerald-500">
-                    <p class="text-xs font-bold text-slate-500 uppercase">إجمالي المسجلين</p>
-                    <h3 id="usersCount" class="text-5xl font-black mt-2 text-emerald-500">0</h3>
-                </div>
-                <div class="glass p-6 flex items-center justify-center">
-                    <button onclick="openPostModal()" class="w-full h-full bg-blue-600 rounded-2xl font-black text-white hover:bg-blue-700 transition shadow-xl">
-                        <i class="fas fa-plus-circle ml-2"></i> إضافة منشور جديد
-                    </button>
+                <div class="glass p-6">
+                    <button onclick="openPostModal()" class="w-full h-full bg-blue-600 rounded-2xl font-black text-white py-4 shadow-xl">إضافة منشور جديد</button>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div class="glass p-8">
-                    <h4 class="font-bold mb-6 flex items-center gap-2"><i class="fas fa-users text-blue-500"></i> سجل المستخدمين</h4>
-                    <div id="usersList" class="space-y-3 max-h-[400px] overflow-y-auto pl-2"></div>
+                    <h4 class="font-bold mb-6 border-b border-white/5 pb-4">إدارة مستخدمي Z Ahmed Tech</h4>
+                    <div id="usersList" class="space-y-3 overflow-y-auto max-h-[500px]"></div>
                 </div>
-                <div class="glass p-8">
-                    <h4 class="font-bold mb-6 flex items-center gap-2"><i class="fas fa-cog text-blue-500"></i> إعدادات العداد</h4>
-                    <div class="p-6 bg-black/20 rounded-2xl">
-                        <label class="text-xs font-bold text-slate-400 block mb-4 uppercase">مدة انتظار الزائر (بالثواني)</label>
-                        <div class="flex gap-4">
-                            <input type="number" id="waitInput" class="flex-grow p-4 rounded-xl bg-slate-900 border border-slate-700 outline-none text-center font-black text-xl">
-                            <button onclick="updateWaitTime(document.getElementById('waitInput').value)" class="bg-blue-600 px-8 rounded-xl font-bold">حفظ</button>
-                        </div>
-                    </div>
+                <div class="glass p-8 text-center">
+                    <h4 class="font-bold mb-6">إعدادات العداد</h4>
+                    <input type="number" id="waitInput" class="w-32 p-4 rounded-xl bg-slate-900 border border-slate-700 text-center font-black mb-4">
+                    <button onclick="updateWaitTime(document.getElementById('waitInput').value)" class="w-full bg-slate-700 py-3 rounded-xl font-bold">حفظ الثواني</button>
                 </div>
             </div>
         </div>
 
-        <div id="pageDl" class="hidden fixed inset-0 z-[500] bg-inherit p-6 overflow-y-auto">
-            <div class="max-w-xl mx-auto mt-20 glass p-10 text-center animate__animated animate__zoomIn">
+        <div id="pageDl" class="hidden fixed inset-0 z-[500] bg-inherit p-6 text-center overflow-y-auto">
+            <div class="max-w-xl mx-auto mt-20 glass p-10 animate__animated animate__zoomIn">
                 <img id="dlImg" class="w-32 h-32 mx-auto rounded-3xl shadow-2xl mb-6">
-                <h2 id="dlTitle" class="text-3xl font-black mb-4"></h2>
+                <h2 id="dlTitle" class="text-2xl font-black mb-4"></h2>
                 <div id="dlTimer">
-                    <p class="text-slate-500 mb-6">جاري التحقق من أمان الرابط...</p>
-                    <div class="relative w-32 h-32 mx-auto mb-6">
-                        <svg class="w-full h-full transform -rotate-90">
-                            <circle cx="64" cy="64" r="60" stroke="currentColor" stroke-width="8" fill="transparent" class="text-slate-800" />
-                            <circle id="dlRing" cx="64" cy="64" r="60" stroke="currentColor" stroke-width="8" fill="transparent" stroke-dasharray="377" stroke-dashoffset="377" class="text-blue-500 transition-all duration-1000" />
-                        </svg>
-                        <span id="dlNum" class="absolute inset-0 flex items-center justify-center text-4xl font-black">00</span>
-                    </div>
+                    <p class="mb-4 opacity-60">جاري تجهيز طلبك...</p>
+                    <div class="text-5xl font-black text-blue-500 mb-6" id="dlNum">00</div>
                 </div>
-                <div id="dlFinal" class="hidden pt-6"></div>
-                <button onclick="showPage('home')" class="mt-10 text-blue-500 font-bold hover:underline italic">← العودة للرئيسية</button>
+                <div id="dlFinal" class="hidden animate__animated animate__bounceIn"></div>
+                <button onclick="showPage('home')" class="mt-8 text-blue-500 font-bold">← العودة</button>
             </div>
         </div>
     </div>
 
     <div id="postModal" class="hidden fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center p-4">
         <div class="glass bg-slate-900 w-full max-w-lg p-8 space-y-4 animate__animated animate__slideInUp">
-            <h2 class="text-2xl font-bold border-b border-white/10 pb-4">نشر موضوع جديد</h2>
-            <input id="postTitle" placeholder="عنوان التطبيق" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700">
-            <input id="postImg" placeholder="رابط الأيقونة (Image URL)" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700">
-            <textarea id="postDesc" placeholder="شرح بسيط..." class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700 h-32 outline-none"></textarea>
-            <input id="postLink" placeholder="الرابط النهائي (Download Link)" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700">
+            <h2 class="text-xl font-bold">نشر جديد على Z Ahmed Tech</h2>
+            <input id="postTitle" placeholder="عنوان المنشور">
+            <input id="postImg" placeholder="رابط الصورة">
+            <input id="btnName" placeholder="اسم الزر (مثال: تحميل التطبيق)">
+            <input id="postLink" placeholder="رابط الزر (URL)">
             <div class="flex gap-4">
-                <button onclick="savePost()" class="flex-grow bg-blue-600 py-4 rounded-xl font-bold shadow-lg">نشر الآن</button>
-                <button onclick="document.getElementById('postModal').classList.add('hidden')" class="px-8 bg-slate-700 py-4 rounded-xl">إلغاء</button>
+                <button onclick="savePost()" class="flex-grow bg-blue-600 py-4 rounded-xl font-bold">نشر</button>
+                <button onclick="document.getElementById('postModal').classList.add('hidden')" class="px-6 bg-slate-700 rounded-xl">إلغاء</button>
             </div>
         </div>
     </div>
 
     <script>
-        // دمج بيانات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAqSQLHq0QFpe1CV8bAYc53mbUO7I03Q5I",
             authDomain: "z-ahmed-tech.firebaseapp.com",
@@ -177,66 +130,66 @@
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.database();
-        const OWNER_EMAIL = "ahmedgames2025.11@gmail.com";
+        const ADMIN_EMAIL = "ahmedgames2025.11@gmail.com";
         let me = null, waitTime = 10;
 
-        // --- وظائف الدخول ---
         function loginEmail() {
-            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            auth.signInWithEmailAndPassword(e, p).catch(err => Swal.fire('خطأ', 'البيانات غير صحيحة', 'error'));
+            auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value).catch(e => alert("خطأ"));
         }
-        function loginGoogle() {
-            auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-        }
+        function loginGoogle() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
         function logout() { auth.signOut().then(() => location.reload()); }
 
         auth.onAuthStateChanged(user => {
             if(user) {
-                // تتبع المتصلين
-                const statusRef = db.ref(`online/${user.uid}`);
-                statusRef.set({ name: user.displayName || 'Tech User', lastActive: Date.now() });
-                statusRef.onDisconnect().remove();
-
+                db.ref(`online/${user.uid}`).set(true);
+                db.ref(`online/${user.uid}`).onDisconnect().remove();
+                
                 db.ref('users/' + user.uid).on('value', snap => {
                     me = snap.val();
                     if(!me) {
                         db.ref('users/' + user.uid).set({ 
-                            name: user.displayName || 'Tech User', 
+                            name: user.displayName || 'User', 
                             email: user.email, 
-                            role: (user.email === OWNER_EMAIL) ? 'admin' : 'visitor' 
+                            uid: user.uid,
+                            role: (user.email === ADMIN_EMAIL) ? 'admin' : 'visitor' 
                         });
                     } else {
                         if(me.role === 'admin') document.body.classList.add('is-admin');
                         document.getElementById('authLayout').classList.add('hidden');
                         document.getElementById('mainApp').classList.remove('hidden');
-                        loadAdminStats();
+                        initAdmin();
                         loadPosts();
                     }
                 });
             }
         });
 
-        // --- لوحة التحكم والبيانات ---
-        function loadAdminStats() {
-            // عداد الحضور
+        function initAdmin() {
             db.ref('online').on('value', s => { document.getElementById('onlineCount').innerText = s.numChildren(); });
-            // قائمة الحسابات
             db.ref('users').on('value', s => {
-                document.getElementById('usersCount').innerText = s.numChildren();
                 const list = document.getElementById('usersList'); list.innerHTML = '';
                 s.forEach(u => {
                     const user = u.val();
-                    list.innerHTML += `<div class="p-4 bg-white/5 rounded-2xl flex justify-between items-center animate__animated animate__fadeIn">
-                        <div><p class="font-bold text-sm">${user.name}</p><p class="text-[10px] opacity-40">${user.email}</p></div>
-                        <span class="text-[9px] px-3 py-1 bg-blue-500/10 text-blue-500 rounded-full font-black uppercase">${user.role}</span>
+                    list.innerHTML += `<div class="p-4 bg-white/5 rounded-2xl flex justify-between items-center">
+                        <div class="text-xs">
+                            <p class="font-bold">${user.name}</p>
+                            <p class="opacity-40">${user.email}</p>
+                        </div>
+                        ${user.email !== ADMIN_EMAIL ? `<button onclick="deleteUser('${user.uid}')" class="text-red-500 text-xs font-bold hover:underline">حذف الحساب</button>` : '<span class="text-blue-500 text-[10px]">الأدمن الرئيسي</span>'}
                     </div>`;
                 });
             });
-            // جلب وقت الانتظار
             db.ref('settings/time').on('value', s => { 
                 waitTime = s.val() || 10;
                 document.getElementById('waitInput').value = waitTime;
             });
+        }
+
+        function deleteUser(uid) {
+            if(confirm("هل أنت متأكد من حذف هذا المستخدم نهائياً؟")) {
+                db.ref('users/' + uid).remove();
+                Swal.fire('تم', 'تم إزالة الحساب من القاعدة', 'success');
+            }
         }
 
         function loadPosts() {
@@ -245,10 +198,10 @@
                 snap.forEach(p => {
                     const post = p.val();
                     grid.innerHTML += `
-                        <div class="glass p-3 rounded-[1.8rem] text-center cursor-pointer group hover:border-blue-500 transition animate__animated animate__zoomIn" onclick="openDownload('${p.key}')">
-                            <img src="${post.img}" class="w-full aspect-square object-cover rounded-2xl mb-3 shadow-lg group-hover:scale-105 transition duration-500">
-                            <h3 class="text-[11px] font-black truncate px-2">${post.title}</h3>
-                            ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="mt-2 text-[9px] text-red-500 hover:scale-110 transition"><i class="fas fa-trash"></i></button>` : ''}
+                        <div class="glass p-3 rounded-[1.8rem] text-center cursor-pointer group hover:border-blue-500 transition" onclick="openDownload('${p.key}')">
+                            <img src="${post.img}" class="w-full aspect-square object-cover rounded-2xl mb-3 shadow-lg">
+                            <h3 class="text-[11px] font-black truncate">${post.title}</h3>
+                            ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="mt-2 text-[9px] text-red-500">حذف المنشور</button>` : ''}
                         </div>`;
                 });
             });
@@ -259,49 +212,41 @@
             showPage('dl');
             document.getElementById('dlImg').src = post.img;
             document.getElementById('dlTitle').innerText = post.title;
-            
             let count = (me.role === 'admin') ? 0 : waitTime;
             document.getElementById('dlNum').innerText = count;
-            document.getElementById('dlRing').style.strokeDashoffset = 377;
             document.getElementById('dlTimer').classList.remove('hidden');
             document.getElementById('dlFinal').classList.add('hidden');
 
-            if(count === 0) { renderFinal(post.link); return; }
-
+            if(count === 0) { renderLink(post.link, post.btnName); return; }
             const itv = setInterval(() => {
                 count--;
                 document.getElementById('dlNum').innerText = count;
-                document.getElementById('dlRing').style.strokeDashoffset = 377 - (377 * (waitTime - count) / waitTime);
-                if(count <= 0) { clearInterval(itv); renderFinal(post.link); }
+                if(count <= 0) { clearInterval(itv); renderLink(post.link, post.btnName); }
             }, 1000);
         }
 
-        function renderFinal(link) {
+        function renderLink(link, btnName) {
             document.getElementById('dlTimer').classList.add('hidden');
             document.getElementById('dlFinal').classList.remove('hidden');
-            document.getElementById('dlFinal').innerHTML = `<a href="${link}" target="_blank" class="w-full block bg-blue-600 py-5 rounded-3xl text-xl font-black shadow-xl animate__animated animate__bounceIn">بدء التحميل الآن</a>`;
+            document.getElementById('dlFinal').innerHTML = `<a href="${link}" target="_blank" class="w-full block bg-blue-600 py-5 rounded-3xl text-xl font-black shadow-xl">${btnName || 'تحميل الآن'}</a>`;
         }
 
-        // --- المساعدات ---
         function showPage(p) {
             ['pageHome', 'pageAdmin', 'pageDl'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById('page' + p.charAt(0).toUpperCase() + p.slice(1)).classList.remove('hidden');
-            window.scrollTo(0,0);
         }
         function toggleTheme() { document.body.classList.toggle('dark-mode'); document.body.classList.toggle('light-mode'); }
         function openPostModal() { document.getElementById('postModal').classList.remove('hidden'); }
-        function updateWaitTime(v) { if(me.role === 'admin') db.ref('settings/time').set(parseInt(v)); Swal.fire('تم', 'تم تحديث الوقت', 'success'); }
-        function deletePost(id) { if(confirm('حذف؟')) db.ref('posts/'+id).remove(); }
+        function updateWaitTime(v) { if(me.role === 'admin') db.ref('settings/time').set(parseInt(v)); }
+        function deletePost(id) { if(confirm('Delete?')) db.ref('posts/'+id).remove(); }
         function savePost() {
             db.ref('posts').push({
                 title: document.getElementById('postTitle').value,
                 img: document.getElementById('postImg').value,
-                desc: document.getElementById('postDesc').value,
-                link: document.getElementById('postLink').value,
-                time: Date.now()
+                btnName: document.getElementById('btnName').value,
+                link: document.getElementById('postLink').value
             });
             document.getElementById('postModal').classList.add('hidden');
-            Swal.fire('نجاح', 'تم النشر بنجاح', 'success');
         }
     </script>
 </body>
