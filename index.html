@@ -21,35 +21,35 @@
         .cyber-card { border-radius: 1.5rem; border: 1px solid rgba(6, 182, 212, 0.1); transition: 0.3s; cursor: pointer; position: relative; }
         .cyber-card:hover { border-color: #06b6d4; transform: scale(1.02); }
         .btn-cyan { background: linear-gradient(90deg, #06b6d4, #3b82f6); color: white; transition: 0.3s; }
-        .btn-action { background: #06b6d4; color: white; padding: 12px 30px; border-radius: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; margin-top: 20px; }
-        .btn-action:hover { box-shadow: 0 0 20px rgba(6, 182, 212, 0.5); transform: translateY(-3px); }
-        .telegram-btn { position: fixed; bottom: 30px; left: 30px; z-index: 100; background: #229ED9; width: 60px; height: 60px; border-radius: 50%; display: flex; items-center; justify-content: center; font-size: 25px; box-shadow: 0 0 20px rgba(34, 158, 217, 0.4); }
+        .telegram-btn { position: fixed; bottom: 30px; left: 30px; z-index: 100; background: #229ED9; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 25px; box-shadow: 0 0 20px rgba(34, 158, 217, 0.4); }
         input, textarea, select { background: #0f172a !important; border: 1px solid #1e293b !important; color: white !important; border-radius: 12px; }
+        .chat-box { height: 300px; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
     </style>
 </head>
 <body>
 
-    <a href="https://t.me/Z_Ahmed_Tech" target="_blank" class="telegram-btn animate__animated animate__bounceIn items-center">
-        <i class="fab fa-telegram-plane text-white"></i>
-    </a>
+    <a href="https://t.me/Z_Ahmed_Tech" target="_blank" class="telegram-btn animate__bounceIn"><i class="fab fa-telegram-plane text-white"></i></a>
 
     <div id="authScreen" class="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950 p-4">
         <div class="glass p-8 w-full max-w-md rounded-[2.5rem] text-center animate__animated animate__zoomIn">
-            <h1 class="text-4xl font-black mb-2 tracking-tighter uppercase">Z Ahmed <span class="text-cyan-400">Tech</span></h1>
-            <div class="space-y-4 mt-8">
-                <button onclick="googleSignIn()" class="w-full bg-white text-black py-4 rounded-xl font-bold flex items-center justify-center gap-3"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20"> دخول بجوجل</button>
+            <h1 class="text-4xl font-black mb-8 uppercase text-white">Z Ahmed <span class="text-cyan-400">Tech</span></h1>
+            <div class="space-y-4">
+                <button onclick="googleSignIn()" class="w-full bg-white text-black py-4 rounded-xl font-bold flex items-center justify-center gap-3">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20"> دخول بجوجل
+                </button>
+                <p class="text-xs text-slate-500">أو الإدارة</p>
                 <input id="email" type="email" placeholder="البريد" class="w-full p-4 outline-none">
                 <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 outline-none">
-                <button onclick="login()" class="w-full btn-cyan py-4 rounded-xl font-bold">دخول الإدارة</button>
+                <button onclick="login()" class="w-full btn-cyan py-4 rounded-xl font-bold">دخول</button>
             </div>
         </div>
     </div>
 
     <div id="mainApp" class="hidden">
         <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center border-b border-white/5">
-            <div class="text-2xl font-black uppercase tracking-tighter cursor-pointer" onclick="goHome()">Z Ahmed <span class="text-cyan-400">Tech</span></div>
+            <div class="text-2xl font-black uppercase cursor-pointer" onclick="goHome()">Z <span class="text-cyan-400">Tech</span></div>
             <div class="flex items-center gap-4">
-                <span id="navRole" class="text-[10px] font-bold bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full">USER</span>
+                <span id="navRole" class="text-[9px] font-bold bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full uppercase italic">USER</span>
                 <button onclick="logout()" class="text-red-500"><i class="fas fa-power-off"></i></button>
             </div>
         </nav>
@@ -58,19 +58,26 @@
             <div id="homeView" class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <div class="space-y-4">
                     <div id="sideMenu" class="hidden glass p-6 rounded-3xl border border-white/5">
-                        <p class="text-[10px] font-bold text-slate-500 mb-4 uppercase text-right">الإدارة</p>
-                        <button onclick="openTab('addPost')" class="w-full text-right p-3 hover:bg-white/5 rounded-xl transition text-sm flex justify-between items-center mb-2"><span>نشر جديد</span><i class="fas fa-edit text-cyan-400"></i></button>
-                        <div id="onlyAdmin" class="hidden pt-2 border-t border-white/5 space-y-2">
-                             <div class="p-3 bg-slate-900/50 rounded-xl">
-                                <p class="text-[9px] text-cyan-400 mb-1 text-right">وقت الانتظار</p>
-                                <input type="number" id="waitTimer" class="w-full bg-transparent text-xs p-1" value="5" onchange="saveWaitTime(this.value)">
+                        <p class="text-[10px] font-bold text-slate-500 mb-4 text-right">لوحة التحكم</p>
+                        <div class="space-y-2">
+                            <button onclick="openAdminModal('addPost')" class="w-full text-right p-3 hover:bg-white/5 rounded-xl text-sm flex justify-between items-center"><span>منشور جديد</span><i class="fas fa-edit text-cyan-400"></i></button>
+                            <div id="onlyAdmin" class="hidden pt-2 border-t border-white/5 space-y-2">
+                                <button onclick="openAdminModal('manageUsers')" class="w-full text-right p-3 hover:bg-white/5 rounded-xl text-sm flex justify-between items-center"><span>إدارة الرتب</span><i class="fas fa-users-cog text-cyan-400"></i></button>
+                                <button onclick="openAdminModal('viewChats')" class="w-full text-right p-3 hover:bg-white/5 rounded-xl text-sm flex justify-between items-center"><span>مراقبة الشات</span><i class="fas fa-comments text-cyan-400"></i></button>
+                                <div class="p-3 bg-slate-900/50 rounded-xl mt-2">
+                                    <p class="text-[9px] text-cyan-400 text-right">عداد الثواني</p>
+                                    <input type="number" id="waitTimer" class="w-full bg-transparent text-xs p-1" onchange="saveWaitTime(this.value)">
+                                </div>
                             </div>
-                            <div id="aiStats" class="p-4 rounded-xl bg-cyan-900/10 text-[10px] text-slate-400 italic"></div>
                         </div>
                     </div>
+                    <button id="supportBtn" onclick="startChat()" class="w-full btn-cyan p-4 rounded-2xl font-bold hidden flex items-center justify-center gap-2">
+                        <i class="fas fa-headset"></i> الدعم الفني
+                    </button>
                 </div>
+
                 <div class="lg:col-span-3">
-                    <h2 class="text-3xl font-black mb-8 text-right">أحدث <span class="text-cyan-400">التحديثات</span></h2>
+                    <h2 class="text-3xl font-black mb-8 text-right text-white italic">آخر <span class="text-cyan-400">التحديثات</span></h2>
                     <div id="postsFeed" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
                 </div>
             </div>
@@ -81,25 +88,23 @@
                         <svg class="w-24 h-24 transform -rotate-90"><circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="8" fill="transparent" class="text-slate-800" /><circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="8" fill="transparent" class="text-cyan-400" stroke-dasharray="251" id="waitCircle" /></svg>
                         <span id="countdownText" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl font-bold"></span>
                     </div>
-                    <h3 class="text-xl font-bold">جاري تجهيز الرابط لك...</h3>
+                    <h3 class="text-xl font-bold">يتم تحضير المحتوى...</h3>
                 </div>
-
                 <div id="actualContent" class="hidden space-y-6 text-right">
-                    <button onclick="goHome()" class="text-cyan-400 flex items-center gap-1 mb-4"><i class="fas fa-arrow-right"></i> العودة</button>
-                    <img id="detailImg" class="w-full h-[400px] object-cover rounded-[2.5rem] shadow-2xl">
-                    <h1 id="detailTitle" class="text-4xl font-black text-white leading-tight"></h1>
-                    <div id="detailDesc" class="text-lg leading-loose text-slate-300 whitespace-pre-wrap border-t border-white/5 pt-6"></div>
-                    
-                    <div id="actionBtnContainer" class="flex justify-center mt-8"></div>
+                    <button onclick="goHome()" class="text-cyan-400 mb-4"><i class="fas fa-arrow-right"></i> رجوع</button>
+                    <img id="detailImg" class="w-full h-80 object-cover rounded-[2rem] shadow-2xl">
+                    <h1 id="detailTitle" class="text-4xl font-black"></h1>
+                    <div id="detailDesc" class="text-lg text-slate-300 leading-relaxed py-6 border-t border-white/5"></div>
+                    <div id="actionBtnContainer" class="flex justify-center pb-10"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="adminModal" class="hidden fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center p-4">
-        <div class="glass w-full max-w-2xl p-8 rounded-[2rem] relative">
-            <button onclick="closeAdminModal()" class="absolute top-6 left-6 text-xl hover:text-cyan-400"><i class="fas fa-times-circle"></i></button>
-            <div id="adminModalContent" class="text-right"></div>
+    <div id="adminModal" class="hidden fixed inset-0 z-[2000] bg-black/95 flex items-center justify-center p-4">
+        <div class="glass w-full max-w-2xl p-8 rounded-[2rem] relative overflow-y-auto max-h-[90vh]">
+            <button onclick="closeModal()" class="absolute top-6 left-6 text-xl text-slate-500"><i class="fas fa-times"></i></button>
+            <div id="modalContent" class="text-right"></div>
         </div>
     </div>
 
@@ -118,154 +123,179 @@
         const MASTER_ADMIN = "ahmedgames2025.11@gmail.com";
         let me = null;
 
+        // Auth
         async function googleSignIn() {
             const provider = new firebase.auth.GoogleAuthProvider();
             try {
                 const res = await auth.signInWithPopup(provider);
                 const user = res.user;
-                const approvedSnap = await db.ref('approved_workers').orderByValue().equalTo(user.email).once('value');
-                const role = (user.email === MASTER_ADMIN) ? 'admin' : (approvedSnap.exists() ? 'worker' : 'visitor');
+                const snap = await db.ref('users/' + user.uid).once('value');
+                const role = snap.exists() ? snap.val().role : (user.email === MASTER_ADMIN ? 'admin' : 'visitor');
                 await db.ref('users/' + user.uid).update({ uid: user.uid, email: user.email, name: user.displayName, role: role });
-            } catch (err) { Swal.fire('Error', 'فشل الدخول', 'error'); }
+            } catch (e) { Swal.fire('Error', 'فشل الدخول', 'error'); }
         }
 
         async function login() {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            try { await auth.signInWithEmailAndPassword(e, p); } catch { Swal.fire('خطأ', 'بيانات خاطئة', 'error'); }
+            try { await auth.signInWithEmailAndPassword(e, p); } catch (err) { Swal.fire('خطأ', 'بيانات غير صحيحة', 'error'); }
         }
 
         function logout() { auth.signOut().then(() => location.reload()); }
+        function closeModal() { document.getElementById('adminModal').classList.add('hidden'); }
+        function goHome() { document.getElementById('homeView').classList.remove('hidden'); document.getElementById('postDetailView').classList.add('hidden'); }
 
         auth.onAuthStateChanged(user => {
             if(user) {
                 db.ref('users/' + user.uid).on('value', snap => {
                     me = snap.val();
-                    if(me) {
-                        document.getElementById('authScreen').classList.add('hidden');
-                        document.getElementById('mainApp').classList.remove('hidden');
-                        document.getElementById('navRole').innerText = me.role;
-                        document.getElementById('sideMenu').classList.remove('hidden');
-                        document.getElementById('onlyAdmin').classList.toggle('hidden', me.role !== 'admin');
-                        loadWaitTime(); loadPosts();
-                        if(me.role === 'admin') runAI();
-                    }
+                    document.getElementById('authScreen').classList.add('hidden');
+                    document.getElementById('mainApp').classList.remove('hidden');
+                    document.getElementById('navRole').innerText = me.role;
+                    document.getElementById('sideMenu').classList.toggle('hidden', me.role === 'visitor');
+                    document.getElementById('onlyAdmin').classList.toggle('hidden', me.role !== 'admin');
+                    document.getElementById('supportBtn').classList.toggle('hidden', me.role !== 'visitor');
+                    loadPosts(); loadWaitTime();
                 });
             } else { document.getElementById('authScreen').classList.remove('hidden'); }
         });
 
+        // Posts Logic
         let globalWaitTime = 5;
-        function saveWaitTime(val) { db.ref('settings/waitTime').set(val); }
         function loadWaitTime() { db.ref('settings/waitTime').on('value', s => { globalWaitTime = s.val() || 5; if(document.getElementById('waitTimer')) document.getElementById('waitTimer').value = globalWaitTime; }); }
-
-        function goHome() {
-            document.getElementById('homeView').classList.remove('hidden');
-            document.getElementById('postDetailView').classList.add('hidden');
-        }
-
-        async function viewPost(id) {
-            document.getElementById('homeView').classList.add('hidden');
-            document.getElementById('postDetailView').classList.remove('hidden');
-            document.getElementById('waitScreen').classList.remove('hidden');
-            document.getElementById('actualContent').classList.add('hidden');
-            
-            const snap = await db.ref('posts/' + id).once('value');
-            const post = snap.val();
-            
-            let timeLeft = globalWaitTime;
-            document.getElementById('countdownText').innerText = timeLeft;
-            const circle = document.getElementById('waitCircle');
-            circle.style.strokeDashoffset = 0;
-
-            const timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('countdownText').innerText = timeLeft;
-                circle.style.strokeDashoffset = 251 - (251 * (globalWaitTime - timeLeft) / globalWaitTime);
-                if(timeLeft <= 0) { clearInterval(timer); showContent(post); }
-            }, 1000);
-        }
-
-        function showContent(post) {
-            document.getElementById('waitScreen').classList.add('hidden');
-            document.getElementById('actualContent').classList.remove('hidden');
-            document.getElementById('detailImg').src = post.img;
-            document.getElementById('detailTitle').innerText = post.title;
-            document.getElementById('detailDesc').innerText = post.desc;
-            
-            const btnBox = document.getElementById('actionBtnContainer');
-            btnBox.innerHTML = '';
-            if(post.btnText && post.btnLink) {
-                btnBox.innerHTML = `<a href="${post.btnLink}" target="_blank" class="btn-action"><i class="fas fa-external-link-alt"></i> ${post.btnText}</a>`;
-            }
-        }
-
-        function openTab(type) {
-            const content = document.getElementById('adminModalContent');
-            document.getElementById('adminModal').classList.remove('hidden');
-            if(type === 'addPost') {
-                content.innerHTML = `
-                    <h2 class="text-xl font-bold text-cyan-400 mb-4 text-right">نشر جديد</h2>
-                    <div class="space-y-3">
-                        <input id="pT" placeholder="عنوان الخبر" class="w-full p-3 outline-none">
-                        <div class="flex gap-2">
-                            <input id="pI" placeholder="رابط الصورة" class="flex-grow p-3 outline-none text-xs">
-                            <input type="file" onchange="handleFile(this)" class="w-1/3 p-2 bg-slate-800 text-[9px]">
-                        </div>
-                        <textarea id="pD" placeholder="الوصف الكامل..." class="w-full p-3 outline-none" rows="4"></textarea>
-                        <div class="grid grid-cols-2 gap-2 border-t border-white/10 pt-3">
-                            <input id="pBtnT" placeholder="نص الزر (مثال: تحميل)" class="p-3 outline-none">
-                            <input id="pBtnL" placeholder="رابط الزر (URL)" class="p-3 outline-none">
-                        </div>
-                        <button onclick="savePost()" class="w-full btn-cyan py-3 rounded-xl font-bold">نشر</button>
-                    </div>`;
-            }
-        }
-
-        function handleFile(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => { document.getElementById('pI').value = e.target.result; };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        async function savePost() {
-            const post = { 
-                title: document.getElementById('pT').value, 
-                img: document.getElementById('pI').value, 
-                desc: document.getElementById('pD').value,
-                btnText: document.getElementById('pBtnT').value,
-                btnLink: document.getElementById('pBtnL').value,
-                author: me.name, 
-                time: Date.now() 
-            };
-            await db.ref('posts').push(post);
-            document.getElementById('adminModal').classList.add('hidden');
-            Swal.fire('تم', 'نشر الخبر مع الزر بنجاح', 'success');
-        }
+        function saveWaitTime(v) { db.ref('settings/waitTime').set(v); }
 
         function loadPosts() {
             db.ref('posts').on('value', snap => {
                 const feed = document.getElementById('postsFeed'); feed.innerHTML = '';
                 snap.forEach(p => {
                     const post = p.val();
-                    feed.innerHTML += `<div class="cyber-card glass overflow-hidden animate__animated animate__fadeIn" onclick="viewPost('${p.key}')">
-                        <img src="${post.img}" class="w-full h-40 object-cover">
-                        <div class="p-4 text-right">
-                            <h3 class="text-lg font-bold mb-1">${post.title}</h3>
-                            <p class="text-cyan-400 text-[10px] italic">عرض التفاصيل <i class="fas fa-chevron-left mr-1"></i></p>
-                            ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="mt-2 text-red-500 text-[10px]"><i class="fas fa-trash"></i> حذف</button>` : ''}
-                        </div>
-                    </div>`;
+                    feed.innerHTML += `
+                        <div class="cyber-card glass overflow-hidden animate__fadeIn" onclick="viewPost('${p.key}')">
+                            <img src="${post.img}" class="w-full h-40 object-cover">
+                            <div class="p-4 text-right">
+                                <h3 class="font-bold text-lg">${post.title}</h3>
+                                <p class="text-cyan-400 text-[10px] mt-2 italic">إقرأ الآن <i class="fas fa-arrow-left"></i></p>
+                                ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="text-red-500 text-[10px] mt-2">حذف</button>` : ''}
+                            </div>
+                        </div>`;
                 });
             });
         }
 
-        function deletePost(id) { db.ref('posts/'+id).remove(); }
-        function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
-        async function runAI() {
-            const u = await db.ref('users').once('value'), p = await db.ref('posts').once('value');
-            document.getElementById('aiStats').innerHTML = `الأعضاء: ${u.numChildren()} | الأخبار: ${p.numChildren()}`;
+        async function viewPost(id) {
+            const snap = await db.ref('posts/'+id).once('value');
+            const post = snap.val();
+            document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('postDetailView').classList.remove('hidden');
+            document.getElementById('waitScreen').classList.remove('hidden');
+            document.getElementById('actualContent').classList.add('hidden');
+            
+            let timeLeft = globalWaitTime;
+            document.getElementById('countdownText').innerText = timeLeft;
+            const timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('countdownText').innerText = timeLeft;
+                if(timeLeft <= 0) { clearInterval(timer); showPost(post); }
+            }, 1000);
         }
+
+        function showPost(post) {
+            document.getElementById('waitScreen').classList.add('hidden');
+            document.getElementById('actualContent').classList.remove('hidden');
+            document.getElementById('detailImg').src = post.img;
+            document.getElementById('detailTitle').innerText = post.title;
+            document.getElementById('detailDesc').innerText = post.desc;
+            document.getElementById('actionBtnContainer').innerHTML = post.btnLink ? `<a href="${post.btnLink}" class="btn-cyan px-8 py-3 rounded-xl font-bold">${post.btnText || 'دخول'}</a>` : '';
+        }
+
+        // Admin Features
+        function openAdminModal(type) {
+            const content = document.getElementById('modalContent');
+            document.getElementById('adminModal').classList.remove('hidden');
+            if(type === 'addPost') {
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold mb-4">نشر منشور جديد</h2>
+                    <input id="pT" placeholder="العنوان" class="w-full p-4 mb-2">
+                    <div class="flex gap-2 mb-2"><input id="pI" placeholder="رابط الصورة" class="flex-grow p-4 text-xs"><input type="file" onchange="upImg(this)" class="w-1/3"></div>
+                    <textarea id="pD" placeholder="الوصف" class="w-full p-4 mb-2" rows="4"></textarea>
+                    <div class="flex gap-2"><input id="pBtnT" placeholder="نص الزر" class="w-1/2 p-4"><input id="pBtnL" placeholder="رابط الزر" class="w-1/2 p-4"></div>
+                    <button onclick="savePost()" class="w-full btn-cyan p-4 mt-4 rounded-xl font-bold">نشر</button>`;
+            } else if(type === 'manageUsers') {
+                content.innerHTML = `<h2 class="text-xl font-bold mb-4">إدارة المستخدمين</h2><div id="usersList" class="space-y-2"></div>`;
+                db.ref('users').on('value', s => {
+                    const list = document.getElementById('usersList'); list.innerHTML = '';
+                    s.forEach(u => {
+                        list.innerHTML += `<div class="p-4 bg-white/5 rounded-xl flex justify-between items-center text-xs">
+                            <select onchange="updateRole('${u.key}', this.value)" class="bg-slate-800 p-1 rounded">
+                                <option ${u.val().role==='visitor'?'selected':''}>visitor</option>
+                                <option ${u.val().role==='worker'?'selected':''}>worker</option>
+                                <option ${u.val().role==='admin'?'selected':''}>admin</option>
+                            </select>
+                            <span>${u.val().name}</span>
+                        </div>`;
+                    });
+                });
+            } else if(type === 'viewChats') {
+                content.innerHTML = `<h2 class="text-xl font-bold mb-4">مراقبة الرسائل والتقييمات</h2><div id="chatsList" class="space-y-2"></div>`;
+                db.ref('chats').on('value', s => {
+                    const list = document.getElementById('chatsList'); list.innerHTML = '';
+                    s.forEach(c => {
+                        list.innerHTML += `<div onclick="openChatUI('${c.key}')" class="p-4 bg-white/5 rounded-xl flex justify-between cursor-pointer">
+                            <span class="text-yellow-400 text-[10px]">${c.val().rating ? '⭐ '+c.val().rating : 'بدون تقييم'}</span>
+                            <span class="text-xs">${c.val().userName}</span>
+                        </div>`;
+                    });
+                });
+            }
+        }
+
+        // Chat & Support
+        function startChat() { openChatUI(me.uid); }
+        function openChatUI(chatId) {
+            const content = document.getElementById('modalContent');
+            document.getElementById('adminModal').classList.remove('hidden');
+            content.innerHTML = `
+                <h3 class="font-bold mb-2">المحادثة الدعم الفني</h3>
+                <div id="chatBox" class="chat-box glass rounded-xl mb-4"></div>
+                <div class="flex gap-2">
+                    <input id="msgInp" placeholder="اكتب رسالتك..." class="flex-grow p-4 outline-none">
+                    <button onclick="sendMsg('${chatId}')" class="btn-cyan px-6 rounded-xl"><i class="fas fa-paper-plane"></i></button>
+                </div>
+                ${me.role === 'visitor' ? `<div class="mt-4 pt-4 border-t border-white/5 flex gap-2 items-center">
+                    <p class="text-[10px]">قيم الموظف:</p>
+                    <select onchange="rateWorker('${chatId}', this.value)" class="text-[10px] p-1 bg-slate-800">
+                        <option>اختر</option><option value="5">ممتاز</option><option value="3">متوسط</option><option value="1">سيء</option>
+                    </select>
+                </div>` : ''}`;
+            
+            db.ref('chats/' + chatId).update({ userName: me.name });
+            db.ref('messages/' + chatId).on('value', s => {
+                const box = document.getElementById('chatBox'); if(!box) return;
+                box.innerHTML = '';
+                s.forEach(m => {
+                    const isMe = m.val().sender === auth.currentUser.uid;
+                    box.innerHTML += `<div class="${isMe ? 'mr-auto bg-cyan-600' : 'ml-auto bg-slate-800'} p-2 rounded-xl text-[10px] max-w-[80%]">${m.val().text}</div>`;
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+        }
+
+        function sendMsg(id) {
+            const txt = document.getElementById('msgInp').value;
+            if(!txt) return;
+            db.ref('messages/' + id).push({ sender: auth.currentUser.uid, text: txt });
+            document.getElementById('msgInp').value = '';
+        }
+
+        function rateWorker(id, v) { db.ref('chats/' + id).update({ rating: v }); Swal.fire('شكراً', 'تم حفظ تقييمك لموظف الخدمة', 'success'); }
+        function updateRole(uid, role) { db.ref('users/' + uid).update({ role }); }
+        function upImg(i) { if(i.files[0]) { const r = new FileReader(); r.onload = e => document.getElementById('pI').value = e.target.result; r.readAsDataURL(i.files[0]); } }
+        async function savePost() {
+            const post = { title:document.getElementById('pT').value, img:document.getElementById('pI').value, desc:document.getElementById('pD').value, btnText:document.getElementById('pBtnT').value, btnLink:document.getElementById('pBtnL').value, time:Date.now() };
+            await db.ref('posts').push(post); closeModal();
+        }
+        function deletePost(id) { db.ref('posts/'+id).remove(); }
     </script>
 </body>
-</html>
+                        </html>
+    
