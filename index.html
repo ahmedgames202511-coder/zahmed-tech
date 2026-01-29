@@ -118,6 +118,11 @@
                 <input type="file" id="fileInput" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
                 <input id="postImg" placeholder="أو ضع رابط صورة جاهز هنا" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-xs mt-2">
             </div>
+
+            <div class="space-y-2">
+                <label class="text-xs text-slate-400 block">وقت نزول المنشور (اتركه فارغاً للنشر الفوري):</label>
+                <input type="datetime-local" id="postSchedule" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-white">
+            </div>
             
             <textarea id="postDesc" placeholder="اكتب وصف المنشور هنا..." class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 h-24 outline-none"></textarea>
             <input id="btnName" placeholder="اسم الزر (مثال: تحميل مباشر)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
@@ -216,12 +221,20 @@
         function loadPosts() {
             db.ref('posts').on('value', snap => {
                 const grid = document.getElementById('postsGrid'); grid.innerHTML = '';
+                const now = new Date().getTime();
+                
                 snap.forEach(p => {
                     const post = p.val();
+                    const scheduleTime = post.schedule ? new Date(post.schedule).getTime() : 0;
+                    
+                    // إخفاء المنشور إذا كان وقته لم يحن بعد (إلا إذا كان المستخدم أدمن يراه دائماً مع علامة توضيحية)
+                    if (me.role !== 'admin' && scheduleTime > now) return;
+
                     grid.innerHTML += `
-                        <div class="glass p-3 rounded-[1.8rem] text-center cursor-pointer group hover:border-blue-500 transition animate__animated animate__zoomIn" onclick="openDownload('${p.key}')">
+                        <div class="glass p-3 rounded-[1.8rem] text-center cursor-pointer group hover:border-blue-500 transition animate__animated animate__zoomIn ${scheduleTime > now ? 'opacity-50' : ''}" onclick="openDownload('${p.key}')">
                             <img src="${post.img}" class="w-full aspect-square object-cover rounded-2xl mb-3 shadow-lg group-hover:scale-105 transition duration-500">
                             <h3 class="text-[11px] font-black truncate px-1">${post.title}</h3>
+                            ${scheduleTime > now ? '<p class="text-[8px] text-yellow-500">[مجدول]</p>' : ''}
                             ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${p.key}')" class="mt-2 text-[10px] text-red-500 opacity-60 hover:opacity-100 italic">حذف المنشور</button>` : ''}
                         </div>`;
                 });
@@ -264,50 +277,50 @@
         function updateWaitTime(v) { if(me.role === 'admin') db.ref('settings/time').set(parseInt(v)); Swal.fire('نجاح', 'تم تحديث وقت العداد', 'success'); }
         function deletePost(id) { if(confirm('حذف هذا المنشور؟')) db.ref('posts/'+id).remove(); }
         
-        // تحويل الصورة المرفوعة إلى Base64
         async function savePost() {
             const title = document.getElementById('postTitle').value;
             const desc = document.getElementById('postDesc').value;
             const bName = document.getElementById('btnName').value;
             const link = document.getElementById('postLink').value;
+            const schedule = document.getElementById('postSchedule').value; // القيمة الجديدة
             const file = document.getElementById('fileInput').files[0];
             let imgUrl = document.getElementById('postImg').value;
 
             if(!title || !link) return Swal.fire('خطأ', 'يرجى ملء العنوان والرابط', 'error');
 
-            // إذا كان هناك ملف مرفوع، نقوم بمعالجته
             if(file) {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = function () {
                     imgUrl = reader.result;
-                    pushToFirebase(title, imgUrl, desc, bName, link);
+                    pushToFirebase(title, imgUrl, desc, bName, link, schedule);
                 };
             } else {
-                pushToFirebase(title, imgUrl, desc, bName, link);
+                pushToFirebase(title, imgUrl, desc, bName, link, schedule);
             }
         }
 
-        function pushToFirebase(title, img, desc, bName, link) {
+        function pushToFirebase(title, img, desc, bName, link, schedule) {
             db.ref('posts').push({
                 title: title,
                 img: img || 'https://via.placeholder.com/150',
                 desc: desc,
                 btnName: bName,
-                link: link
+                link: link,
+                schedule: schedule || "" // حفظ التوقيت
             }).then(() => {
                 document.getElementById('postModal').classList.add('hidden');
                 Swal.fire('تم النشر', 'تمت إضافة المنشور بنجاح', 'success');
-                // تنظيف
+                // تنظيف الحقول
                 document.getElementById('postTitle').value = '';
                 document.getElementById('postImg').value = '';
                 document.getElementById('postDesc').value = '';
                 document.getElementById('btnName').value = '';
                 document.getElementById('postLink').value = '';
                 document.getElementById('fileInput').value = '';
+                document.getElementById('postSchedule').value = '';
             });
         }
     </script>
 </body>
 </html>
-
