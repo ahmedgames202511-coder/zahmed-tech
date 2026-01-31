@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Ahmed Tech | Pro Dashboard</title>
+    <title>Z Ahmed Tech | Ultimate Dashboard & Contests</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -16,7 +16,7 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; transition: 0.4s; overflow-x: hidden; }
+        body { font-family: 'Cairo', sans-serif; transition: 0.4s; overflow-x: hidden; scroll-behavior: smooth; }
         .dark-mode { background: #020617; color: #f1f5f9; }
         .light-mode { background: #f8fafc; color: #0f172a; }
         .glass { backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
@@ -24,14 +24,12 @@
         .light-mode .glass { background: rgba(255, 255, 255, 0.9); border-color: #e2e8f0; }
         .admin-only { display: none !important; }
         body.is-admin .admin-only { display: block !important; }
-        .chat-msg { margin-bottom: 10px; padding: 12px 16px; border-radius: 18px; max-width: 85%; position: relative; font-size: 0.95rem; }
-        .msg-me { background: #2563eb; color: white; margin-left: auto; border-bottom-left-radius: 4px; }
-        .msg-other { background: #334155; color: white; margin-right: auto; border-bottom-right-radius: 4px; }
-        .tab-active { color: #3b82f6; border-bottom: 3px solid #3b82f6; }
-        
-        /* ستايل مخصص لمعاينة الصورة */
-        #imgPreview { width: 100%; height: 150px; border: 2px dashed #334155; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-top: 10px; cursor: pointer; }
-        #imgPreview img { width: 100%; height: 100%; object-fit: cover; }
+        .tab-active { border-bottom: 3px solid #3b82f6; color: #3b82f6; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        .chat-bubble { max-width: 80%; padding: 10px 15px; border-radius: 15px; margin: 5px 0; }
+        .chat-me { background: #3b82f6; color: white; margin-right: auto; border-bottom-left-radius: 2px; }
+        .chat-them { background: #334155; color: white; margin-left: auto; border-bottom-right-radius: 2px; }
     </style>
 </head>
 <body class="dark-mode">
@@ -39,121 +37,129 @@
     <div id="authLayout" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950">
         <div class="glass p-10 w-full max-w-md text-center animate__animated animate__zoomIn">
             <h1 class="text-3xl font-black mb-2 text-white">Z Ahmed Tech</h1>
-            <div class="space-y-4 mt-8">
-                <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none text-white">
-                <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none text-white">
-                <button onclick="loginEmail()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold hover:bg-blue-700 transition">دخول</button>
-                <button onclick="loginGoogle()" class="w-full bg-white text-black py-4 rounded-2xl font-bold flex items-center justify-center gap-3">
+            <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-widest">Premium Platform</p>
+            <div class="space-y-4">
+                <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none text-white focus:border-blue-500 transition">
+                <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none text-white focus:border-blue-500 transition">
+                <button onclick="loginEmail()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-900/20">دخول</button>
+                <div class="text-slate-500 text-sm">أو</div>
+                <button onclick="loginGoogle()" class="w-full bg-white text-black py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-slate-200 transition">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="22"> جوجل
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="mainApp" class="hidden min-h-screen pb-20">
+    <div id="mainApp" class="hidden min-h-screen">
         <nav class="glass sticky top-4 mx-4 z-[1000] px-6 py-4 flex justify-between items-center shadow-2xl">
             <div class="flex items-center gap-6">
-                <span class="text-xl font-black text-blue-500">Z Ahmed Tech</span>
+                <span class="text-xl font-black text-blue-500 tracking-tighter">Z Ahmed Tech</span>
                 <div class="hidden md:flex gap-6 text-sm font-bold">
-                    <span onclick="showPage('home')" class="nav-link cursor-pointer hover:text-blue-500 transition">الرئيسية</span>
-                    <span onclick="showPage('chat')" class="nav-link cursor-pointer hover:text-blue-500 transition">المحادثات</span>
-                    <span onclick="showPage('admin')" class="nav-link cursor-pointer hover:text-blue-500 transition admin-only">لوحة الأدمن</span>
+                    <span onclick="showPage('home')" class="cursor-pointer nav-link tab-active" id="nav-home">الرئيسية</span>
+                    <span onclick="showPage('contests')" class="cursor-pointer nav-link" id="nav-contests">المسابقات</span>
+                    <span onclick="showPage('chat')" class="cursor-pointer nav-link" id="nav-chat">الدردشة</span>
+                    <span onclick="showPage('admin')" class="cursor-pointer hover:text-blue-500 transition admin-only">لوحة الإدارة</span>
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <button onclick="toggleTheme()" class="p-2"><i class="fas fa-adjust"></i></button>
-                <button onclick="logout()" class="text-red-500 p-2"><i class="fas fa-power-off"></i></button>
+                <button onclick="toggleTheme()" class="p-2 hover:bg-white/10 rounded-full transition"><i class="fas fa-adjust"></i></button>
+                <button onclick="logout()" class="text-red-500 p-2 hover:bg-red-500/10 rounded-full transition"><i class="fas fa-power-off"></i></button>
             </div>
         </nav>
 
-        <div id="pageHome" class="container mx-auto px-6 py-10">
-            <div class="flex justify-center gap-8 mb-10 border-b border-white/10">
-                <button onclick="toggleHomeSection('posts')" id="btnPosts" class="pb-4 font-bold tab-active">قسم المنشورات</button>
-                <button onclick="toggleHomeSection('contests')" id="btnContests" class="pb-4 font-bold opacity-50">قسم المسابقات</button>
+        <div id="pageHome" class="container mx-auto px-6 py-10 animate__animated animate__fadeIn">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-black border-r-4 border-blue-500 pr-4">آخر الأخبار والمنشورات</h2>
             </div>
-            <div id="postsSection">
-                <h2 class="text-xl font-black mb-6 border-r-4 border-blue-500 pr-4">أحدث الملفات</h2>
-                <div id="postsGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
-            </div>
-            <div id="contestsSection" class="hidden">
-                <h2 class="text-xl font-black mb-6 border-r-4 border-yellow-500 pr-4">اشترك الآن في المسابقات</h2>
-                <div id="contestsGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+            <div id="postsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        </div>
+
+        <div id="pageContests" class="hidden container mx-auto px-6 py-10 animate__animated animate__fadeIn">
+            <h2 class="text-2xl font-black mb-8 border-r-4 border-yellow-500 pr-4">المسابقات النشطة</h2>
+            <div id="contestsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+
+        <div id="pageChat" class="hidden container mx-auto px-6 py-10 animate__animated animate__fadeIn">
+            <div class="max-w-4xl mx-auto glass h-[70vh] flex flex-col overflow-hidden">
+                <div class="p-4 border-b border-white/10 flex items-center justify-between bg-blue-600/10">
+                    <h3 class="font-bold"><i class="fas fa-comments ml-2"></i> مركز الدعم والجوائز</h3>
+                    <div id="chatStatus" class="text-xs opacity-50">اختر محادثة للبدء</div>
+                </div>
+                <div class="flex-grow flex overflow-hidden">
+                    <div id="adminChatList" class="w-1/3 border-l border-white/10 overflow-y-auto admin-only p-2 space-y-2"></div>
+                    <div class="flex-grow flex flex-col p-4">
+                        <div id="chatMessages" class="flex-grow overflow-y-auto space-y-2 p-2 flex flex-col"></div>
+                        <div class="mt-4 flex gap-2">
+                            <input id="chatInput" type="text" placeholder="اكتب رسالتك هنا..." class="flex-grow p-3 rounded-xl bg-slate-900 border border-slate-700 outline-none">
+                            <button onclick="sendMessage()" class="bg-blue-600 px-6 rounded-xl hover:bg-blue-700 transition"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div id="pageChat" class="hidden container mx-auto px-6 py-10">
-            <div class="max-w-3xl mx-auto glass h-[75vh] flex flex-col overflow-hidden">
-                <div class="admin-only p-4 border-b border-white/10 bg-white/5">
-                    <select id="chatRecipient" onchange="loadChat()" class="w-full bg-slate-900 p-3 rounded-xl border border-slate-700 outline-none text-white">
-                        <option value="global">المحادثة العامة</option>
-                    </select>
-                </div>
-                <div id="chatContent" class="flex-grow overflow-y-auto p-6 space-y-4"></div>
-                <div class="p-4 bg-white/5 flex gap-3">
-                    <input id="chatInput" placeholder="اكتب رسالتك..." class="flex-grow p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none text-white">
-                    <button onclick="sendMsg()" class="bg-blue-600 px-8 rounded-2xl hover:bg-blue-700 transition shadow-lg"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <div id="pageAdmin" class="hidden container mx-auto px-6 py-10">
+        <div id="pageAdmin" class="hidden container mx-auto px-6 py-10 animate__animated animate__fadeIn">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                 <div class="glass p-6 border-l-4 border-blue-500">
-                    <p class="text-xs font-bold opacity-50">إجمالي المستخدمين</p>
-                    <h3 id="userTotalCount" class="text-3xl font-black">0</h3>
+                    <p class="text-xs font-bold text-slate-500 uppercase">المتصلون الآن</p>
+                    <h3 id="onlineCount" class="text-4xl font-black text-blue-500">0</h3>
                 </div>
-                <div class="glass p-6 md:col-span-2">
-                    <button onclick="openPostModal()" class="w-full h-full bg-blue-600 rounded-2xl font-black text-white py-4 shadow-xl hover:bg-blue-700 transition">إضافة عمل جديد (منشور/مسابقة)</button>
-                </div>
+                <button onclick="openPostModal('normal')" class="glass p-6 hover:bg-blue-600/20 transition text-right">
+                    <i class="fas fa-newspaper text-3xl mb-2 text-blue-500"></i>
+                    <p class="font-black">منشور عادي</p>
+                </button>
+                <button onclick="openPostModal('contest')" class="glass p-6 hover:bg-yellow-600/20 transition text-right">
+                    <i class="fas fa-trophy text-3xl mb-2 text-yellow-500"></i>
+                    <p class="font-black">مسابقة جديدة</p>
+                </button>
             </div>
-        </div>
 
-        <div id="pageDl" class="hidden fixed inset-0 z-[500] bg-slate-950 p-6 overflow-y-auto">
-            <div class="max-w-xl mx-auto mt-10 glass p-8 animate__animated animate__zoomIn text-center">
-                <img id="dlImg" class="w-48 h-48 mx-auto rounded-3xl shadow-2xl mb-6 object-cover border-4 border-blue-500/20">
-                <h2 id="dlTitle" class="text-2xl font-black mb-4 text-white"></h2>
-                <div id="dlDesc" class="bg-black/20 p-6 rounded-2xl mb-6 text-sm leading-relaxed text-slate-300"></div>
-                <div id="normalPostSection" class="hidden">
-                    <div id="dlTimer" class="mb-6">
-                        <div class="text-6xl font-black text-blue-500" id="dlNum">10</div>
-                    </div>
-                    <div id="dlFinal"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass p-6">
+                    <h4 class="font-bold mb-4">طلبات الاشتراك في المسابقات</h4>
+                    <div id="contestRequests" class="space-y-3 max-h-[400px] overflow-y-auto"></div>
                 </div>
-                <button onclick="showPage('home')" class="mt-8 text-white/50 hover:text-white transition">← إلغاء والعودة</button>
+                <div class="glass p-6">
+                    <h4 class="font-bold mb-4">المستخدمين المسجلين</h4>
+                    <div id="usersList" class="space-y-2 max-h-[400px] overflow-y-auto"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="postModal" class="hidden fixed inset-0 z-[2000] bg-black/95 flex items-center justify-center p-4">
-        <div class="glass bg-slate-900 w-full max-w-lg p-8 space-y-4 overflow-y-auto max-h-[90vh]">
-            <h2 class="text-xl font-bold text-white text-center">إضافة محتوى جديد في Z Ahmed Tech</h2>
+    <div id="postModal" class="hidden fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center p-4">
+        <div class="glass bg-slate-900 w-full max-w-lg p-8 space-y-4 max-h-[90vh] overflow-y-auto">
+            <h2 id="modalTitle" class="text-xl font-bold border-b border-white/10 pb-2">إضافة جديد</h2>
+            <input id="postTitle" placeholder="العنوان" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+            <textarea id="postDesc" placeholder="الوصف التفصيلي..." class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 h-24"></textarea>
             
-            <select id="postType" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700 text-white outline-none">
-                <option value="normal">منشور عادي (تحميل)</option>
-                <option value="contest">مسابقة (اشتراك)</option>
-            </select>
-
-            <input id="postTitle" placeholder="العنوان" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700 text-white outline-none">
-            
-            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-                <label class="block text-xs font-bold mb-2 opacity-70 text-white">اختر صورة الغلاف من جهازك:</label>
-                <input type="file" id="imageFile" accept="image/*" class="hidden" onchange="previewImage(this)">
-                <div id="imgPreview" onclick="document.getElementById('imageFile').click()">
-                    <span class="text-slate-400 text-sm">اضغط هنا لرفع صورة</span>
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[10px] text-slate-400">صورة من الجهاز:</label>
+                    <input type="file" id="fileInput" accept="image/*" class="w-full text-xs text-slate-500 file:bg-blue-600 file:text-white file:rounded-lg file:border-0 p-2">
+                </div>
+                <div>
+                    <label class="text-[10px] text-slate-400">أو رابط صورة:</label>
+                    <input id="postImg" placeholder="https://..." class="w-full p-2 text-xs rounded-lg bg-slate-800 border border-slate-700">
                 </div>
             </div>
 
-            <textarea id="postDesc" placeholder="تفاصيل المحتوى..." class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700 h-24 text-white outline-none"></textarea>
-            <input id="postLink" placeholder="رابط التحميل المباشر" class="w-full p-4 rounded-xl bg-slate-800 border border-slate-700 text-white outline-none">
+            <div id="contestOnlyFields" class="hidden space-y-2 p-4 bg-yellow-500/5 rounded-xl border border-yellow-500/20">
+                <p class="text-xs font-bold text-yellow-500 italic">إعدادات المسابقة</p>
+                <input id="contestPrize" placeholder="الجائزة (مثال: 1000 جوهرة)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+            </div>
+
+            <input id="postLink" placeholder="الرابط (اختياري للمنشور العادي)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
             
             <div class="flex gap-4 pt-4">
-                <button onclick="savePost()" class="flex-grow bg-blue-600 py-4 rounded-xl font-bold text-white shadow-lg hover:bg-blue-700">نشر الآن</button>
-                <button onclick="document.getElementById('postModal').classList.add('hidden')" class="px-8 bg-white/10 rounded-xl text-white">إلغاء</button>
+                <button onclick="saveContent()" class="flex-grow bg-blue-600 py-4 rounded-xl font-bold">تأكيد النشر</button>
+                <button onclick="closeModal()" class="px-6 bg-slate-700 rounded-xl">إغاء</button>
             </div>
         </div>
     </div>
 
     <script>
+        // --- Firebase Configuration ---
         const firebaseConfig = {
             apiKey: "AIzaSyAqSQLHq0QFpe1CV8bAYc53mbUO7I03Q5I",
             authDomain: "z-ahmed-tech.firebaseapp.com",
@@ -166,127 +172,308 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.database();
         const ADMIN_EMAIL = "ahmedgames2025.11@gmail.com";
-        let me = null, activePostId = null, uploadedImageBase64 = "";
+        
+        let me = null;
+        let currentContentType = 'normal';
+        let activeChatUser = null;
 
-        // معاينة الصورة فور اختيارها وتحويلها لـ Base64
-        function previewImage(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedImageBase64 = e.target.result;
-                    document.getElementById('imgPreview').innerHTML = `<img src="${uploadedImageBase64}" class="w-full h-full object-cover">`;
-                }
-                reader.readAsDataURL(file);
-            }
+        // --- Auth Functions ---
+        function loginEmail() {
+            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
+            auth.signInWithEmailAndPassword(e, p).catch(err => Swal.fire('خطأ', 'بيانات الدخول غير صحيحة', 'error'));
         }
+        function loginGoogle() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+        function logout() { auth.signOut().then(() => location.reload()); }
 
-        // حفظ المنشور مع الصورة
-        function savePost() {
-            const title = document.getElementById('postTitle').value;
-            const desc = document.getElementById('postDesc').value;
-            const type = document.getElementById('postType').value;
-            const link = document.getElementById('postLink').value;
-
-            if(!title || !uploadedImageBase64) {
-                return Swal.fire('تنبيه', 'يجب إدخال العنوان ورفع صورة!', 'warning');
-            }
-
-            const data = {
-                type: type,
-                title: title,
-                img: uploadedImageBase64, // الصورة المخزنة كـ كود
-                desc: desc,
-                link: link,
-                time: Date.now()
-            };
-
-            db.ref('posts').push(data).then(() => {
-                document.getElementById('postModal').classList.add('hidden');
-                // مسح البيانات للعملية القادمة
-                document.getElementById('postTitle').value = "";
-                document.getElementById('postDesc').value = "";
-                document.getElementById('imgPreview').innerHTML = '<span class="text-slate-400 text-sm">اضغط هنا لرفع صورة</span>';
-                uploadedImageBase64 = "";
-                Swal.fire('تم بنجاح', 'تم إضافة المنشور في Z Ahmed Tech', 'success');
-            });
-        }
-
-        // --- Auth & Original Functions --- (Keeping your core logic)
         auth.onAuthStateChanged(user => {
             if(user) {
                 db.ref(`users/${user.uid}`).on('value', snap => {
                     me = snap.val();
                     if(!me) {
-                        me = { name: user.displayName || 'مستخدم جديد', email: user.email, uid: user.uid, role: (user.email === ADMIN_EMAIL ? 'admin' : 'visitor') };
+                        me = { name: user.displayName || 'مستخدم جديد', email: user.email, uid: user.uid, role: (user.email === ADMIN_EMAIL ? 'admin' : 'user') };
                         db.ref(`users/${user.uid}`).set(me);
                     }
                     if(me.role === 'admin') document.body.classList.add('is-admin');
                     document.getElementById('authLayout').classList.add('hidden');
                     document.getElementById('mainApp').classList.remove('hidden');
-                    loadPosts();
+                    initApp();
                 });
+                db.ref(`online/${user.uid}`).set(true);
+                db.ref(`online/${user.uid}`).onDisconnect().remove();
             }
         });
 
-        function loginEmail() { 
-            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            auth.signInWithEmailAndPassword(e, p).catch(() => Swal.fire('خطأ', 'البيانات غير صحيحة', 'error'));
-        }
-        function loginGoogle() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
-        function logout() { auth.signOut().then(() => location.reload()); }
-        function showPage(p) {
-            ['pageHome', 'pageAdmin', 'pageDl', 'pageChat'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            document.getElementById('page' + p.charAt(0).toUpperCase() + p.slice(1)).classList.remove('hidden');
-        }
-        function toggleHomeSection(type) {
-            document.getElementById('postsSection').classList.toggle('hidden', type !== 'posts');
-            document.getElementById('contestsSection').classList.toggle('hidden', type === 'posts');
-            document.getElementById('btnPosts').classList.toggle('tab-active', type === 'posts');
-            document.getElementById('btnContests').classList.toggle('tab-active', type !== 'posts');
+        // --- Core App Logic ---
+        function initApp() {
+            loadPosts();
+            loadContests();
+            loadChat();
+            if(me.role === 'admin') {
+                initAdminPanel();
+            }
         }
 
+        function showPage(p) {
+            ['pageHome', 'pageContests', 'pageChat', 'pageAdmin'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.add('hidden');
+            });
+            document.getElementById('page' + p.charAt(0).toUpperCase() + p.slice(1)).classList.remove('hidden');
+            
+            // Update UI Tabs
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('tab-active'));
+            const activeNav = document.getElementById('nav-' + p);
+            if(activeNav) activeNav.classList.add('tab-active');
+        }
+
+        function openPostModal(type) {
+            currentContentType = type;
+            document.getElementById('postModal').classList.remove('hidden');
+            document.getElementById('modalTitle').innerText = (type === 'contest' ? 'نشر مسابقة جديدة' : 'نشر موضوع جديد');
+            document.getElementById('contestOnlyFields').classList.toggle('hidden', type !== 'contest');
+        }
+
+        function closeModal() { document.getElementById('postModal').classList.add('hidden'); }
+
+        async function saveContent() {
+            const title = document.getElementById('postTitle').value;
+            const desc = document.getElementById('postDesc').value;
+            const file = document.getElementById('fileInput').files[0];
+            let imgUrl = document.getElementById('postImg').value;
+            const prize = document.getElementById('contestPrize').value;
+            const link = document.getElementById('postLink').value;
+
+            if(!title || !desc) return Swal.fire('تنبيه', 'يرجى كتابة العنوان والوصف', 'warning');
+
+            Swal.showLoading();
+
+            if(file) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    finalizeSave(title, desc, reader.result, prize, link);
+                };
+            } else {
+                finalizeSave(title, desc, imgUrl, prize, link);
+            }
+        }
+
+        function finalizeSave(title, desc, img, prize, link) {
+            const path = (currentContentType === 'contest' ? 'contests' : 'posts');
+            const data = {
+                title, desc, 
+                img: img || 'https://via.placeholder.com/400x200?text=Z+Ahmed+Tech',
+                link: link || '',
+                date: Date.now()
+            };
+            if(currentContentType === 'contest') data.prize = prize;
+
+            db.ref(path).push(data).then(() => {
+                Swal.fire('تم النشر', 'تمت الإضافة بنجاح', 'success');
+                closeModal();
+            });
+        }
+
+        // --- Load Content ---
         function loadPosts() {
             db.ref('posts').on('value', snap => {
-                const pGrid = document.getElementById('postsGrid'), cGrid = document.getElementById('contestsGrid');
-                pGrid.innerHTML = ''; cGrid.innerHTML = '';
+                const grid = document.getElementById('postsGrid'); grid.innerHTML = '';
                 snap.forEach(child => {
                     const p = child.val();
-                    const card = `
-                        <div class="glass p-3 text-center cursor-pointer hover:scale-105 transition-all" onclick="openDetail('${child.key}')">
-                            <img src="${p.img}" class="w-full aspect-square object-cover rounded-xl mb-3 shadow-md">
-                            <h3 class="text-xs font-bold truncate mb-2 text-white">${p.title}</h3>
-                            ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deletePost('${child.key}')" class="text-red-500 text-[10px] underline">حذف</button>` : ''}
+                    grid.innerHTML += `
+                        <div class="glass overflow-hidden group hover:scale-[1.02] transition duration-300">
+                            <img src="${p.img}" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-bold text-sm mb-2">${p.title}</h3>
+                                <p class="text-[10px] text-slate-400 line-clamp-2 mb-4">${p.desc}</p>
+                                <div class="flex justify-between items-center">
+                                    <a href="${p.link}" target="_blank" class="text-blue-500 text-xs font-bold">اقرأ المزيد ←</a>
+                                    ${me.role === 'admin' ? `<button onclick="deleteItem('posts','${child.key}')" class="text-red-500 text-xs"><i class="fas fa-trash"></i></button>` : ''}
+                                </div>
+                            </div>
                         </div>`;
-                    p.type === 'contest' ? cGrid.innerHTML += card : pGrid.innerHTML += card;
                 });
             });
         }
 
-        async function openDetail(id) {
-            activePostId = id;
-            const post = (await db.ref('posts/'+id).once('value')).val();
-            showPage('dl');
-            document.getElementById('dlImg').src = post.img;
-            document.getElementById('dlTitle').innerText = post.title;
-            document.getElementById('dlDesc').innerText = post.desc;
-            if(post.type !== 'contest') {
-                document.getElementById('normalPostSection').classList.remove('hidden');
-                let timer = 10;
-                const itv = setInterval(() => {
-                    timer--;
-                    document.getElementById('dlNum').innerText = timer;
-                    if(timer <= 0) {
-                        clearInterval(itv);
-                        document.getElementById('dlFinal').innerHTML = `<a href="${post.link}" target="_blank" class="block bg-blue-600 py-4 rounded-2xl font-black text-white animate__animated animate__pulse animate__infinite">إضغط للتحميل المباشر</a>`;
-                    }
-                }, 1000);
+        function loadContests() {
+            db.ref('contests').on('value', snap => {
+                const grid = document.getElementById('contestsGrid'); grid.innerHTML = '';
+                snap.forEach(child => {
+                    const c = child.val();
+                    grid.innerHTML += `
+                        <div class="glass p-6 border-b-4 border-yellow-500 relative">
+                            <span class="absolute top-4 left-4 bg-yellow-500 text-black text-[10px] font-bold px-3 py-1 rounded-full">مسابقة</span>
+                            <img src="${c.img}" class="w-full h-48 object-cover rounded-xl mb-4">
+                            <h3 class="text-xl font-black mb-2">${c.title}</h3>
+                            <p class="text-sm text-slate-400 mb-4">${c.desc}</p>
+                            <div class="bg-white/5 p-4 rounded-xl mb-4">
+                                <p class="text-xs text-yellow-500 font-bold">الجائزة: ${c.prize}</p>
+                            </div>
+                            <button onclick="joinContest('${child.key}', '${c.title}')" class="w-full bg-yellow-600 hover:bg-yellow-700 py-3 rounded-xl font-bold transition">اشترك الآن</button>
+                        </div>`;
+                });
+            });
+        }
+
+        function joinContest(id, title) {
+            Swal.fire({
+                title: 'الاشتراك في المسابقة',
+                html: `
+                    <p class="text-sm mb-4">أنت تشترك في: ${title}</p>
+                    <input id="swal-name" class="swal2-input" placeholder="اسمك بالكامل">
+                    <input id="swal-phone" class="swal2-input" placeholder="رقم الهاتف">
+                `,
+                confirmButtonText: 'إرسال الطلب',
+                preConfirm: () => {
+                    const name = document.getElementById('swal-name').value;
+                    const phone = document.getElementById('swal-phone').value;
+                    if(!name || !phone) return Swal.showValidationMessage('يرجى ملء كافة البيانات');
+                    return { name, phone };
+                }
+            }).then(res => {
+                if(res.isConfirmed) {
+                    db.ref(`contest_requests/${id}/${me.uid}`).set({
+                        ...res.value,
+                        uid: me.uid,
+                        email: me.email,
+                        status: 'pending'
+                    });
+                    Swal.fire('تم بنجاح', 'تم تسجيل طلبك، انتظر إعلان الفائز', 'success');
+                }
+            });
+        }
+
+        // --- Admin Functions ---
+        function initAdminPanel() {
+            db.ref('online').on('value', s => document.getElementById('onlineCount').innerText = s.numChildren());
+            
+            // Load Users
+            db.ref('users').on('value', s => {
+                const list = document.getElementById('usersList'); list.innerHTML = '';
+                s.forEach(u => {
+                    const user = u.val();
+                    list.innerHTML += `<div class="p-3 bg-white/5 rounded-xl flex justify-between items-center text-xs">
+                        <span>${user.name}</span>
+                        <button onclick="startChat('${user.uid}', '${user.name}')" class="text-blue-500 underline">شات</button>
+                    </div>`;
+                });
+            });
+
+            // Load Contest Requests
+            db.ref('contest_requests').on('value', snap => {
+                const container = document.getElementById('contestRequests'); container.innerHTML = '';
+                snap.forEach(contest => {
+                    contest.forEach(req => {
+                        const r = req.val();
+                        container.innerHTML += `
+                            <div class="p-4 bg-white/5 rounded-xl border border-white/10 animate__animated animate__fadeIn">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-bold text-sm">${r.name}</p>
+                                        <p class="text-[10px] text-slate-500">${r.phone}</p>
+                                    </div>
+                                    <button onclick="approveWinner('${contest.key}', '${r.uid}', '${r.name}')" class="bg-green-600 text-[10px] px-3 py-1 rounded-lg font-bold">اختيار كفائز</button>
+                                </div>
+                            </div>`;
+                    });
+                });
+            });
+        }
+
+        function approveWinner(contestId, userId, userName) {
+            Swal.fire({
+                title: 'تأكيد الفائز',
+                text: `هل تريد إعلان ${userName} كفائز بالمسابقة؟`,
+                icon: 'question',
+                showCancelButton: true
+            }).then(res => {
+                if(res.isConfirmed) {
+                    // 1. Send system message to chat
+                    const msg = `🎉 مبروك يا ${userName}! لقد تم اختيارك كفائز في المسابقة. تواصل معنا هنا لاستلام جائزتك.`;
+                    sendMessageTo(userId, msg);
+                    
+                    // 2. Alert admin
+                    Swal.fire('تم!', 'تم إرسال رسالة للفائز وفتح شات معه', 'success');
+                    startChat(userId, userName);
+                }
+            });
+        }
+
+        // --- Chat System ---
+        function loadChat() {
+            if(me.role !== 'admin') {
+                // User Chat
+                db.ref(`chats/${me.uid}`).on('value', snap => {
+                    renderMessages(snap);
+                });
+            } else {
+                // Admin see list of active chats
+                db.ref('chats').on('value', snap => {
+                    const list = document.getElementById('adminChatList'); list.innerHTML = '';
+                    snap.forEach(userChat => {
+                        db.ref(`users/${userChat.key}`).once('value', uSnap => {
+                            const u = uSnap.val();
+                            list.innerHTML += `
+                                <div onclick="startChat('${u.uid}', '${u.name}')" class="p-3 bg-white/5 rounded-xl cursor-pointer hover:bg-blue-600/20 transition text-xs mb-2 ${activeChatUser === u.uid ? 'bg-blue-600/40' : ''}">
+                                    <p class="font-bold">${u.name}</p>
+                                </div>`;
+                        });
+                    });
+                });
             }
         }
 
-        function deletePost(id) { Swal.fire({title: 'حذف؟', icon: 'warning', showCancelButton: true}).then(r => { if(r.isConfirmed) db.ref('posts/'+id).remove(); }); }
-        function toggleTheme() { document.body.classList.toggle('dark-mode'); document.body.classList.toggle('light-mode'); }
-        function openPostModal() { document.getElementById('postModal').classList.remove('hidden'); }
+        function startChat(uid, name) {
+            activeChatUser = uid;
+            document.getElementById('chatStatus').innerText = `تتحدث مع: ${name}`;
+            showPage('chat');
+            db.ref(`chats/${uid}`).on('value', renderMessages);
+        }
+
+        function renderMessages(snap) {
+            const area = document.getElementById('chatMessages'); area.innerHTML = '';
+            snap.forEach(mChild => {
+                const m = mChild.val();
+                const isMe = m.sender === me.uid;
+                area.innerHTML += `
+                    <div class="chat-bubble ${isMe ? 'chat-me' : 'chat-them'} animate__animated animate__fadeInUp text-sm">
+                        ${m.text}
+                    </div>`;
+            });
+            area.scrollTop = area.scrollHeight;
+        }
+
+        function sendMessage() {
+            const txt = document.getElementById('chatInput').value;
+            const target = (me.role === 'admin' ? activeChatUser : me.uid);
+            if(!txt || !target) return;
+
+            db.ref(`chats/${target}`).push({
+                sender: me.uid,
+                text: txt,
+                time: Date.now()
+            });
+            document.getElementById('chatInput').value = '';
+        }
+
+        function sendMessageTo(userId, text) {
+            db.ref(`chats/${userId}`).push({
+                sender: 'system',
+                text: text,
+                time: Date.now()
+            });
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode');
+        }
+
+        function deleteItem(path, id) {
+            if(confirm('هل أنت متأكد من الحذف؟')) db.ref(`${path}/${id}`).remove();
+        }
+
     </script>
 </body>
 </html>
