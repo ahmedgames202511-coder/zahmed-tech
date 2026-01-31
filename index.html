@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <div id="mainApp" class="hidden min-h-screen">
+    <div id="mainApp" class="hidden min-h-screen pb-20">
         <nav class="glass sticky top-4 mx-4 z-[1000] px-6 py-4 flex justify-between items-center shadow-2xl">
             <div class="flex items-center gap-6">
                 <span class="text-xl font-black text-blue-500 tracking-tighter">Z Ahmed Tech</span>
@@ -75,23 +75,25 @@
         </div>
 
         <div id="pageContests" class="hidden container mx-auto px-6 py-10 animate__animated animate__fadeIn">
-            <h2 class="text-2xl font-black mb-8 border-r-4 border-yellow-500 pr-4">المسابقات النشطة</h2>
+            <h2 class="text-2xl font-black mb-8 border-r-4 border-yellow-500 pr-4">المسابقات والجوائز</h2>
             <div id="contestsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </div>
 
         <div id="pageChat" class="hidden container mx-auto px-6 py-10 animate__animated animate__fadeIn">
-            <div class="max-w-4xl mx-auto glass h-[70vh] flex flex-col overflow-hidden">
+            <div class="max-w-4xl mx-auto glass h-[70vh] flex flex-col overflow-hidden shadow-2xl">
                 <div class="p-4 border-b border-white/10 flex items-center justify-between bg-blue-600/10">
-                    <h3 class="font-bold"><i class="fas fa-comments ml-2"></i> مركز الدعم والجوائز</h3>
-                    <div id="chatStatus" class="text-xs opacity-50">اختر محادثة للبدء</div>
+                    <h3 class="font-bold text-lg"><i class="fas fa-comments ml-2 text-blue-400"></i> التواصل المباشر</h3>
+                    <div id="chatStatus" class="text-xs opacity-50 font-mono">اختر محادثة</div>
                 </div>
                 <div class="flex-grow flex overflow-hidden">
-                    <div id="adminChatList" class="w-1/3 border-l border-white/10 overflow-y-auto admin-only p-2 space-y-2"></div>
-                    <div class="flex-grow flex flex-col p-4">
-                        <div id="chatMessages" class="flex-grow overflow-y-auto space-y-2 p-2 flex flex-col"></div>
-                        <div class="mt-4 flex gap-2">
-                            <input id="chatInput" type="text" placeholder="اكتب رسالتك هنا..." class="flex-grow p-3 rounded-xl bg-slate-900 border border-slate-700 outline-none">
-                            <button onclick="sendMessage()" class="bg-blue-600 px-6 rounded-xl hover:bg-blue-700 transition"><i class="fas fa-paper-plane"></i></button>
+                    <div id="adminChatList" class="w-1/3 border-l border-white/10 overflow-y-auto admin-only p-2 space-y-2 bg-black/20"></div>
+                    <div class="flex-grow flex flex-col relative">
+                        <div id="chatMessages" class="flex-grow overflow-y-auto space-y-2 p-4 flex flex-col">
+                            <p class="text-center text-slate-500 text-sm mt-10">اختر مستخدماً لبدء المحادثة أو انتظر رسالة من الإدارة</p>
+                        </div>
+                        <div class="p-4 bg-white/5 border-t border-white/10 flex gap-2">
+                            <input id="chatInput" type="text" placeholder="اكتب رسالتك هنا..." class="flex-grow p-3 rounded-xl bg-slate-900 border border-slate-700 outline-none focus:border-blue-500 transition">
+                            <button onclick="sendMessage()" class="bg-blue-600 px-6 rounded-xl hover:bg-blue-700 transition text-white shadow-lg"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
                 </div>
@@ -104,56 +106,61 @@
                     <p class="text-xs font-bold text-slate-500 uppercase">المتصلون الآن</p>
                     <h3 id="onlineCount" class="text-4xl font-black text-blue-500">0</h3>
                 </div>
-                <button onclick="openPostModal('normal')" class="glass p-6 hover:bg-blue-600/20 transition text-right">
-                    <i class="fas fa-newspaper text-3xl mb-2 text-blue-500"></i>
-                    <p class="font-black">منشور عادي</p>
+                <button onclick="openPostModal('normal')" class="glass p-6 hover:bg-blue-600/20 transition text-right group">
+                    <i class="fas fa-newspaper text-3xl mb-2 text-blue-500 group-hover:scale-110 transition"></i>
+                    <p class="font-black text-lg">منشور عادي</p>
+                    <p class="text-xs text-slate-500">أخبار، شروحات، روابط</p>
                 </button>
-                <button onclick="openPostModal('contest')" class="glass p-6 hover:bg-yellow-600/20 transition text-right">
-                    <i class="fas fa-trophy text-3xl mb-2 text-yellow-500"></i>
-                    <p class="font-black">مسابقة جديدة</p>
+                <button onclick="openPostModal('contest')" class="glass p-6 hover:bg-yellow-600/20 transition text-right group">
+                    <i class="fas fa-trophy text-3xl mb-2 text-yellow-500 group-hover:scale-110 transition"></i>
+                    <p class="font-black text-lg">مسابقة جديدة</p>
+                    <p class="text-xs text-slate-500">جوائز، مشتركين، فائزين</p>
                 </button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div class="glass p-6">
-                    <h4 class="font-bold mb-4">طلبات الاشتراك في المسابقات</h4>
-                    <div id="contestRequests" class="space-y-3 max-h-[400px] overflow-y-auto"></div>
+                    <h4 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-users text-yellow-500"></i> طلبات الاشتراك في المسابقات</h4>
+                    <div id="contestRequests" class="space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
                 </div>
                 <div class="glass p-6">
-                    <h4 class="font-bold mb-4">المستخدمين المسجلين</h4>
-                    <div id="usersList" class="space-y-2 max-h-[400px] overflow-y-auto"></div>
+                    <h4 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-user-shield text-blue-500"></i> المستخدمين المسجلين</h4>
+                    <div id="usersList" class="space-y-2 max-h-[400px] overflow-y-auto pr-2"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="postModal" class="hidden fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center p-4">
-        <div class="glass bg-slate-900 w-full max-w-lg p-8 space-y-4 max-h-[90vh] overflow-y-auto">
+        <div class="glass bg-slate-900 w-full max-w-lg p-8 space-y-4 max-h-[90vh] overflow-y-auto animate__animated animate__fadeInUp">
             <h2 id="modalTitle" class="text-xl font-bold border-b border-white/10 pb-2">إضافة جديد</h2>
-            <input id="postTitle" placeholder="العنوان" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
-            <textarea id="postDesc" placeholder="الوصف التفصيلي..." class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 h-24"></textarea>
             
-            <div class="grid grid-cols-2 gap-2">
-                <div>
-                    <label class="text-[10px] text-slate-400">صورة من الجهاز:</label>
-                    <input type="file" id="fileInput" accept="image/*" class="w-full text-xs text-slate-500 file:bg-blue-600 file:text-white file:rounded-lg file:border-0 p-2">
-                </div>
-                <div>
-                    <label class="text-[10px] text-slate-400">أو رابط صورة:</label>
-                    <input id="postImg" placeholder="https://..." class="w-full p-2 text-xs rounded-lg bg-slate-800 border border-slate-700">
-                </div>
+            <input id="postTitle" placeholder="العنوان الرئيسي" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 focus:border-blue-500 outline-none transition">
+            
+            <div class="space-y-2">
+                 <label class="text-[10px] text-slate-400 block">صورة الموضوع:</label>
+                 <div class="flex gap-2">
+                    <input type="file" id="fileInput" accept="image/*" class="w-1/2 text-[10px] text-slate-500 file:bg-blue-600 file:text-white file:rounded-lg file:border-0 p-2 bg-slate-800 rounded-lg">
+                    <input id="postImg" placeholder="أو رابط مباشر للصورة" class="w-1/2 p-2 text-xs rounded-lg bg-slate-800 border border-slate-700 outline-none">
+                 </div>
             </div>
 
-            <div id="contestOnlyFields" class="hidden space-y-2 p-4 bg-yellow-500/5 rounded-xl border border-yellow-500/20">
-                <p class="text-xs font-bold text-yellow-500 italic">إعدادات المسابقة</p>
-                <input id="contestPrize" placeholder="الجائزة (مثال: 1000 جوهرة)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+            <textarea id="postDesc" placeholder="الوصف والتفاصيل..." class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 h-24 outline-none focus:border-blue-500 transition"></textarea>
+
+            <div id="contestOnlyFields" class="hidden space-y-2 p-4 bg-yellow-500/10 rounded-xl border border-yellow-500/20">
+                <p class="text-xs font-bold text-yellow-500 italic"><i class="fas fa-exclamation-triangle"></i> إعدادات المسابقة</p>
+                <input id="contestPrize" placeholder="اسم الجائزة (مثال: حساب ببجي، كود شحن...)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+                <p class="text-[10px] text-slate-400">* سيتم طلب الاسم ورقم الهاتف تلقائياً من المشتركين.</p>
             </div>
 
-            <input id="postLink" placeholder="الرابط (اختياري للمنشور العادي)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+            <div id="normalPostFields" class="space-y-2">
+                <input id="postLink" placeholder="الرابط (اختياري للمنشور العادي)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+                <input id="btnName" placeholder="اسم الزر (مثال: تحميل)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
+            </div>
             
-            <div class="flex gap-4 pt-4">
-                <button onclick="saveContent()" class="flex-grow bg-blue-600 py-4 rounded-xl font-bold">تأكيد النشر</button>
-                <button onclick="closeModal()" class="px-6 bg-slate-700 rounded-xl">إغاء</button>
+            <div class="flex gap-4 pt-4 border-t border-white/10 mt-4">
+                <button onclick="saveContent()" class="flex-grow bg-blue-600 hover:bg-blue-700 py-3 rounded-xl font-bold transition shadow-lg text-white">نشر الآن</button>
+                <button onclick="closeModal()" class="px-6 bg-slate-700 hover:bg-slate-600 rounded-xl text-white transition">إلغاء</button>
             </div>
         </div>
     </div>
@@ -224,13 +231,22 @@
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('tab-active'));
             const activeNav = document.getElementById('nav-' + p);
             if(activeNav) activeNav.classList.add('tab-active');
+            window.scrollTo(0,0);
         }
 
         function openPostModal(type) {
             currentContentType = type;
             document.getElementById('postModal').classList.remove('hidden');
             document.getElementById('modalTitle').innerText = (type === 'contest' ? 'نشر مسابقة جديدة' : 'نشر موضوع جديد');
-            document.getElementById('contestOnlyFields').classList.toggle('hidden', type !== 'contest');
+            
+            // Toggle Fields
+            if(type === 'contest') {
+                document.getElementById('contestOnlyFields').classList.remove('hidden');
+                document.getElementById('normalPostFields').classList.add('hidden');
+            } else {
+                document.getElementById('contestOnlyFields').classList.add('hidden');
+                document.getElementById('normalPostFields').classList.remove('hidden');
+            }
         }
 
         function closeModal() { document.getElementById('postModal').classList.add('hidden'); }
@@ -242,35 +258,47 @@
             let imgUrl = document.getElementById('postImg').value;
             const prize = document.getElementById('contestPrize').value;
             const link = document.getElementById('postLink').value;
+            const btnName = document.getElementById('btnName').value;
 
-            if(!title || !desc) return Swal.fire('تنبيه', 'يرجى كتابة العنوان والوصف', 'warning');
+            if(!title) return Swal.fire('تنبيه', 'يرجى كتابة العنوان على الأقل', 'warning');
 
-            Swal.showLoading();
+            Swal.fire({title: 'جاري النشر...', didOpen: () => Swal.showLoading()});
 
             if(file) {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = () => {
-                    finalizeSave(title, desc, reader.result, prize, link);
+                    finalizeSave(title, desc, reader.result, prize, link, btnName);
                 };
             } else {
-                finalizeSave(title, desc, imgUrl, prize, link);
+                finalizeSave(title, desc, imgUrl, prize, link, btnName);
             }
         }
 
-        function finalizeSave(title, desc, img, prize, link) {
+        function finalizeSave(title, desc, img, prize, link, btnName) {
             const path = (currentContentType === 'contest' ? 'contests' : 'posts');
             const data = {
                 title, desc, 
                 img: img || 'https://via.placeholder.com/400x200?text=Z+Ahmed+Tech',
-                link: link || '',
                 date: Date.now()
             };
-            if(currentContentType === 'contest') data.prize = prize;
+            
+            if(currentContentType === 'contest') {
+                data.prize = prize;
+            } else {
+                data.link = link || '#';
+                data.btnName = btnName || 'عرض';
+            }
 
             db.ref(path).push(data).then(() => {
                 Swal.fire('تم النشر', 'تمت الإضافة بنجاح', 'success');
                 closeModal();
+                // Clear fields
+                document.getElementById('postTitle').value = '';
+                document.getElementById('postDesc').value = '';
+                document.getElementById('postLink').value = '';
+                document.getElementById('contestPrize').value = '';
+                document.getElementById('fileInput').value = '';
             });
         }
 
@@ -284,10 +312,10 @@
                         <div class="glass overflow-hidden group hover:scale-[1.02] transition duration-300">
                             <img src="${p.img}" class="w-full h-40 object-cover">
                             <div class="p-4">
-                                <h3 class="font-bold text-sm mb-2">${p.title}</h3>
+                                <h3 class="font-bold text-sm mb-2 truncate">${p.title}</h3>
                                 <p class="text-[10px] text-slate-400 line-clamp-2 mb-4">${p.desc}</p>
                                 <div class="flex justify-between items-center">
-                                    <a href="${p.link}" target="_blank" class="text-blue-500 text-xs font-bold">اقرأ المزيد ←</a>
+                                    <a href="${p.link}" target="_blank" class="text-blue-500 text-xs font-bold border border-blue-500/30 px-3 py-1 rounded-lg hover:bg-blue-500 hover:text-white transition">${p.btnName || 'مشاهدة'}</a>
                                     ${me.role === 'admin' ? `<button onclick="deleteItem('posts','${child.key}')" class="text-red-500 text-xs"><i class="fas fa-trash"></i></button>` : ''}
                                 </div>
                             </div>
@@ -302,15 +330,22 @@
                 snap.forEach(child => {
                     const c = child.val();
                     grid.innerHTML += `
-                        <div class="glass p-6 border-b-4 border-yellow-500 relative">
-                            <span class="absolute top-4 left-4 bg-yellow-500 text-black text-[10px] font-bold px-3 py-1 rounded-full">مسابقة</span>
-                            <img src="${c.img}" class="w-full h-48 object-cover rounded-xl mb-4">
+                        <div class="glass p-5 border-b-4 border-yellow-500 relative hover:shadow-yellow-500/20 hover:shadow-2xl transition">
+                            <span class="absolute top-4 left-4 bg-yellow-500 text-black text-[10px] font-bold px-3 py-1 rounded-full shadow-lg animate__animated animate__pulse animate__infinite">مسابقة</span>
+                            <img src="${c.img}" class="w-full h-48 object-cover rounded-xl mb-4 shadow-lg">
                             <h3 class="text-xl font-black mb-2">${c.title}</h3>
-                            <p class="text-sm text-slate-400 mb-4">${c.desc}</p>
-                            <div class="bg-white/5 p-4 rounded-xl mb-4">
-                                <p class="text-xs text-yellow-500 font-bold">الجائزة: ${c.prize}</p>
+                            <p class="text-sm text-slate-400 mb-4 h-10 overflow-hidden">${c.desc}</p>
+                            <div class="bg-white/5 p-3 rounded-xl mb-4 flex items-center gap-3">
+                                <i class="fas fa-gift text-yellow-500 text-xl"></i>
+                                <div>
+                                    <p class="text-[10px] text-slate-400">الجائزة</p>
+                                    <p class="text-xs font-bold text-white">${c.prize || 'غير محدد'}</p>
+                                </div>
                             </div>
-                            <button onclick="joinContest('${child.key}', '${c.title}')" class="w-full bg-yellow-600 hover:bg-yellow-700 py-3 rounded-xl font-bold transition">اشترك الآن</button>
+                            <div class="flex gap-2">
+                                <button onclick="joinContest('${child.key}', '${c.title}')" class="flex-grow bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 py-3 rounded-xl font-bold text-black transition shadow-lg">اشترك الآن</button>
+                                ${me.role === 'admin' ? `<button onclick="deleteItem('contests','${child.key}')" class="bg-red-500/10 text-red-500 px-4 rounded-xl"><i class="fas fa-trash"></i></button>` : ''}
+                            </div>
                         </div>`;
                 });
             });
@@ -318,13 +353,15 @@
 
         function joinContest(id, title) {
             Swal.fire({
-                title: 'الاشتراك في المسابقة',
+                title: '📝 الاشتراك في المسابقة',
                 html: `
-                    <p class="text-sm mb-4">أنت تشترك في: ${title}</p>
+                    <p class="text-xs mb-4 text-slate-400">أنت تشترك في: ${title}</p>
                     <input id="swal-name" class="swal2-input" placeholder="اسمك بالكامل">
-                    <input id="swal-phone" class="swal2-input" placeholder="رقم الهاتف">
+                    <input id="swal-phone" class="swal2-input" placeholder="رقم الهاتف للتواصل">
                 `,
                 confirmButtonText: 'إرسال الطلب',
+                background: '#0f172a',
+                color: '#fff',
                 preConfirm: () => {
                     const name = document.getElementById('swal-name').value;
                     const phone = document.getElementById('swal-phone').value;
@@ -337,9 +374,10 @@
                         ...res.value,
                         uid: me.uid,
                         email: me.email,
-                        status: 'pending'
+                        status: 'pending',
+                        timestamp: Date.now()
                     });
-                    Swal.fire('تم بنجاح', 'تم تسجيل طلبك، انتظر إعلان الفائز', 'success');
+                    Swal.fire('تم بنجاح', 'تم تسجيل اسمك ورقمك، انتظر إعلان الفائز', 'success');
                 }
             });
         }
@@ -354,8 +392,8 @@
                 s.forEach(u => {
                     const user = u.val();
                     list.innerHTML += `<div class="p-3 bg-white/5 rounded-xl flex justify-between items-center text-xs">
-                        <span>${user.name}</span>
-                        <button onclick="startChat('${user.uid}', '${user.name}')" class="text-blue-500 underline">شات</button>
+                        <span>${user.name} <span class="opacity-50">(${user.email})</span></span>
+                        <button onclick="startChat('${user.uid}', '${user.name}')" class="text-blue-500 bg-blue-500/10 px-3 py-1 rounded-lg hover:bg-blue-500 hover:text-white transition">شات</button>
                     </div>`;
                 });
             });
@@ -363,39 +401,50 @@
             // Load Contest Requests
             db.ref('contest_requests').on('value', snap => {
                 const container = document.getElementById('contestRequests'); container.innerHTML = '';
+                let hasRequests = false;
+                
                 snap.forEach(contest => {
                     contest.forEach(req => {
+                        hasRequests = true;
                         const r = req.val();
                         container.innerHTML += `
-                            <div class="p-4 bg-white/5 rounded-xl border border-white/10 animate__animated animate__fadeIn">
+                            <div class="p-4 bg-white/5 rounded-xl border border-white/10 animate__animated animate__fadeIn mb-2">
                                 <div class="flex justify-between items-start">
                                     <div>
-                                        <p class="font-bold text-sm">${r.name}</p>
-                                        <p class="text-[10px] text-slate-500">${r.phone}</p>
+                                        <p class="font-bold text-sm text-white">${r.name}</p>
+                                        <p class="text-[10px] text-slate-400 font-mono"><i class="fas fa-phone"></i> ${r.phone}</p>
+                                        <p class="text-[10px] text-yellow-500 mt-1">مسابقة ID: ${contest.key.substring(0,5)}...</p>
                                     </div>
-                                    <button onclick="approveWinner('${contest.key}', '${r.uid}', '${r.name}')" class="bg-green-600 text-[10px] px-3 py-1 rounded-lg font-bold">اختيار كفائز</button>
+                                    <button onclick="approveWinner('${contest.key}', '${r.uid}', '${r.name}')" class="bg-green-600 hover:bg-green-500 text-white text-[10px] px-3 py-2 rounded-lg font-bold shadow-lg transition"><i class="fas fa-check-circle"></i> اختيار كفائز</button>
                                 </div>
                             </div>`;
                     });
                 });
+                
+                if(!hasRequests) container.innerHTML = '<p class="text-center text-slate-500 text-xs py-4">لا توجد طلبات اشتراك حالياً</p>';
             });
         }
 
         function approveWinner(contestId, userId, userName) {
             Swal.fire({
-                title: 'تأكيد الفائز',
-                text: `هل تريد إعلان ${userName} كفائز بالمسابقة؟`,
+                title: 'تأكيد الفائز 🏆',
+                text: `هل تريد إعلان ${userName} كفائز وإرسال رسالة له؟`,
                 icon: 'question',
-                showCancelButton: true
+                showCancelButton: true,
+                confirmButtonText: 'نعم، فائز!',
+                cancelButtonText: 'إلغاء'
             }).then(res => {
                 if(res.isConfirmed) {
                     // 1. Send system message to chat
                     const msg = `🎉 مبروك يا ${userName}! لقد تم اختيارك كفائز في المسابقة. تواصل معنا هنا لاستلام جائزتك.`;
                     sendMessageTo(userId, msg);
                     
-                    // 2. Alert admin
-                    Swal.fire('تم!', 'تم إرسال رسالة للفائز وفتح شات معه', 'success');
-                    startChat(userId, userName);
+                    // 2. Alert admin & redirect
+                    Swal.fire('تم!', 'تم إرسال رسالة للفائز وفتح المحادثة', 'success').then(() => {
+                        startChat(userId, userName);
+                    });
+
+                    // 3. Optional: Remove request (or mark as won) - here we just keep it for record
                 }
             });
         }
@@ -403,20 +452,24 @@
         // --- Chat System ---
         function loadChat() {
             if(me.role !== 'admin') {
-                // User Chat
+                // User Chat: Listen only to their own chat
                 db.ref(`chats/${me.uid}`).on('value', snap => {
                     renderMessages(snap);
                 });
             } else {
-                // Admin see list of active chats
+                // Admin: Listen to chat list
                 db.ref('chats').on('value', snap => {
                     const list = document.getElementById('adminChatList'); list.innerHTML = '';
                     snap.forEach(userChat => {
                         db.ref(`users/${userChat.key}`).once('value', uSnap => {
-                            const u = uSnap.val();
+                            const u = uSnap.val() || {name: 'مستخدم محذوف', uid: userChat.key};
                             list.innerHTML += `
-                                <div onclick="startChat('${u.uid}', '${u.name}')" class="p-3 bg-white/5 rounded-xl cursor-pointer hover:bg-blue-600/20 transition text-xs mb-2 ${activeChatUser === u.uid ? 'bg-blue-600/40' : ''}">
-                                    <p class="font-bold">${u.name}</p>
+                                <div onclick="startChat('${u.uid}', '${u.name}')" class="p-3 bg-white/5 rounded-xl cursor-pointer hover:bg-blue-600/20 transition text-xs border-b border-white/5 ${activeChatUser === u.uid ? 'bg-blue-600/40 border-l-4 border-l-blue-500' : ''}">
+                                    <div class="flex justify-between">
+                                        <p class="font-bold text-white">${u.name}</p>
+                                        <i class="fas fa-comment text-blue-500 opacity-50"></i>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 mt-1">اضغط للمراسلة</p>
                                 </div>`;
                         });
                     });
@@ -426,19 +479,37 @@
 
         function startChat(uid, name) {
             activeChatUser = uid;
-            document.getElementById('chatStatus').innerText = `تتحدث مع: ${name}`;
+            document.getElementById('chatStatus').innerText = `المتصل: ${name}`;
             showPage('chat');
+            
+            // Highlight active user in admin list
+            const adminListItems = document.querySelectorAll('#adminChatList > div');
+            adminListItems.forEach(item => item.classList.remove('bg-blue-600/40', 'border-l-4', 'border-l-blue-500'));
+            
+            // Load messages for this specific user
+            db.ref(`chats/${uid}`).off(); // Remove old listeners
             db.ref(`chats/${uid}`).on('value', renderMessages);
         }
 
         function renderMessages(snap) {
             const area = document.getElementById('chatMessages'); area.innerHTML = '';
+            if(!snap.exists()) {
+                area.innerHTML = '<p class="text-center text-slate-500 text-xs mt-4">لا توجد رسائل سابقة. ابدأ المحادثة!</p>';
+                return;
+            }
+            
             snap.forEach(mChild => {
                 const m = mChild.val();
                 const isMe = m.sender === me.uid;
+                const isSystem = m.sender === 'system';
+                
+                let bubbleClass = isMe ? 'chat-me' : 'chat-them';
+                if(isSystem) bubbleClass = 'bg-green-600/80 text-white mx-auto text-center w-full';
+
                 area.innerHTML += `
-                    <div class="chat-bubble ${isMe ? 'chat-me' : 'chat-them'} animate__animated animate__fadeInUp text-sm">
-                        ${m.text}
+                    <div class="chat-bubble ${bubbleClass} animate__animated animate__fadeInUp text-sm shadow-md">
+                        ${isSystem ? '<i class="fas fa-trophy text-yellow-300 mr-2"></i>' : ''} ${m.text}
+                        <p class="text-[8px] opacity-50 mt-1 text-right">${new Date(m.time).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'})}</p>
                     </div>`;
             });
             area.scrollTop = area.scrollHeight;
@@ -447,7 +518,9 @@
         function sendMessage() {
             const txt = document.getElementById('chatInput').value;
             const target = (me.role === 'admin' ? activeChatUser : me.uid);
-            if(!txt || !target) return;
+            
+            if(!txt) return;
+            if(me.role === 'admin' && !activeChatUser) return Swal.fire('تنبيه', 'اختر مستخدماً من القائمة أولاً', 'warning');
 
             db.ref(`chats/${target}`).push({
                 sender: me.uid,
@@ -471,7 +544,7 @@
         }
 
         function deleteItem(path, id) {
-            if(confirm('هل أنت متأكد من الحذف؟')) db.ref(`${path}/${id}`).remove();
+            if(confirm('هل أنت متأكد من الحذف؟ لا يمكن التراجع.')) db.ref(`${path}/${id}`).remove();
         }
 
     </script>
