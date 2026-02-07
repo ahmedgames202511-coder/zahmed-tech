@@ -4,16 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Z Ahmed Tech | منصة التقنية والمسابقات الكبرى</title>
-    <meta name="description" content="مرحباً بك في Z Ahmed Tech. منصتك الرائدة للحصول على أحدث المنشورات التقنية، روابط التحميل المباشرة، والمشاركة في أقوى المسابقات والجوائز الحصرية.">
-    <meta name="keywords" content="Z Ahmed Tech, تقنية, مسابقات, تحميل, جوائز, برامج">
-    <meta name="author" content="Z Ahmed Tech">
+    <title>Z Ahmed Tech | التقنية، التطبيقات والمسابقات</title>
+    <meta name="description" content="منصة Z Ahmed Tech هي وجهتك الأولى لاكتشاف أحدث التطبيقات، الشروحات التقنية الحصرية، والمشاركة في أقوى المسابقات والجوائز. عالم التقنية بين يديك.">
+    <meta name="keywords" content="Z Ahmed Tech, تطبيقات, تقنية, مسابقات, جوائز, شروحات تطبيقات, أخبار التقنية">
     
-    <meta property="og:title" content="Z Ahmed Tech | عالم من الحصريات">
-    <meta property="og:description" content="تابع أحدث المنشورات وشارك في المسابقات لتربح جوائز قيمة عبر منصة Z Ahmed Tech.">
-    <meta property="og:url" content="https://ahmedgames202511-coder.github.io/zahmed-tech/">
-    <meta property="og:type" content="website">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,7 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
         body { font-family: 'Cairo', sans-serif; transition: 0.4s; overflow-x: hidden; scroll-behavior: smooth; }
@@ -42,24 +36,24 @@
         .nav-active { color: #3b82f6; border-bottom: 2px solid #3b82f6; }
     </style>
 </head>
-
 <body class="dark-mode">
 
     <div style="display:none">
-        <h1>Z Ahmed Tech</h1>
-        <p>أفضل منصة تقنية للمسابقات والمحتوى الحصري.</p>
+        <h1>Z Ahmed Tech - زد أحمد تك</h1>
+        <h2>تطبيقات، شروحات تقنية، ومسابقات بجوائز حقيقية</h2>
+        <p>استكشف عالم التقنية مع Z Ahmed Tech، منصتك الموثوقة لتحميل التطبيقات والاشتراك في أقوى التحديات.</p>
     </div>
 
     <div id="authLayout" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950">
         <div class="glass p-10 w-full max-w-md text-center animate__animated animate__zoomIn">
             <h1 class="text-3xl font-black mb-2 text-white">Z Ahmed Tech</h1>
-            <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-widest">Premium Dashboard</p>
+            <p class="text-slate-500 text-[10px] mb-8 uppercase tracking-widest">تطبيقات • تقنية • مسابقات</p>
             <div class="space-y-4">
                 <input id="email" type="email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none text-white">
                 <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 outline-none text-white">
                 <button onclick="loginEmail()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-900/50">دخول</button>
                 <button onclick="loginGoogle()" class="w-full btn-google py-4 rounded-2xl font-bold flex items-center justify-center gap-3">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="22" alt="Google"> تسجيل بجوجل
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="22"> تسجيل بجوجل
                 </button>
             </div>
         </div>
@@ -83,19 +77,19 @@
         </nav>
 
         <div id="pageHome" class="container mx-auto px-6 py-10 animate__animated animate__fadeIn">
-            <h2 class="text-2xl font-black mb-8 border-r-4 border-blue-500 pr-4">أحدث المنشورات</h2>
+            <h2 class="text-2xl font-black mb-8 border-r-4 border-blue-500 pr-4">أحدث المنشورات والتطبيقات</h2>
             <div id="postsGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
         </div>
 
         <div id="pageContests" class="hidden container mx-auto px-6 py-10 animate__animated animate__fadeIn">
-            <h2 class="text-2xl font-black mb-8 border-r-4 border-yellow-500 pr-4">مسابقات وجوائز</h2>
+            <h2 class="text-2xl font-black mb-8 border-r-4 border-yellow-500 pr-4">مسابقات وجوائز Z Ahmed Tech</h2>
             <div id="contestsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
         </div>
 
         <div id="pageChat" class="hidden container mx-auto px-6 py-10 animate__animated animate__fadeIn">
             <div class="max-w-4xl mx-auto glass h-[70vh] flex flex-col overflow-hidden shadow-2xl">
                 <div class="p-4 border-b border-white/10 bg-black/20 flex justify-between items-center">
-                    <h3 class="font-bold"><i class="fas fa-comments text-blue-500 ml-2"></i> المحادثات</h3>
+                    <h3 class="font-bold"><i class="fas fa-comments text-blue-500 ml-2"></i> الدعم الفني والمحادثات</h3>
                     <span id="chatTargetName" class="text-xs text-slate-400"></span>
                 </div>
                 <div class="flex-grow flex overflow-hidden">
@@ -120,36 +114,24 @@
                 <button onclick="openModal('normal')" class="glass p-6 hover:bg-blue-600/10 transition text-right group cursor-pointer">
                     <i class="fas fa-plus-circle text-3xl mb-2 text-blue-500 group-hover:scale-110 transition"></i>
                     <h3 class="font-bold text-lg">منشور عادي</h3>
-                    <p class="text-xs text-slate-500">رابط تحميل، صورة، عداد</p>
                 </button>
                 <button onclick="openModal('contest')" class="glass p-6 hover:bg-yellow-600/10 transition text-right group cursor-pointer">
                     <i class="fas fa-trophy text-3xl mb-2 text-yellow-500 group-hover:scale-110 transition"></i>
                     <h3 class="font-bold text-lg">مسابقة جديدة</h3>
-                    <p class="text-xs text-slate-500">جوائز، مشتركين، سحب</p>
                 </button>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div class="glass p-6 h-[500px] flex flex-col">
                     <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
-                        <h4 class="font-bold text-yellow-500"><i class="fas fa-users-cog"></i> عرض المشاركين</h4>
+                        <h4 class="font-bold text-yellow-500">المشاركين في المسابقات</h4>
                         <select id="contestFilter" onchange="loadContestRequests()" class="bg-slate-800 text-xs p-2 rounded-lg outline-none border border-slate-700 text-white w-1/2">
                             <option value="">اختر المسابقة...</option>
                         </select>
                     </div>
-                    <div id="contestRequestsList" class="overflow-y-auto flex-grow space-y-2 pr-2">
-                        <p class="text-slate-500 text-center text-xs mt-10">اختر مسابقة لعرض المشاركين فيها</p>
-                    </div>
+                    <div id="contestRequestsList" class="overflow-y-auto flex-grow space-y-2 pr-2"></div>
                 </div>
                 <div class="glass p-6 h-[500px] flex flex-col">
                     <h4 class="font-bold mb-4 border-b border-white/5 pb-2">إعدادات النظام</h4>
-                    <div class="mb-6">
-                        <label class="text-xs text-slate-500 block mb-2">وقت العداد (ثواني)</label>
-                        <div class="flex gap-2">
-                            <input type="number" id="waitInput" class="w-20 p-2 rounded-lg bg-slate-800 border border-slate-700 text-center font-bold text-white">
-                            <button onclick="updateWaitTime()" class="bg-blue-600 px-4 rounded-lg text-sm font-bold">حفظ</button>
-                        </div>
-                    </div>
-                    <h4 class="font-bold mb-2 text-sm">المستخدمين المسجلين</h4>
                     <div id="usersList" class="overflow-y-auto flex-grow space-y-2 pr-2 text-xs"></div>
                 </div>
             </div>
@@ -157,9 +139,9 @@
 
         <div id="pageDl" class="hidden fixed inset-0 z-[500] bg-inherit p-6 text-center overflow-y-auto">
             <div class="max-w-xl mx-auto mt-10 glass p-8 animate__animated animate__zoomIn">
-                <img id="dlImg" src="" class="w-32 h-32 mx-auto rounded-3xl shadow-2xl mb-4 object-cover" alt="Post Image">
+                <img id="dlImg" class="w-32 h-32 mx-auto rounded-3xl shadow-2xl mb-4 object-cover">
                 <h2 id="dlTitle" class="text-2xl font-black mb-2"></h2>
-                <div id="dlDesc" class="desc-box text-slate-400 italic"></div>
+                <div id="dlDesc" class="desc-box text-slate-400 italic mb-4"></div>
                 <div id="dlTimer">
                     <p class="mb-2 text-xs opacity-60">جاري تجهيز الرابط...</p>
                     <div class="text-5xl font-black text-blue-500 mb-6" id="dlNum">00</div>
@@ -171,31 +153,22 @@
     </div>
 
     <div id="universalModal" class="hidden fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center p-4">
-        <div class="glass bg-slate-900 w-full max-w-lg p-6 space-y-3 animate__animated animate__slideInUp max-h-[90vh] overflow-y-auto text-white">
-            <h2 id="modalHead" class="text-xl font-bold border-b border-white/10 pb-2"></h2>
-            <input id="inpTitle" placeholder="العنوان" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 outline-none">
-            <div class="grid grid-cols-2 gap-2">
-                <input type="file" id="inpFile" accept="image/*" class="text-[10px] bg-slate-800 p-2 rounded-xl">
-                <input id="inpImgUrl" placeholder="أو رابط صورة" class="p-3 rounded-xl bg-slate-800 border border-slate-700 text-xs">
-            </div>
-            <textarea id="inpDesc" placeholder="الوصف..." class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 h-20 outline-none"></textarea>
-            
+        <div class="glass bg-slate-900 w-full max-w-lg p-6 space-y-3 animate__animated animate__slideInUp">
+            <h2 id="modalHead" class="text-xl font-bold border-b border-white/10 pb-2 text-white"></h2>
+            <input id="inpTitle" placeholder="العنوان" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 outline-none text-white">
+            <textarea id="inpDesc" placeholder="الوصف..." class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 h-20 outline-none text-white"></textarea>
             <div id="sectionNormal" class="space-y-3 hidden">
-                <input id="inpLink" placeholder="الرابط (URL)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
-                <input id="inpBtn" placeholder="اسم الزر" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700">
-                <div class="bg-slate-800 p-3 rounded-xl">
-                    <label class="text-[10px] text-slate-400 block mb-1">وقت النشر (مجدول):</label>
-                    <input type="datetime-local" id="inpSchedule" class="w-full bg-transparent text-white outline-none">
-                </div>
+                <input id="inpLink" placeholder="الرابط (URL)" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-white">
+                <input id="inpBtn" placeholder="اسم الزر" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-white">
+                <input id="inpImgUrl" placeholder="رابط صورة الغلاف" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-white">
             </div>
-
             <div id="sectionContest" class="space-y-3 hidden">
-                <input id="inpPrize" placeholder="الجائزة (مثال: شدات ببجي)" class="w-full p-3 rounded-xl bg-slate-800 border border-yellow-500/30 text-yellow-500 placeholder-yellow-500/50">
+                <input id="inpPrize" placeholder="الجائزة" class="w-full p-3 rounded-xl bg-slate-800 border border-yellow-500/30 text-yellow-500">
+                <input id="inpContestImg" placeholder="رابط صورة المسابقة" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-700 text-white">
             </div>
-
             <div class="flex gap-3 pt-2">
-                <button onclick="saveContent()" class="flex-grow bg-blue-600 py-3 rounded-xl font-bold">نشر</button>
-                <button onclick="document.getElementById('universalModal').classList.add('hidden')" class="px-6 bg-slate-700 rounded-xl">إلغاء</button>
+                <button onclick="saveContent()" class="flex-grow bg-blue-600 py-3 rounded-xl font-bold text-white">نشر</button>
+                <button onclick="document.getElementById('universalModal').classList.add('hidden')" class="px-6 bg-slate-700 rounded-xl text-white">إلغاء</button>
             </div>
         </div>
     </div>
@@ -213,7 +186,8 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.database();
         const ADMIN_EMAIL = "ahmedgames2025.11@gmail.com";
-        let me = null; let waitTime = 10; let currentModalType = 'normal'; let activeChatUser = null;
+
+        let me = null, waitTime = 10, currentModalType = 'normal', activeChatUser = null;
 
         function loginEmail() { auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value).catch(e => Swal.fire('خطأ', 'بيانات خاطئة', 'error')); }
         function loginGoogle() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
@@ -238,198 +212,118 @@
         });
 
         function initSystem() { loadPosts(); loadContests(); loadChatSystem(); if(me.role === 'admin') initAdminPanel(); }
-
-        function showPage(p) {
+        function showPage(p) { 
             ['pageHome', 'pageContests', 'pageChat', 'pageAdmin', 'pageDl'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById('page' + p.charAt(0).toUpperCase() + p.slice(1)).classList.remove('hidden');
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
-            const btn = document.getElementById('btn-' + p); if(btn) btn.classList.add('nav-active');
-            window.scrollTo(0,0);
+            if(document.getElementById('btn-'+p)) document.getElementById('btn-'+p).classList.add('nav-active');
         }
 
         function loadPosts() {
             db.ref('posts').on('value', snap => {
-                const grid = document.getElementById('postsGrid'); grid.innerHTML = '';
-                const now = new Date().getTime();
+                const grid = document.getElementById('postsGrid');
+                grid.innerHTML = '';
                 snap.forEach(p => {
                     const post = p.val();
-                    const scheduleTime = post.schedule ? new Date(post.schedule).getTime() : 0;
-                    if (me.role !== 'admin' && scheduleTime > now) return;
-                    grid.innerHTML += `
-                        <div class="glass p-3 rounded-[1.5rem] text-center cursor-pointer group hover:border-blue-500 transition animate__animated animate__zoomIn ${scheduleTime > now ? 'opacity-50' : ''}" onclick="openDownload('${p.key}')">
-                            <div class="relative overflow-hidden rounded-2xl mb-3">
-                                <img src="${post.img}" class="w-full aspect-square object-cover group-hover:scale-110 transition duration-500" alt="Image">
-                            </div>
-                            <h3 class="text-[12px] font-bold truncate px-1">${post.title}</h3>
-                            ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deleteItem('posts','${p.key}')" class="mt-2 text-[10px] text-red-500 opacity-60 hover:opacity-100"><i class="fas fa-trash"></i> حذف</button>` : ''}
-                        </div>`;
-                });
-            });
-        }
-
-        async function openDownload(id) {
-            const snap = await db.ref('posts/'+id).once('value');
-            const post = snap.val();
-            showPage('dl');
-            document.getElementById('dlImg').src = post.img;
-            document.getElementById('dlTitle').innerText = post.title;
-            document.getElementById('dlDesc').innerText = post.desc || "";
-            let count = (me.role === 'admin') ? 0 : waitTime;
-            document.getElementById('dlNum').innerText = count;
-            document.getElementById('dlTimer').classList.remove('hidden');
-            document.getElementById('dlFinal').classList.add('hidden');
-            const tick = () => {
-                if(count <= 0) {
-                    document.getElementById('dlTimer').classList.add('hidden');
-                    document.getElementById('dlFinal').classList.remove('hidden');
-                    document.getElementById('dlFinal').innerHTML = `<a href="${post.link}" target="_blank" class="w-full block bg-blue-600 py-4 rounded-2xl text-lg font-black shadow-xl animate__animated animate__pulse animate__infinite">${post.btnName || 'تحميل'}</a>`;
-                } else {
-                    count--; document.getElementById('dlNum').innerText = count;
-                    setTimeout(tick, 1000);
-                }
-            };
-            tick();
-        }
-
-        function loadContests() {
-            db.ref('contests').on('value', snap => {
-                const grid = document.getElementById('contestsGrid');
-                const filter = document.getElementById('contestFilter');
-                grid.innerHTML = ''; filter.innerHTML = '<option value="">اختر المسابقة...</option>';
-                snap.forEach(c => {
-                    const contest = c.val();
-                    if(me.role === 'admin') filter.innerHTML += `<option value="${c.key}">${contest.title}</option>`;
-                    grid.innerHTML += `
-                        <div class="glass p-5 border-b-4 border-yellow-500 relative overflow-hidden group">
-                            <img src="${contest.img}" class="w-full h-40 object-cover rounded-xl mb-4 shadow-lg group-hover:scale-105 transition" alt="Contest">
-                            <h3 class="text-xl font-black mb-2">${contest.title}</h3>
-                            <p class="text-sm text-slate-400 mb-4 h-12 overflow-hidden">${contest.desc}</p>
-                            <div class="bg-yellow-500/10 p-3 rounded-lg mb-4 flex items-center gap-3 border border-yellow-500/20">
-                                <i class="fas fa-gift text-yellow-500 text-xl"></i>
-                                <div><p class="text-[10px] text-slate-400">الجائزة</p><p class="text-xs font-bold text-white">${contest.prize}</p></div>
-                            </div>
-                            <div class="flex gap-2">
-                                <button onclick="joinContest('${c.key}')" class="flex-grow bg-gradient-to-r from-yellow-600 to-yellow-400 text-black font-black py-3 rounded-xl shadow-lg transition">اشتراك الآن</button>
-                                ${me.role === 'admin' ? `<button onclick="deleteContestWithData('${c.key}')" class="bg-red-500/20 text-red-500 px-3 rounded-xl"><i class="fas fa-trash"></i></button>` : ''}
-                            </div>
-                        </div>`;
-                });
-            });
-        }
-
-        function joinContest(id) {
-            Swal.fire({
-                title: 'تسجيل في المسابقة',
-                html: `<input id="swal-name" class="swal2-input" placeholder="اسمك الثلاثي" style="color: black;">
-                       <input id="swal-phone" class="swal2-input" placeholder="رقم الهاتف" style="color: black;">`,
-                confirmButtonText: 'تأكيد الاشتراك', background: '#0f172a', color: '#fff',
-                preConfirm: () => {
-                    const name = document.getElementById('swal-name').value;
-                    const phone = document.getElementById('swal-phone').value;
-                    if(!name || !phone) { Swal.showValidationMessage('البيانات ناقصة'); return false; }
-                    return { name, phone };
-                }
-            }).then(res => {
-                if(res.isConfirmed) {
-                    db.ref(`contest_requests/${id}/${me.uid}`).set({ name: res.value.name, phone: res.value.phone, uid: me.uid, timestamp: Date.now() })
-                    .then(() => { Swal.fire('تم!', 'تم تسجيلك بنجاح.', 'success'); });
-                }
-            });
-        }
-
-        function loadContestRequests() {
-            const contestId = document.getElementById('contestFilter').value;
-            const list = document.getElementById('contestRequestsList');
-            if(!contestId) { list.innerHTML = '<p class="text-slate-500 text-center text-xs mt-10">اختر مسابقة لعرض المشاركين</p>'; return; }
-            db.ref(`contest_requests/${contestId}`).on('value', snap => {
-                list.innerHTML = '';
-                snap.forEach(reqSnap => {
-                    const req = reqSnap.val();
-                    list.innerHTML += `<div class="bg-white/5 p-3 rounded-xl border-r-2 border-yellow-500 mb-2 flex justify-between items-center">
-                        <div><p class="font-bold text-sm text-white">${req.name}</p><p class="text-[10px] text-slate-400">${req.phone}</p></div>
-                        <div class="flex gap-2"><button onclick="pickWinner('${contestId}', '${req.uid}', '${req.name}')" class="bg-green-600 text-[10px] px-2 py-1 rounded">فائز</button></div>
+                    grid.innerHTML += `<div class="glass p-3 rounded-3xl text-center cursor-pointer group hover:border-blue-500 transition" onclick="openDownload('${p.key}')">
+                        <img src="${post.img}" class="w-full aspect-square object-cover rounded-2xl mb-3">
+                        <h3 class="text-xs font-bold truncate">${post.title}</h3>
+                        ${me.role === 'admin' ? `<button onclick="event.stopPropagation(); deleteItem('posts','${p.key}')" class="text-red-500 text-[10px] mt-2">حذف</button>` : ''}
                     </div>`;
                 });
             });
         }
 
-        function loadChatSystem() {
-            if(me.role === 'admin') {
-                db.ref('chats').on('value', snap => {
-                    const list = document.getElementById('adminChatList'); list.innerHTML = '';
-                    snap.forEach(chat => {
-                        db.ref('users/'+chat.key).once('value', uSnap => {
-                            const u = uSnap.val() || {name: 'مستخدم'};
-                            list.innerHTML += `<div onclick="openAdminChat('${u.uid}', '${u.name}')" class="p-4 border-b border-white/5 cursor-pointer hover:bg-white/5"><p class="font-bold text-sm text-white">${u.name}</p></div>`;
-                        });
-                    });
+        function openDownload(id) {
+            db.ref('posts/'+id).once('value').then(snap => {
+                const post = snap.val();
+                showPage('dl');
+                document.getElementById('dlImg').src = post.img;
+                document.getElementById('dlTitle').innerText = post.title;
+                document.getElementById('dlDesc').innerText = post.desc || "";
+                let count = waitTime;
+                document.getElementById('dlNum').innerText = count;
+                document.getElementById('dlTimer').classList.remove('hidden');
+                document.getElementById('dlFinal').classList.add('hidden');
+                const timer = setInterval(() => {
+                    count--;
+                    document.getElementById('dlNum').innerText = count;
+                    if(count <= 0) {
+                        clearInterval(timer);
+                        document.getElementById('dlTimer').classList.add('hidden');
+                        document.getElementById('dlFinal').classList.remove('hidden');
+                        document.getElementById('dlFinal').innerHTML = `<a href="${post.link}" target="_blank" class="bg-blue-600 block py-4 rounded-2xl font-black text-white">تحميل الآن</a>`;
+                    }
+                }, 1000);
+            });
+        }
+
+        function loadContests() {
+            db.ref('contests').on('value', snap => {
+                const grid = document.getElementById('contestsGrid');
+                grid.innerHTML = '';
+                snap.forEach(c => {
+                    const contest = c.val();
+                    grid.innerHTML += `<div class="glass p-5 border-b-4 border-yellow-500">
+                        <img src="${contest.img}" class="w-full h-40 object-cover rounded-xl mb-4">
+                        <h3 class="text-xl font-black">${contest.title}</h3>
+                        <p class="text-yellow-500 font-bold mb-4">الجائزة: ${contest.prize}</p>
+                        <button onclick="joinContest('${c.key}')" class="w-full bg-yellow-500 text-black font-black py-3 rounded-xl">اشتراك</button>
+                    </div>`;
                 });
-            } else { listenToChat(me.uid); }
-        }
-
-        function openAdminChat(uid, name) { activeChatUser = uid; document.getElementById('chatTargetName').innerText = name; listenToChat(uid); }
-
-        function listenToChat(uid) {
-            db.ref(`chats/${uid}`).off();
-            db.ref(`chats/${uid}`).on('value', snap => {
-                const area = document.getElementById('messagesArea'); area.innerHTML = '';
-                snap.forEach(msgSnap => {
-                    const msg = msgSnap.val(); const isMe = (msg.sender === me.uid);
-                    area.innerHTML += `<div class="chat-bubble ${msg.sender === 'system' ? 'chat-system' : (isMe ? 'chat-me' : 'chat-them')}">${msg.text}</div>`;
-                });
-                area.scrollTop = area.scrollHeight;
             });
         }
 
-        function sendMsg() {
-            const input = document.getElementById('msgInput'); const txt = input.value;
-            let targetUid = (me.role === 'admin') ? activeChatUser : me.uid;
-            if(!txt || !targetUid) return;
-            db.ref(`chats/${targetUid}`).push({ sender: me.uid, text: txt, time: Date.now() }); input.value = '';
+        function joinContest(id) {
+            const name = prompt("أدخل اسمك الثلاثي:");
+            const phone = prompt("أدخل رقم الهاتف:");
+            if(name && phone) {
+                db.ref(`contest_requests/${id}/${me.uid}`).set({ name, phone, timestamp: Date.now() });
+                Swal.fire('تم', 'تم تسجيلك في المسابقة', 'success');
+            }
         }
 
-        function initAdminPanel() {
-            db.ref('online').on('value', s => document.getElementById('onlineCount').innerText = s.numChildren());
-            db.ref('settings/time').on('value', s => { waitTime = s.val() || 10; document.getElementById('waitInput').value = waitTime; });
-            db.ref('users').on('value', s => {
-                const list = document.getElementById('usersList'); list.innerHTML = '';
-                s.forEach(u => { const user = u.val(); list.innerHTML += `<div class="flex justify-between p-2 bg-white/5 rounded"><span>${user.name}</span></div>`; });
-            });
-        }
-
-        function pickWinner(cId, uId, uName) {
-            Swal.fire({ title: 'تحديد الفائز 🏆', text: `اعتماد ${uName} كفائز؟`, showCancelButton: true }).then(res => {
-                if(res.isConfirmed) {
-                    db.ref(`chats/${uId}`).push({ sender: 'system', text: `🎉 مبروك يا ${uName}! لقد فزت معنا بالمسابقة. تواصل معنا هنا.`, time: Date.now() });
-                    showPage('chat');
-                }
-            });
-        }
-
-        function openModal(type) { currentModalType = type; document.getElementById('universalModal').classList.remove('hidden');
-            document.getElementById('modalHead').innerText = (type === 'contest') ? 'إنشاء مسابقة جديدة' : 'إنشاء منشور جديد';
+        function openModal(type) {
+            currentModalType = type;
+            document.getElementById('universalModal').classList.remove('hidden');
+            document.getElementById('sectionNormal').classList.toggle('hidden', type !== 'normal');
             document.getElementById('sectionContest').classList.toggle('hidden', type !== 'contest');
-            document.getElementById('sectionNormal').classList.toggle('hidden', type === 'contest');
         }
 
-        async function saveContent() {
-            const title = document.getElementById('inpTitle').value; const desc = document.getElementById('inpDesc').value;
-            const file = document.getElementById('inpFile').files[0]; let img = document.getElementById('inpImgUrl').value || 'https://via.placeholder.com/300';
-            if(!title) return;
-            if(file) { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => pushData(title, desc, reader.result); }
-            else { pushData(title, desc, img); }
+        function saveContent() {
+            const title = document.getElementById('inpTitle').value;
+            const desc = document.getElementById('inpDesc').value;
+            if(currentModalType === 'normal') {
+                db.ref('posts').push({ title, desc, link: document.getElementById('inpLink').value, img: document.getElementById('inpImgUrl').value, btnName: document.getElementById('inpBtn').value });
+            } else {
+                db.ref('contests').push({ title, desc, prize: document.getElementById('inpPrize').value, img: document.getElementById('inpContestImg').value });
+            }
+            document.getElementById('universalModal').classList.add('hidden');
         }
 
-        function pushData(title, desc, img) {
-            const data = { title, desc, img };
-            if(currentModalType === 'contest') { data.prize = document.getElementById('inpPrize').value; db.ref('contests').push(data); }
-            else { data.link = document.getElementById('inpLink').value; data.btnName = document.getElementById('inpBtn').value; data.schedule = document.getElementById('inpSchedule').value; db.ref('posts').push(data); }
-            document.getElementById('universalModal').classList.add('hidden'); Swal.fire('نجاح', 'تم النشر', 'success');
-        }
-
-        function updateWaitTime() { db.ref('settings/time').set(Number(document.getElementById('waitInput').value)); }
         function deleteItem(path, key) { if(confirm('حذف؟')) db.ref(`${path}/${key}`).remove(); }
         function toggleTheme() { document.body.classList.toggle('dark-mode'); document.body.classList.toggle('light-mode'); }
+        
+        // Chat & Admin simple logic
+        function loadChatSystem() { if(me.role !== 'admin') listenToChat(me.uid); }
+        function listenToChat(uid) {
+            db.ref(`chats/${uid}`).on('value', snap => {
+                const area = document.getElementById('messagesArea');
+                area.innerHTML = '';
+                snap.forEach(m => {
+                    const msg = m.val();
+                    area.innerHTML += `<div class="chat-bubble ${msg.sender === me.uid ? 'chat-me' : 'chat-them'}">${msg.text}</div>`;
+                });
+            });
+        }
+        function sendMsg() {
+            const input = document.getElementById('msgInput');
+            if(input.value) {
+                db.ref(`chats/${me.uid}`).push({ sender: me.uid, text: input.value, time: Date.now() });
+                input.value = '';
+            }
+        }
+        function initAdminPanel() { db.ref('online').on('value', s => document.getElementById('onlineCount').innerText = s.numChildren()); }
     </script>
 </body>
 </html>
